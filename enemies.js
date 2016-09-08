@@ -4,16 +4,18 @@ function enemies()
   //ref to this
   const e = this;
 
+  //const
+  const maxNumber = 32;
+
   //variables
-  var maxNumber = 2;
   var enemyStack = [];
 
+  //Populates the array with enemies of different types.
   e.generateStack = function()
   {
     for(var i = 0; i < maxNumber; ++i)
     {
-      var typeIndex = getRandomInt(0,1);
-      console.log(typeIndex);
+      var typeIndex = getRandomInt(0,2);
       if(typeIndex == 0)
       {
         enemyStack.push(new enemy());
@@ -32,7 +34,7 @@ function enemies()
     }
   }
 
-
+  //renders the stack of enemies (calls enemy.render());
   e.renderStack = function(dt)
   {
     for(var i = 0; i < maxNumber; ++i)
@@ -60,11 +62,11 @@ function enemy(){
     e._highType = "high";
     e._lowTypeSpeed = 80;
     e._medTypeSpeed = 120;
-    e._highTypeSpeed = 170;
+    e._highTypeSpeed = 160;
     e._lowTypeColor = "#2c3e50";
     e._medTypeColor = "#8e44ad";
     e._highTypeColor = "#f39c12";
-    e._typeSize = [40, 25 ,10];
+    e._typeSize = [40, 20, 10];
 
     //e Specifics;
     e.health;
@@ -81,9 +83,11 @@ function enemy(){
     //init
     e.init = function(typeOf)
     {
-      var randIntX = getRandomInt(200, 1200);
-      var randIntY = getRandomInt(100, 600);
+      //randomize a start position
+      var randIntX = getRandomInt(0, c.width);
+      var randIntY = getRandomInt(0, c.height);
 
+      //Creates enemy of right type and sets properties accordningly
       if(typeOf == e._lowType)
       {
         e._type = typeOf;
@@ -106,23 +110,26 @@ function enemy(){
       {
         e._type = typeOf;
         e.health = e._highTypeHealth;
-        e.dmg = e._highDmg;
+        e.dmg = e._highTypeDmg;
         e._color = e._highTypeColor;
         e._size = [e._typeSize[2], e._typeSize[2]];
-        e.speed = e._highSpeed;
+        e.speed = e._highTypeSpeed;
       }
 
+      //sets common properties
       e.pos = [randIntX, randIntY];
       e.angle = getAngle(e.pos, pl.pos);
     }
 
+    //Render functions which i called to render an enemy
     e.render = function(dt)
     {
-      drawLineBetween(e.pos, pl.pos, "#e74c3c");
+      drawLineBetween(e.pos, pl.pos, "rgba(231, 76, 60, 0.3)", 0.10);
       e.updatePosition(dt);
       e.draw();
     }
 
+    //function that update the position of an enemy
     e.updatePosition = function(dt)
     {
       e.angle = getAngle(e.pos, pl.pos);
@@ -130,6 +137,7 @@ function enemy(){
       e.pos[1] += (e.speed * Math.sin(e.angle) * dt);
     }
 
+    //draws the enemy on the screen
     e.draw = function()
     {
       ctx.fillStyle = e._color;
