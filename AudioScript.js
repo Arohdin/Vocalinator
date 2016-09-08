@@ -19,7 +19,7 @@ var frequencyArray= new Float32Array(analyzer.frequencyBinCount);
 
 for(var i =0; i<analyzer.frequencyBinCount; ++i)
 {
-	frequencyArray[i]= i*(sampleRate/analyzer.frequencyBinCount)
+	frequencyArray[i]= i*(sampleRate/analyzer.fftSize)
 }
 
  var volumeNode = context.createGain();
@@ -58,10 +58,14 @@ function drawBasic() {
 
       var options = {
         hAxis: {
-          title: 'Time'
+          title: 'Frequency'
         },
         vAxis: {
-          title: 'Popularity'
+          title: 'Amplitude',
+              viewWindow:{
+                max:300,
+                min:0.0
+              }
         }
       };
 
