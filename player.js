@@ -5,29 +5,28 @@ function player(){
 
 	//default values;
 	p.DEF_HEALTH = 10;
-	p.DEF_SPEED = 200.0;
+	p.DEF_SPEED = 350.0;
 	p.DEF_DEACC = 0.9;
 	p.DEF_THRESH = 25;
 
 	//Variables
 	p.health = p.DEF_HEALTH;
-	p.orientation = [0,0];
+	p.angle = 0.0;
 	p.speed = p.DEF_SPEED;
 	p.vel = [0,0];
-	p.pos = [400,400];
 	p._size = [30, 30];
+	p.pos = [w/2, h/2];
 	p._color = "#3498db";
 
 	//Functions
-
 	p.render = function(dt)
 	{
+		drawLineBetween(p.pos, [mousePos.x, mousePos.y], "#000000");
+		drawCrosshair();
+
 		p.calc();
 		p.updatePosition(dt);
-
-		ctx.fillStyle = p._color;
-		ctx.fillRect(p.pos[0]-(p._size[0]/2), p.pos[1] - (p._size[1]/2), p._size[0], p._size[1]);
-
+		p.draw();
 	}
 
 	p.calc = function()
@@ -60,6 +59,8 @@ function player(){
 				p.vel[1] = p.speed * yDirection;
 			}
 		}
+
+		p.angle = getAngle([mousePos.x, mousePos.y], p.pos);
 	}
 
 	p.updatePosition = function(dt)
@@ -84,9 +85,15 @@ function player(){
 		p.pos[1] += p.vel[1] * dt;
 	}
 
-	p.getPosition = function()
+	p.draw = function()
 	{
-		return p.pos;
+		ctx.fillStyle = p._color;
+
+		ctx.save();
+		ctx.translate(p.pos[0], p.pos[1]);
+		ctx.rotate(-p.angle);
+		ctx.fillRect(-p._size[0]/2,-p._size[1]/2, p._size[0], p._size[1]);
+		ctx.restore();
 	}
 
 

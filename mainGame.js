@@ -1,9 +1,11 @@
 //VARIABLES
 var ctx, c;
-var mousePos;
+var mousePos = {x: 0, y:0};
 var keyPressed = {};
-var pl;
+var pl, enemies;
 var clock, prevTime;
+var w = 1280;
+var h = 720;
 
 
 $(document).ready(function(){
@@ -13,8 +15,10 @@ $(document).ready(function(){
 	c = document.getElementById("theCanvas");
 	ctx = c.getContext("2d");
 
-	c.width = 800;
-	c.height = 800;
+	c.width = w;
+	c.height = h;
+	c.style.width = w;
+	c.style.height = h;
 
 	//EventListeners
 
@@ -24,6 +28,8 @@ $(document).ready(function(){
 
 	//CREATE GAME OBJECTS
 	pl = new player();
+	en = new enemies();
+	en.generateStack();
 
 	//Create and start clock
 	clock = new Date();
@@ -48,14 +54,9 @@ function draw()
 	ctx.clearRect (0 , 0 , c.width, c.height);
 	ctx.fillStyle = "#e74c3c";
 
-	if(mousePos)
-	{
-		//MISC
-		drawCrosshair();
-		drawAimLine();
-	}
-
 	pl.render((clock.getTime() - prevTime)/1000);
+	en.renderStack((clock.getTime() - prevTime)/1000);
+
 
 	prevTime = clock.getTime();
 	requestAnimationFrame(draw);
