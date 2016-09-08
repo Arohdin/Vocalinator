@@ -50,22 +50,9 @@ function draw()
 
 	if(mousePos)
 	{
-		//DRAW CROSSHAIR
-		ctx.beginPath();
-    ctx.arc(mousePos.x, mousePos.y, 4, 0, 2 * Math.PI, false);
-		ctx.closePath();
-		ctx.fill();
-
-		//DRAW aimLine
-		var playerPos = pl.getPosition();
-		ctx.beginPath();
-		ctx.moveTo(playerPos[0], playerPos[1]);
-		ctx.lineTo(mousePos.x, mousePos.y);
-		ctx.lineWidth = 0.25;
-		ctx.stroke();
-		ctx.closePath();
-
-
+		//MISC
+		drawCrosshair();
+		drawAimLine();
 	}
 
 	pl.render((clock.getTime() - prevTime)/1000);
