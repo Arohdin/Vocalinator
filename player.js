@@ -15,6 +15,8 @@ function player(){
 	p.speed = p.DEF_SPEED;
 	p.vel = [0,0];
 	p.pos = [400,400];
+	p._size = [30, 30];
+	p._color = "#3498db";
 
 	//Functions
 
@@ -23,39 +25,39 @@ function player(){
 		p.calc();
 		p.updatePosition(dt);
 
-		ctx.fillStyle = "#34495e";
-		ctx.fillRect(p.pos[0], p.pos[1], 25, 25);
+		ctx.fillStyle = p._color;
+		ctx.fillRect(p.pos[0]-(p._size[0]/2), p.pos[1] - (p._size[1]/2), p._size[0], p._size[1]);
 
 	}
 
 	p.calc = function()
-	{	//neg, pos
-		var x = 0;
-		var y = 0;
+	{
+		var xDirection = 0;
+		var yDirection = 0;
 
 		//x-led
-		if(keyPressed[68]){x += 1;}
-		if(keyPressed[65]){x += -1;}
+		if(keyPressed[68]){xDirection += 1;}
+		if(keyPressed[65]){xDirection += -1;}
 
 		//y-led
-		if(keyPressed[87]){y += -1;}
-		if (keyPressed[83]){y += 1;}
+		if(keyPressed[87]){yDirection += -1;}
+		if (keyPressed[83]){yDirection += 1;}
 
 		//calc
-		if((x != 0) && (y != 0))
+		if((xDirection != 0) && (yDirection != 0))
 		{
 			var newSpeed = Math.sqrt(Math.pow(p.speed, 2) / 2);
-			p.vel = [newSpeed * x, newSpeed * y];
+			p.vel = [newSpeed * xDirection, newSpeed * yDirection];
 		}
 		else
 		{
-			if(x != 0)
+			if(xDirection != 0)
 			{
-				p.vel[0] = p.speed * x;
+				p.vel[0] = p.speed * xDirection;
 			}
-			if(y != 0)
+			if(yDirection != 0)
 			{
-				p.vel[1] = p.speed * y;
+				p.vel[1] = p.speed * yDirection;
 			}
 		}
 	}
@@ -80,6 +82,11 @@ function player(){
 		}
 		p.pos[0] += p.vel[0] * dt;
 		p.pos[1] += p.vel[1] * dt;
+	}
+
+	p.getPosition = function()
+	{
+		return p.pos;
 	}
 
 

@@ -1,11 +1,12 @@
 * {
 	padding: 0;
 	margin: 0;
+	cursor: none;
 }
 
 /*
 	Default values
 */
 #theCanvas {
-	background-color: #009966;
+	background-color: #bdc3c7;
 }
