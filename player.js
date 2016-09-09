@@ -14,9 +14,10 @@ function player(){
 	p.angle = 0.0;
 	p.speed = p.DEF_SPEED;
 	p.vel = [0,0];
-	p._size = [30, 30];
+	p._size = 30;
 	p.pos = [w/2, h/2];
 	p._color = "#3498db";
+	p._collisionRadius = generateCollisionMesh(p._size);
 
 	//Function that renders the player
 	p.render = function(dt)
@@ -28,6 +29,7 @@ function player(){
 		p.calc();	//Calculates the behaivour of the movement
 		p.updatePosition(dt);	//Uppdates the position
 		p.draw();	//Draws the player on screen
+		drawCollisionMesh(p._collisionRadius, p.pos, "rgba(231, 76, 60, 0.5)");	//Draw the collision circle
 	}
 
 	p.calc = function()
@@ -103,8 +105,13 @@ function player(){
 		ctx.save();	//Saves the state of the canvas
 		ctx.translate(p.pos[0], p.pos[1]);	//translate the drawing origin to the position of the object
 		ctx.rotate(-p.angle);	//Rotates the grid/coordinates (canvas)
-		ctx.fillRect(-p._size[0]/2,-p._size[1]/2, p._size[0], p._size[1]);	//draws the rect relative to the new origin and rotation
+		ctx.fillRect(-p._size/2,-p._size/2, p._size, p._size);	//draws the rect relative to the new origin and rotation
 		ctx.restore();	//Loads the saved state.
+	}
+
+	p.getCollisionMeshBoundary = function()
+	{
+		return p._collisionRadius;
 	}
 
 	//Draws the crosshair of the player.

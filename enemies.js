@@ -75,6 +75,7 @@ function enemy(){
     e.dmg;
     e._color;
     e._size;
+    e._collisionRadius;
 
     //Variables
     e.pos;
@@ -94,8 +95,9 @@ function enemy(){
         e.health = e._lowTypeHealth;
         e.dmg = e._lowTypeDmg;
         e._color = e._lowTypeColor;
-        e._size = [e._typeSize[0], e._typeSize[0]];
+        e._size = e._typeSize[0];
         e.speed = e._lowTypeSpeed;
+        e._collisionRadius = generateCollisionMesh(e._size);
       }
       if(typeOf == e._medType)
       {
@@ -103,8 +105,9 @@ function enemy(){
         e.health = e._medTypeHealth;
         e.dmg = e._medTypeDmg;
         e._color = e._medTypeColor;
-        e._size = [e._typeSize[1], e._typeSize[1]];
+        e._size = e._typeSize[1];
         e.speed = e._medTypeSpeed;
+        e._collisionRadius = generateCollisionMesh(e._size);
       }
       if(typeOf == e._highType)
       {
@@ -112,8 +115,9 @@ function enemy(){
         e.health = e._highTypeHealth;
         e.dmg = e._highTypeDmg;
         e._color = e._highTypeColor;
-        e._size = [e._typeSize[2], e._typeSize[2]];
+        e._size = e._typeSize[2];
         e.speed = e._highTypeSpeed;
+        e._collisionRadius = generateCollisionMesh(e._size);
       }
 
       //sets common properties
@@ -127,6 +131,7 @@ function enemy(){
       drawLineBetween(e.pos, pl.pos, "rgba(231, 76, 60, 0.3)", 0.10);
       e.updatePosition(dt);
       e.draw();
+      drawCollisionMesh(e._collisionRadius, e.pos, "rgba(231, 76, 60, 0.8)");
     }
 
     //function that update the position of an enemy
@@ -145,8 +150,13 @@ function enemy(){
       ctx.save();
       ctx.translate(e.pos[0], e.pos[1]);
       ctx.rotate(-e.angle);
-      ctx.fillRect(-e._size[0]/2, -e._size[1]/2, e._size[0], e._size[1]);
+      ctx.fillRect(-e._size/2, -e._size/2, e._size, e._size);
       ctx.restore();
+    }
+
+    e.getCollisionMeshBoundary = function()
+    {
+      return e._collisionRadius;
     }
 
 }

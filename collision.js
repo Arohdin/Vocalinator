@@ -1,1 +1,0 @@
-const sameTypeCollision = false;

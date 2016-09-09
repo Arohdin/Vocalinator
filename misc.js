@@ -34,3 +34,18 @@ function getDist(A, B) //between A and B
   var c = Math.sqrt(Math.pow(a,2) + Math.pow(b,2));
   return [a, b, c] //[närliggande, motstående, hypotinusa]
 }
+
+function generateCollisionMesh(A)
+{
+  return (A/2) + ((Math.sqrt(Math.pow(A/2,2) + Math.pow(A/2,2)) - (A/2))/2);
+}
+
+function drawCollisionMesh(rad, pos, color)
+{
+  ctx.strokeStyle = color;
+  ctx.beginPath();
+  ctx.arc(pos[0], pos[1], rad, 0, 2 * Math.PI, false);
+  ctx.closePath();
+  ctx.lineWidth = 2;
+  ctx.stroke();
+}
