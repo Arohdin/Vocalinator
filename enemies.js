@@ -8,7 +8,7 @@ function enemies()
   const maxNumber = 32;
 
   //variables
-  var enemyStack = [];
+  e.enemyStack = [];
 
   //Populates the array with enemies of different types.
   e.generateStack = function()
@@ -18,18 +18,18 @@ function enemies()
       var typeIndex = getRandomInt(0,2);
       if(typeIndex == 0)
       {
-        enemyStack.push(new enemy());
-        enemyStack[enemyStack.length - 1].init("low");
+        e.enemyStack.push(new enemy());
+        e.enemyStack[e.enemyStack.length - 1].init("low");
       }
       if(typeIndex == 1)
       {
-        enemyStack.push(new enemy());
-        enemyStack[enemyStack.length - 1].init("med");
+        e.enemyStack.push(new enemy());
+        e.enemyStack[e.enemyStack.length - 1].init("med");
       }
       if(typeIndex == 2)
       {
-        enemyStack.push(new enemy());
-        enemyStack[enemyStack.length - 1].init("high");
+        e.enemyStack.push(new enemy());
+        e.enemyStack[e.enemyStack.length - 1].init("high");
       }
     }
   }
@@ -39,7 +39,7 @@ function enemies()
   {
     for(var i = 0; i < maxNumber; ++i)
     {
-      enemyStack[i].render(dt);
+      e.enemyStack[i].render(dt);
     }
   }
 
@@ -60,13 +60,13 @@ function enemy(){
     e._lowType = "low";
     e._medType = "med";
     e._highType = "high";
-    e._lowTypeSpeed = 120;
-    e._medTypeSpeed = 160;
-    e._highTypeSpeed = 200;
+    e._lowTypeSpeed = 100;
+    e._medTypeSpeed = 130;
+    e._highTypeSpeed = 170;
     e._lowTypeColor = "#2c3e50";
     e._medTypeColor = "#8e44ad";
     e._highTypeColor = "#f39c12";
-    e._typeSize = [60, 40, 20];
+    e._typeSize = [50, 30, 15];
 
     //e Specifics;
     e.health;
@@ -85,8 +85,11 @@ function enemy(){
     e.init = function(typeOf)
     {
       //randomize a start position
-      var randIntX = getRandomInt(0, c.width);
-      var randIntY = getRandomInt(0, c.height);
+      do
+      {
+        var randIntX = getRandomInt(0, c.width);
+        var randIntY = getRandomInt(0, c.height);
+      }while(getDist(pl.pos,[randIntX,randIntY])[2] < (c.width*0.10)); //Enemies can't spawn closer than this (percent of width)
 
       //Creates enemy of right type and sets properties accordningly
       if(typeOf == e._lowType)
@@ -128,7 +131,7 @@ function enemy(){
     //Render functions which i called to render an enemy
     e.render = function(dt)
     {
-      drawLineBetween(e.pos, pl.pos, "rgba(231, 76, 60, 0.3)", 0.10);
+      //drawLineBetween(e.pos, pl.pos, "rgba(231, 76, 60, 0.3)", 0.10);
       e.updatePosition(dt);
       e.draw();
       drawCollisionMesh(e._collisionRadius, e.pos, "rgba(231, 76, 60, 0.8)");

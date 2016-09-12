@@ -31,7 +31,7 @@ $(document).ready(function(){
 
 	//set scaleFactor
 	_scaleFactor = c.width/_OPTIMAL_RES;
-	console.log(c.width);
+	console.log(_scaleFactor);
 
 	//EventListeners
 	c.addEventListener('mousemove', function(evt) {
@@ -47,13 +47,18 @@ $(document).ready(function(){
 	en.generateStack();
 	krock.generateGrid();
 
-	//Create and start clock
-	clock = new Date();
-	prevTime = clock.getTime();
-
 	//Calls the draw function
-	draw();
-
+	ctx.font= "130px Roboto";
+	ctx.textAlign= "center";
+	ctx.fillStyle = "rgba(26, 188, 156,1.0)";
+	ctx.fillText("GO!",c.width/2,c.height/2);
+	setTimeout(function()
+	{
+		//Create and start clock
+		clock = new Date();
+		prevTime = clock.getTime();
+		draw();
+	}, 1050);
 });
 
 //Things that happens on resize of window

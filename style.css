@@ -12,3 +12,8 @@
 #theCanvas {
 	background-color: #bdc3c7;
 }
+
+@font-face {
+    font-family: 'Roboto', sans-serif;
+    src: url('https://fonts.gstatic.com/s/roboto/v15/e7MeVAyvogMqFwwl61PKhBTbgVql8nDJpwnrE27mub0.woff2');
+}
