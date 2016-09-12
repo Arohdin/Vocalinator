@@ -138,8 +138,8 @@ function enemy(){
     e.updatePosition = function(dt)
     {
       e.angle = getAngle(e.pos, pl.pos);
-      e.pos[0] += (-e.speed * Math.cos(e.angle) * dt);
-      e.pos[1] += (e.speed * Math.sin(e.angle) * dt);
+      e.pos[0] += (-e.speed * Math.cos(e.angle) * dt * timeFactor);
+      e.pos[1] += (e.speed * Math.sin(e.angle) * dt * timeFactor);
     }
 
     //draws the enemy on the screen

@@ -6,7 +6,7 @@ function player(){
 	//default values;
 	p.DEF_HEALTH = 10;
 	p.DEF_SPEED = 350.0;
-	p.DEF_DEACC = 0.9;
+	p.DEF_DEACC = 1 - (0.1 * timeFactor);
 	p.DEF_THRESH = 25;
 
 	//Variables
@@ -93,8 +93,8 @@ function player(){
 			}
 		}
 		//Calculates the new positions
-		p.pos[0] += p.vel[0] * dt;
-		p.pos[1] += p.vel[1] * dt;
+		p.pos[0] += p.vel[0] * dt * timeFactor;
+		p.pos[1] += p.vel[1] * dt * timeFactor;
 	}
 
 	//Draws the player on the screen

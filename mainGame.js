@@ -5,6 +5,7 @@ var keyPressed = {};
 var pl, enemies;
 var clock, prevTime;
 var w, h;
+var timeFactor = 1.0;
 
 //Waits for all the files to get ready
 $(document).ready(function(){
