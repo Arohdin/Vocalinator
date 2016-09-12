@@ -5,7 +5,7 @@ function player(){
 
 	//default values;
 	p.DEF_HEALTH = 10;
-	p.DEF_SPEED = 350.0;
+	p.DEF_SPEED = 400.0;
 	p.DEF_DEACC = 1 - (0.1 * timeFactor);
 	p.DEF_THRESH = 25;
 
@@ -14,7 +14,7 @@ function player(){
 	p.angle = 0.0;
 	p.speed = p.DEF_SPEED;
 	p.vel = [0,0];
-	p._size = 30;
+	p._size = 50 * _scaleFactor;
 	p.pos = [w/2, h/2];
 	p._color = "#3498db";
 	p._collisionRadius = generateCollisionMesh(p._size);
@@ -93,8 +93,8 @@ function player(){
 			}
 		}
 		//Calculates the new positions
-		p.pos[0] += p.vel[0] * dt * timeFactor;
-		p.pos[1] += p.vel[1] * dt * timeFactor;
+		p.pos[0] += p.vel[0] * dt * timeFactor * _scaleFactor;
+		p.pos[1] += p.vel[1] * dt * timeFactor * _scaleFactor;
 	}
 
 	//Draws the player on the screen

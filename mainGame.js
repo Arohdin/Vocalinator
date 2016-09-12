@@ -1,11 +1,13 @@
 //VARIABLES
+const _OPTIMAL_RES = 1920;
 var ctx, c;
 var mousePos = {x: 0, y:0};
 var keyPressed = {};
-var pl, enemies;
+var pl, enemies, krock;
 var clock, prevTime;
 var w, h;
 var timeFactor = 1.0;
+var scaleFactor;
 
 //Waits for all the files to get ready
 $(document).ready(function(){
@@ -27,6 +29,10 @@ $(document).ready(function(){
 	c.style.width = w;
 	c.style.height = h;
 
+	//set scaleFactor
+	_scaleFactor = c.width/_OPTIMAL_RES;
+	console.log(c.width);
+
 	//EventListeners
 	c.addEventListener('mousemove', function(evt) {
           mousePos = getMousePos(c, evt);
@@ -35,7 +41,11 @@ $(document).ready(function(){
 	//CREATE GAME OBJECTS
 	pl = new player();
 	en = new enemies();
+	krock = new collisionDetection();
+
+	//Init
 	en.generateStack();
+	krock.generateGrid();
 
 	//Create and start clock
 	clock = new Date();
@@ -61,6 +71,8 @@ $(window).resize(function(){
 	c.style.width = w;
 	c.style.height = h;
 
+	krock.generateGrid();
+
 });
 
 
@@ -70,6 +82,9 @@ function draw()
 	clock = new Date();
 
 	ctx.clearRect (0 , 0 , c.width, c.height);	//Clears the canvas from old data.
+
+	//DEBUGG
+		krock.drawGrid();
 
 	//Renders
 	en.renderStack((clock.getTime() - prevTime)/1000);	//render for enemies

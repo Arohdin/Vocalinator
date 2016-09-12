@@ -60,13 +60,13 @@ function enemy(){
     e._lowType = "low";
     e._medType = "med";
     e._highType = "high";
-    e._lowTypeSpeed = 80;
-    e._medTypeSpeed = 120;
-    e._highTypeSpeed = 160;
+    e._lowTypeSpeed = 120;
+    e._medTypeSpeed = 160;
+    e._highTypeSpeed = 200;
     e._lowTypeColor = "#2c3e50";
     e._medTypeColor = "#8e44ad";
     e._highTypeColor = "#f39c12";
-    e._typeSize = [40, 20, 10];
+    e._typeSize = [60, 40, 20];
 
     //e Specifics;
     e.health;
@@ -95,7 +95,7 @@ function enemy(){
         e.health = e._lowTypeHealth;
         e.dmg = e._lowTypeDmg;
         e._color = e._lowTypeColor;
-        e._size = e._typeSize[0];
+        e._size = e._typeSize[0] * _scaleFactor;
         e.speed = e._lowTypeSpeed;
         e._collisionRadius = generateCollisionMesh(e._size);
       }
@@ -105,7 +105,7 @@ function enemy(){
         e.health = e._medTypeHealth;
         e.dmg = e._medTypeDmg;
         e._color = e._medTypeColor;
-        e._size = e._typeSize[1];
+        e._size = e._typeSize[1] * _scaleFactor;
         e.speed = e._medTypeSpeed;
         e._collisionRadius = generateCollisionMesh(e._size);
       }
@@ -115,7 +115,7 @@ function enemy(){
         e.health = e._highTypeHealth;
         e.dmg = e._highTypeDmg;
         e._color = e._highTypeColor;
-        e._size = e._typeSize[2];
+        e._size = e._typeSize[2] * _scaleFactor;
         e.speed = e._highTypeSpeed;
         e._collisionRadius = generateCollisionMesh(e._size);
       }
@@ -138,8 +138,8 @@ function enemy(){
     e.updatePosition = function(dt)
     {
       e.angle = getAngle(e.pos, pl.pos);
-      e.pos[0] += (-e.speed * Math.cos(e.angle) * dt * timeFactor);
-      e.pos[1] += (e.speed * Math.sin(e.angle) * dt * timeFactor);
+      e.pos[0] += (-e.speed * Math.cos(e.angle) * dt * timeFactor * _scaleFactor);
+      e.pos[1] += (e.speed * Math.sin(e.angle) * dt * timeFactor *_scaleFactor);
     }
 
     //draws the enemy on the screen
