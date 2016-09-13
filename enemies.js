@@ -16,6 +16,7 @@ function enemies()
     for(var i = 0; i < maxNumber; ++i)
     {
       var typeIndex = getRandomInt(0,2);
+	  
       if(typeIndex == 0)
       {
         e.enemyStack.push(new enemy());
@@ -135,6 +136,7 @@ function enemy(){
       e.updatePosition(dt);
       e.draw();
       drawCollisionMesh(e._collisionRadius, e.pos, "rgba(231, 76, 60, 0.8)");
+		//drawCollisionMesh(1,[en.enemyStack[0].pos[0],en.enemyStack[0].pos[1]],"rgba(255,0,0,1.0)");
     }
 
     //function that update the position of an enemy

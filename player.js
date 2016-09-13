@@ -76,7 +76,7 @@ function player(){
 	//Calculates the new position
 	p.updatePosition = function(dt)
 	{
-		if(!keyPressed[65] && !keyPressed[68])	//if W or S are not pressed, generate decreasing velocity.
+		if(!keyPressed[65] && !keyPressed[68])	//if A or D are not pressed, generate decreasing velocity.
 		{
 			p.vel[0] *= p.DEF_DEACC;
 			if(Math.abs(p.vel[0]) <= p.DEF_THRESH)	//If the velocity is slow enough, set ut to zero.
@@ -84,7 +84,7 @@ function player(){
 				p.vel[0] = 0;
 			}
 		}
-		if(!keyPressed[87] && !keyPressed[83])	//if A or D are not pressed, generate decreasing velocity.
+		if(!keyPressed[87] && !keyPressed[83])	//if W or S are not pressed, generate decreasing velocity.
 		{
 			p.vel[1] *= p.DEF_DEACC;
 			if(Math.abs(p.vel[1]) <= p.DEF_THRESH)

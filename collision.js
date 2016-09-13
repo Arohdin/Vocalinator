@@ -2,16 +2,18 @@ function collisionDetection()
 {
   const cd = this;
 
-  cd.numCols = 30;
-  cd.numRows = 20;
+  cd._PAD = 2;
+  cd.numCols = 25 + cd._PAD;
+  cd.numRows = 16 + cd._PAD;
   cd.cellWidth;
   cd.cellHeight;
   cd.AA;
+  cd.cellIndexArray = [];
 
   cd.generateGrid = function()
   {
-    cd.cellWidth = c.width / cd.numCols;
-    cd.cellHeight = c.height / cd.numRows;
+    cd.cellWidth = c.width / (cd.numCols - cd._PAD);
+    cd.cellHeight = c.height / (cd.numRows - cd._PAD);
 
     cd.AA = new Array(cd.numRows);    //AA[row][col];
 
@@ -25,7 +27,7 @@ function collisionDetection()
     {
       for(var q = 0; q < cd.numCols; ++q)
       {
-        cd.AA[i][q] = new genBox(q*cd.cellWidth, i*cd.cellHeight, cd.cellWidth, cd.cellHeight);
+        cd.AA[i][q] = new cell(q*cd.cellWidth, i*cd.cellHeight, cd.cellWidth, cd.cellHeight);
       }
     }
   }
@@ -51,14 +53,49 @@ function collisionDetection()
       ctx.closePath();
     }
   }
+  
+  cd.init = function()
+  {
+	  for(var i = 0; i < en.enemyStack.length; ++i)
+	  {
+		  var posX = en.enemyStack[i].pos[0];
+		  var posY = en.enemyStack[i].pos[1];
+		  var colIndex = 1 + Math.floor(posX/cd.cellWidth);
+		  var rowIndex = 1 + Math.floor(posY/cd.cellHeight);
+		  cd.AA[rowIndex][colIndex].members.push(i);
+		  //console.log(cd.AA[rowIndex][colIndex].members);
+		  //console.log([rowIndex,colIndex]);
+		  cd.cellIndexArray.push([rowIndex,colIndex]);
+	  }
+		//console.log([cd.cellIndexArray[0][0], cd.cellIndexArray[0][1]])
+  }
+  
+  cd.updateCells = function()
+  {
+	  //flushing
+	  for(var q = 0; q < cd.cellIndexArray.length; q++)
+	  {
+		  cd.AA[cd.cellIndexArray[q][0]][cd.cellIndexArray[q][1]].members.length = 0;
+	  }
+	  cd.cellIndexArray.length = 0;
+	  
+	  //Init again
+	  cd.init();
+  }
+  
+  
 
 }
 
 
-function genBox(inx, iny, indx, indy)
+function cell(inx, iny, indx, indy)
 {
-  this.x = inx;
-  this.dx = indx;
-  this.y = iny;
-  this.dy = indy;
+	const t = this;
+	
+	t.x = inx;
+	t.dx = indx;
+	t.y = iny;
+	t.dy = indy;
+	
+	t.members = [];
 }

@@ -46,6 +46,8 @@ $(document).ready(function(){
 	//Init
 	en.generateStack();
 	krock.generateGrid();
+	krock.init();
+	
 
 	//Calls the draw function
 	ctx.font= "130px Roboto";
@@ -76,7 +78,7 @@ $(window).resize(function(){
 	c.style.width = w;
 	c.style.height = h;
 
-	krock.generateGrid();
+	//krock.generateGrid();
 
 });
 
@@ -92,6 +94,7 @@ function draw()
 		krock.drawGrid();
 
 	//Renders
+	krock.updateCells();
 	en.renderStack((clock.getTime() - prevTime)/1000);	//render for enemies
 	pl.render((clock.getTime() - prevTime)/1000);	//render for player
 
