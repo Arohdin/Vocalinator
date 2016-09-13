@@ -3,8 +3,8 @@ function collisionDetection()
   const cd = this;
 
   cd._PAD = 2;
-  cd.numCols = 25 + cd._PAD;
-  cd.numRows = 16 + cd._PAD;
+  cd.numCols = 24 + cd._PAD;
+  cd.numRows = 13 + cd._PAD;
   cd.cellWidth;
   cd.cellHeight;
   cd.AA;
@@ -53,7 +53,7 @@ function collisionDetection()
       ctx.closePath();
     }
   }
-  
+
   cd.init = function()
   {
 	  for(var i = 0; i < en.enemyStack.length; ++i)
@@ -69,7 +69,7 @@ function collisionDetection()
 	  }
 		//console.log([cd.cellIndexArray[0][0], cd.cellIndexArray[0][1]])
   }
-  
+
   cd.updateCells = function()
   {
 	  //flushing
@@ -78,12 +78,12 @@ function collisionDetection()
 		  cd.AA[cd.cellIndexArray[q][0]][cd.cellIndexArray[q][1]].members.length = 0;
 	  }
 	  cd.cellIndexArray.length = 0;
-	  
+
 	  //Init again
 	  cd.init();
   }
-  
-  
+
+
 
 }
 
@@ -91,11 +91,11 @@ function collisionDetection()
 function cell(inx, iny, indx, indy)
 {
 	const t = this;
-	
+
 	t.x = inx;
 	t.dx = indx;
 	t.y = iny;
 	t.dy = indy;
-	
+
 	t.members = [];
 }
