@@ -1,13 +1,10 @@
 
 
-  navigator.getUserMedia = ( navigator.getUserMedia ||
-                       navigator.webkitGetUserMedia ||
-                       navigator.mozGetUserMedia ||
-                       navigator.msGetUserMedia);
+navigator.getUserMedia = ( navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
 
-window.AudioContext = window.AudioContext ||
-                      window.webkitAudioContext;
+google.charts.load('current', {packages: ['corechart', 'line']});
 
 var context = new AudioContext();
 var analyzer = context.createAnalyser();
@@ -84,3 +81,5 @@ function drawBasic() {
 
       chart.draw(data, options);
     }
+  chart.draw(data, options);
+}
