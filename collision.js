@@ -113,8 +113,27 @@ function collisionDetection()
                   //timeFactor = 0.0;
                   var newAngle = getAngle(en.enemyStack[tempAA.members[s]].pos, en.enemyStack[currAA.members[h]].pos);
                   var moveDist = Math.abs(dist[2] - rad1 -rad2);
-                  en.enemyStack[currAA.members[h]].pos[0] += (Math.cos(newAngle)*-moveDist);
-                  en.enemyStack[currAA.members[h]].pos[1] += (Math.sin(newAngle)*moveDist);
+                  var smallPercent;
+                  var deltaPercent;
+                  //THIS IS UGLY AS FUUCK
+                  if(en.enemyStack[currAA.members[h]]._size >=en.enemyStack[tempAA.members[s]]._size)
+                  {
+                    smallPercent = en.enemyStack[tempAA.members[s]]._size/en.enemyStack[currAA.members[h]]._size;
+                    deltaPercent = 1 - smallPercent;
+                    en.enemyStack[currAA.members[h]].pos[0] += (Math.cos(newAngle)*-moveDist * smallPercent);
+                    en.enemyStack[currAA.members[h]].pos[1] += (Math.sin(newAngle)*moveDist * smallPercent);
+                    en.enemyStack[tempAA.members[s]].pos[0] += (Math.cos(newAngle)*moveDist * deltaPercent);
+                    en.enemyStack[tempAA.members[s]].pos[1] += (Math.sin(newAngle)*-moveDist * deltaPercent);
+                  }
+                  else
+                  {
+                    smallPercent = en.enemyStack[currAA.members[h]]._size/en.enemyStack[tempAA.members[s]]._size;
+                    deltaPercent = 1 - smallPercent;
+                    en.enemyStack[currAA.members[h]].pos[0] += (Math.cos(newAngle)*-moveDist * deltaPercent);
+                    en.enemyStack[currAA.members[h]].pos[1] += (Math.sin(newAngle)*moveDist * deltaPercent);
+                    en.enemyStack[tempAA.members[s]].pos[0] += (Math.cos(newAngle)*moveDist * smallPercent);
+                    en.enemyStack[tempAA.members[s]].pos[1] += (Math.sin(newAngle)*-moveDist * smallPercent);
+                  }
                 }
               }
             }
