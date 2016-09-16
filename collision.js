@@ -134,6 +134,8 @@ function collisionDetection()
                     en.enemyStack[tempAA.members[s]].pos[0] += (Math.cos(newAngle)*moveDist * smallPercent);
                     en.enemyStack[tempAA.members[s]].pos[1] += (Math.sin(newAngle)*-moveDist * smallPercent);
                   }
+                  en.enemyStack[currAA.members[h]].angle = getAngle(en.enemyStack[currAA.members[h]].pos, pl.pos);
+                  en.enemyStack[tempAA.members[s]].angle = getAngle(en.enemyStack[tempAA.members[s]].pos, pl.pos);
                 }
               }
             }
