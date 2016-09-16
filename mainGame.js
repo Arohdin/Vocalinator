@@ -47,7 +47,8 @@ $(document).ready(function(){
 	en.generateStack();
 	krock.generateGrid();
 	krock.init();
-	
+	//krock.calculateCollision();
+
 
 	//Calls the draw function
 	ctx.font= "130px Roboto";
@@ -95,6 +96,7 @@ function draw()
 
 	//Renders
 	krock.updateCells();
+	krock.calculateCollision();
 	en.renderStack((clock.getTime() - prevTime)/1000);	//render for enemies
 	pl.render((clock.getTime() - prevTime)/1000);	//render for player
 

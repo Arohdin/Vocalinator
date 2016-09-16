@@ -16,7 +16,7 @@ function enemies()
     for(var i = 0; i < maxNumber; ++i)
     {
       var typeIndex = getRandomInt(0,2);
-	  
+
       if(typeIndex == 0)
       {
         e.enemyStack.push(new enemy());

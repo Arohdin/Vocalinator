@@ -83,6 +83,47 @@ function collisionDetection()
 	  cd.init();
   }
 
+  cd.calculateCollision = function()
+  {
+    for(var i = 0; i < cd.cellIndexArray.length; ++i)
+    {
+      for(var q = cd.cellIndexArray[i][0] - 1; q <= cd.cellIndexArray[i][0] + 1; q++)
+      {
+        for(var d = cd.cellIndexArray[i][1] - 1; d <= cd.cellIndexArray[i][1] + 1; ++d)
+        {
+          //tempRow/col is current enemy position
+          var tempRow = cd.cellIndexArray[i][0];
+          var tempCol = cd.cellIndexArray[i][1];
+          var tempAA = cd.AA[tempRow][tempCol];
+          //current cell we're checking (around tempAA)
+          var currAA = cd.AA[q][d];
+
+          if(currAA.members.length > 0)
+          {
+            for(var s  = 0; s < tempAA.members.length; ++s)
+            {
+              for(var h = 0; h < currAA.members.length; ++h)
+              {
+                var dist = getDist(en.enemyStack[tempAA.members[s]].pos, en.enemyStack[currAA.members[h]].pos);
+                var rad1 = en.enemyStack[tempAA.members[s]]._collisionRadius;
+                var rad2 = en.enemyStack[currAA.members[h]]._collisionRadius;
+                if(dist[2] > 0 && (dist[2] - rad1 - rad2) < 0)
+                {
+                  //console.log("Collision");
+                  //timeFactor = 0.0;
+                  var newAngle = getAngle(en.enemyStack[tempAA.members[s]].pos, en.enemyStack[currAA.members[h]].pos);
+                  var moveDist = Math.abs(dist[2] - rad1 -rad2);
+                  en.enemyStack[currAA.members[h]].pos[0] += (Math.cos(newAngle)*-moveDist);
+                  en.enemyStack[currAA.members[h]].pos[1] += (Math.sin(newAngle)*moveDist);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
 
 
 }
@@ -97,5 +138,6 @@ function cell(inx, iny, indx, indy)
 	t.y = iny;
 	t.dy = indy;
 
+  //holds the index in the enemyStack
 	t.members = [];
 }
