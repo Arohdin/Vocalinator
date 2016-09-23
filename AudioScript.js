@@ -18,8 +18,8 @@ var sampleRate= context.sampleRate;
 var volumeNode = context.createGain();
 volumeNode.gain.value = 0.0;
 var errorCallback = function(e) {console.log('Mic error!', e);};
-var high =400, low=200, step =((high-low)/3.0), picth, projectile;
-const LOW=0, MEDIUM=1, HIGH=2;
+var high =400, low=200, step =((high-low)/3.0), picth, projectileType;
+const LOW=0, MEDIUM=1, HIGH=2, NOTLOUD=-1;
 
 navigator.getUserMedia({audio: true}, function(stream)
 {
@@ -37,25 +37,25 @@ for(var i =0; i<analyzer.frequencyBinCount; ++i)
 
 setInterval(function() {
   pitch=getPitch();
-  if((pitch!=-1) && (high>low))
+  if((pitch!=NOTLOUD) && (high>low))
   {
     if(pitch > high-step) //High
     {
       console.log("High");
-      projectile=HIGH;
+      projectileType=HIGH;
     }
     else if((pitch > low + step) && pitch < high-step) // Medium
     {
       console.log("Medium");
-      projectile=MEDIUM;
+      projectileType=MEDIUM;
     }
     else //Low
     {
       console.log("Low");
-      projectile=LOW;
+      projectileType=LOW;
     }
   }
-  drawBasic();
+  //drawBasic();
 }, 33);
 
 //Draw graph
@@ -88,7 +88,6 @@ function getPitch()
   for(var i =0; 5*i < Math.floor(analyzer.frequencyBinCount/5); ++i)
   {
     pitchArray[i]=Math.pow(10.0, -12.0)*Math.pow(10.0, (amplitudeArray[i]+amplitudeArray[2*i]+amplitudeArray[3*i]+amplitudeArray[4*i]+amplitudeArray[5*i])/10.0);
-
     //identify frequency with highest amplitude
     if(pitchArray[i]>max)
     {
@@ -96,6 +95,8 @@ function getPitch()
       maxIndex=i;
     }
   }
+  if(max< Math.pow(10.0,25.0))
+  return NOTLOUD;
   /*
   if(max < Math.pow(10.0,6.0))
   {

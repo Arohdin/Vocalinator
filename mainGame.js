@@ -3,7 +3,7 @@ const _OPTIMAL_RES = 1920;
 var ctx, c;
 var mousePos = {x: 0, y:0};
 var keyPressed = {};
-var pl, enemies, krock;
+var pl, enemies, krock, proj;
 var clock, prevTime;
 var w, h;
 var timeFactor = 1.0;
@@ -37,11 +37,15 @@ $(document).ready(function(){
 	c.addEventListener('mousemove', function(evt) {
           mousePos = getMousePos(c, evt);
     }, false);
+		c.addEventListener('click', function(evt) {
+			proj.shoot();
+		},false);
 
 	//CREATE GAME OBJECTS
 	pl = new player();
 	en = new enemies();
 	krock = new collisionDetection();
+	proj = new projectiles();
 
 	//Init
 	en.generateStack();
@@ -99,6 +103,7 @@ function draw()
 	krock.calculateCollision();
 	en.renderStack((clock.getTime() - prevTime)/1000);	//render for enemies
 	pl.render((clock.getTime() - prevTime)/1000);	//render for player
+	proj.render((clock.getTime() - prevTime)/1000); // render projectiles
 
 	prevTime = clock.getTime();
 	requestAnimationFrame(draw);	//draw again
