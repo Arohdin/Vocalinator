@@ -59,7 +59,7 @@ function enemy(){
 	e._typeColor = ["#2c3e50", "#8e44ad", "#f39c12"];
     e._typeSize = [50, 30, 15];
 
-    //e Specifics;
+    //type specifics;
     e.health;
     e.speed;
     e._type;
