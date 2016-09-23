@@ -56,7 +56,7 @@ function collisionDetection()
 
   cd.init = function()
   {
-		//Init for enemies 
+		//Init for enemies
 		for(var i = 0; i < en.enemyStack.length; ++i)
 		{
 		  var posX = en.enemyStack[i].pos[0];
@@ -67,9 +67,21 @@ function collisionDetection()
 		  cd.cellIndexArray.push([rowIndex,colIndex]);
 		}
 		//console.log([cd.cellIndexArray[0][0], cd.cellIndexArray[0][1]])
-		
+
+    /*
+    for(var u = 0; u < proj.skott.length; ++u)
+    {
+      var pX = en.enemyStack[u].pos[0];
+      var pY = en.enemyStack[u].pos[1];
+      var cIndex = 1 + Math.floor(pX/cd.cellWidth);
+      var rIndex = 1 + Math.floor(pY/cd.cellHeight);
+      cd.AA[rIndex][cIndex].members[1].push(u);
+      cd.cellIndexArray.push([rowIndex,colIndex]);
+    }
+    */
+
 		//
-		
+
   }
 
   cd.updateCells = function()
@@ -79,9 +91,12 @@ function collisionDetection()
 	  {
 		  for(var s = 0; s < cd.AA[cd.cellIndexArray[q][0]][cd.cellIndexArray[q][1]].members.length; ++s)
 		  {
-			  cd.AA[cd.cellIndexArray[q][0]][cd.cellIndexArray[q][1]].members[s].length = 0;
-		  }
-		  
+        for(var h = 0; h < cd.AA[cd.cellIndexArray[q][0]][cd.cellIndexArray[q][1]].members[s].length; ++h)
+        {
+          cd.AA[cd.cellIndexArray[q][0]][cd.cellIndexArray[q][1]].members[s][h].length = 0;
+        }
+        cd.AA[cd.cellIndexArray[q][0]][cd.cellIndexArray[q][1]].members[s].length = 0;
+			}
 	  }
 	  cd.cellIndexArray.length = 0;
 
@@ -93,14 +108,15 @@ function collisionDetection()
   {
 	  //Check collision with screen border (also moves if outside the boundries)
 	  pl.pos = cd.checkBorderCollision(pl.pos, pl._collisionRadius)
-	  
+
     for(var i = 0; i < cd.cellIndexArray.length; ++i)
     {
       for(var q = cd.cellIndexArray[i][0] - 1; q <= cd.cellIndexArray[i][0] + 1; q++)
       {
         for(var d = cd.cellIndexArray[i][1] - 1; d <= cd.cellIndexArray[i][1] + 1; ++d)
         {
-			cd.enemyCollisionCheck(q,d,i);
+			       cd.enemyCollisionCheck(q,d,i);
+             //cd.projectileCollisionCheck(q,d,i);
         }
       }
     }
@@ -112,18 +128,18 @@ function collisionDetection()
 		{
 			var deltaDist = Math.abs(dist[2] - pl._collisionRadius - en.enemyStack[f]._collisionRadius);
 			var tempAngle = getAngle(pl.pos, en.enemyStack[f].pos);
-			
+
 			en.enemyStack[f].pos[0] += Math.cos(tempAngle) * -deltaDist;
 			en.enemyStack[f].pos[1] += Math.sin(tempAngle) * deltaDist;
-			
+
 			pl._color = "#ff0000";
-		}	
+		}
 
 		//Check collision with screen border (also moves if outside the boundries)
 		en.enemyStack[f].pos = cd.checkBorderCollision(en.enemyStack[f].pos, en.enemyStack[f]._collisionRadius);
 	}
   }
-  
+
 	cd.checkBorderCollision = function(positions, radius)
 	{
 		var returnValues = positions;
@@ -145,11 +161,32 @@ function collisionDetection()
 		{
 			returnValues[1] = c.height - radius;
 		}
-		
+
 		return returnValues;
 	}
-  
-	
+
+  cd.projectileCollisionCheck = function(rowIndex, colIndex, middleIndex)
+  {
+    var middleCell = cd.AA[cd.cellIndexArray[middleIndex][0], cd.cellIndexArray[middleIndex][1]];
+    var tempCell = cd.AA[rowIndex][colIndex];
+    /*
+    for(var g = 0; g < middleCell.members[1].length; ++g)
+    {
+      for(var j = 0; j < tempCell.members[0].length; ++j)
+      {
+        var dist = getDist(proj.skott[middleCell.members[1][g]].pos, en.enemyStack[tempCell.members[0][j]].pos);
+        var rad1 = proj.skott[middleCell.members[1][g]].radius;
+        var rad2 = en.enemyStack[tempCell.members[0][j]]._collisionRadius;
+        if(dist[2] - rad1 - rad2)
+        {
+          console.log("HIT");
+        }
+      }
+    }
+    */
+  }
+
+
 	cd.enemyCollisionCheck = function(q,d,i)
 	{
 	  //tempRow/col is current enemy position
@@ -195,7 +232,7 @@ function collisionDetection()
 			  }
 			  en.enemyStack[currAA.members[0][h]].angle = getAngle(en.enemyStack[currAA.members[0][h]].pos, pl.pos);
 			  en.enemyStack[tempAA.members[0][s]].angle = getAngle(en.enemyStack[tempAA.members[0][s]].pos, pl.pos);
-			}			
+			}
 		  }
 		}
 	  }
@@ -215,7 +252,7 @@ function cell(inx, iny, indx, indy)
 	t.dy = indy;
 
   //holds the index in the enemyStack
- 
+
 	t.members = new Array(2); //[enemies, projectiles]
 	for(var q = 0; q < t.members.length; ++q)
 	{
