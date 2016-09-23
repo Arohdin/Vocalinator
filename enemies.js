@@ -20,17 +20,17 @@ function enemies()
       if(typeIndex == 0)
       {
         e.enemyStack.push(new enemy());
-        e.enemyStack[e.enemyStack.length - 1].init("low");
+        e.enemyStack[e.enemyStack.length - 1].init(0);	//low
       }
       if(typeIndex == 1)
       {
         e.enemyStack.push(new enemy());
-        e.enemyStack[e.enemyStack.length - 1].init("med");
+        e.enemyStack[e.enemyStack.length - 1].init(1); 	//med
       }
       if(typeIndex == 2)
       {
         e.enemyStack.push(new enemy());
-        e.enemyStack[e.enemyStack.length - 1].init("high");
+        e.enemyStack[e.enemyStack.length - 1].init(2); //high
       }
     }
   }
@@ -51,22 +51,12 @@ function enemy(){
     //ref to this
     const e = this;
 
-    //Defaults
-    e._lowTypeHealth = 10;
-    e._medTypeHealth = 5;
-    e._highTypeHealth = 1;
-    e._lowTypeDmg = 5;
-    e._medTypeDmg = 2;
-    e._highTypeDmg = 1;
-    e._lowType = "low";
-    e._medType = "med";
-    e._highType = "high";
-    e._lowTypeSpeed = 100;
-    e._medTypeSpeed = 130;
-    e._highTypeSpeed = 170;
-    e._lowTypeColor = "#2c3e50";
-    e._medTypeColor = "#8e44ad";
-    e._highTypeColor = "#f39c12";
+    //Defaults [low,medhigh] - parameters
+	e._typeHealth = [10,5,1];
+	e._typeDmg = [5,2,1];
+	e._type = ["low", "medium", "high"];
+	e._typeSpeed = [100,130,170];
+	e._typeColor = ["#2c3e50", "#8e44ad", "#f39c12"];
     e._typeSize = [50, 30, 15];
 
     //e Specifics;
@@ -81,7 +71,7 @@ function enemy(){
     //Variables
     e.pos;
     e.angle;
-
+	
     //init
     e.init = function(typeOf)
     {
@@ -93,36 +83,13 @@ function enemy(){
       }while(getDist(pl.pos,[randIntX,randIntY])[2] < (c.width*0.10)); //Enemies can't spawn closer than this (percent of width)
 
       //Creates enemy of right type and sets properties accordningly
-      if(typeOf == e._lowType)
-      {
-        e._type = typeOf;
-        e.health = e._lowTypeHealth;
-        e.dmg = e._lowTypeDmg;
-        e._color = e._lowTypeColor;
-        e._size = e._typeSize[0] * _scaleFactor;
-        e.speed = e._lowTypeSpeed;
-        e._collisionRadius = generateCollisionMesh(e._size);
-      }
-      if(typeOf == e._medType)
-      {
-        e._type = typeOf;
-        e.health = e._medTypeHealth;
-        e.dmg = e._medTypeDmg;
-        e._color = e._medTypeColor;
-        e._size = e._typeSize[1] * _scaleFactor;
-        e.speed = e._medTypeSpeed;
-        e._collisionRadius = generateCollisionMesh(e._size);
-      }
-      if(typeOf == e._highType)
-      {
-        e._type = typeOf;
-        e.health = e._highTypeHealth;
-        e.dmg = e._highTypeDmg;
-        e._color = e._highTypeColor;
-        e._size = e._typeSize[2] * _scaleFactor;
-        e.speed = e._highTypeSpeed;
-        e._collisionRadius = generateCollisionMesh(e._size);
-      }
+		e._type = e._type[typeOf];
+		e.health = e._typeHealth[typeOf];
+		e.dmg = e._typeDmg[typeOf];
+		e._color = e._typeColor[typeOf];
+		e._size = e._typeSize[typeOf] * _scaleFactor;
+		e.speed = e._typeSpeed[typeOf];
+		e._collisionRadius = generateCollisionMesh(e._size);
 
       //sets common properties
       e.pos = [randIntX, randIntY];
