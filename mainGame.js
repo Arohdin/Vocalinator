@@ -37,9 +37,6 @@ $(document).ready(function(){
 	c.addEventListener('mousemove', function(evt) {
           mousePos = getMousePos(c, evt);
     }, false);
-		c.addEventListener('click', function(evt) {
-			proj.shoot();
-		},false);
 
 	//CREATE GAME OBJECTS
 	pl = new player();
@@ -65,6 +62,12 @@ $(document).ready(function(){
 		clock = new Date();
 		prevTime = clock.getTime();
 		draw();
+		proj.init();
+
+
+		setInterval(function() {
+			proj.shoot();
+		},33);
 	}, 1050);
 });
 

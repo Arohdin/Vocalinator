@@ -5,10 +5,17 @@ function projectiles() {
 
   //variables
   pj.skott= [];
+  pj.timeSinceShot;
+
+  pj.init= function()
+  {
+    pj.timeSinceShot=clock.getTime();
+  }
 
   //constants
   const projColors = ["#3498db", "#2ecc71", "#e74c3c"];
   const speed = 1100;
+  const rateOfFire = 150;
 
   //projectile object
   function projectile() {
@@ -21,7 +28,7 @@ function projectiles() {
 
     pro.init = function()
     {
-      pro.radius= 7;
+      pro.radius= 7*_scaleFactor;
       pro.color = projColors[projectileType];
       var angle =getAngle([mousePos.x, mousePos.y], pl.pos);
       var hype=pl._collisionRadius+ pro.radius;
@@ -47,9 +54,14 @@ function projectiles() {
 
   pj.shoot = function()
   {
-    var ettSkott = new projectile();
-    ettSkott.init();
-    pj.skott.unshift(ettSkott);
+    if((clock.getTime()-pj.timeSinceShot > rateOfFire*timeFactor) && pitch!=NOTLOUD)
+    {
+      var ettSkott = new projectile();
+      ettSkott.init();
+      pj.skott.push(ettSkott);
+      pj.timeSinceShot=clock.getTime();
+    }
+
   }
 
   pj.updateAll= function(deltaT)
@@ -68,9 +80,14 @@ function projectiles() {
     }
   }
 
-  pj.removeProjectile= function()
+  pj.removeProjectiles= function()
   {
-    pj.skott.length--;
+    temp = pj.skott.filter(krock.checkProjectileBorderCollision);
+    pj.skott.length=0;
+    for(i=0;i<temp.length;++i)
+    {
+      pj.skott[i]=temp[i];
+    }
   }
 
   pj.render = function(deltaT)

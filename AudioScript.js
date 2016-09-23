@@ -41,17 +41,14 @@ setInterval(function() {
   {
     if(pitch > high-step) //High
     {
-      console.log("High");
       projectileType=HIGH;
     }
     else if((pitch > low + step) && pitch < high-step) // Medium
     {
-      console.log("Medium");
       projectileType=MEDIUM;
     }
     else //Low
     {
-      console.log("Low");
       projectileType=LOW;
     }
   }
@@ -95,16 +92,9 @@ function getPitch()
       maxIndex=i;
     }
   }
-  if(max< Math.pow(10.0,25.0))
+  if(max< 0.5*Math.pow(10.0,47.0)) // 47
   return NOTLOUD;
-  /*
-  if(max < Math.pow(10.0,6.0))
-  {
-    return -1;
-  }
-  */
-  //Log frequency with highest amplitude
-  //console.log(frequencyArray[maxIndex] + " with index " + maxIndex);
+
   return frequencyArray[maxIndex];
 }
 
