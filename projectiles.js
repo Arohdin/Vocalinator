@@ -54,7 +54,7 @@ function projectiles() {
 
   pj.shoot = function()
   {
-    if((clock.getTime()-pj.timeSinceShot > rateOfFire*timeFactor) && pitch!=NOTLOUD)
+    if((clock.getTime()-pj.timeSinceShot > rateOfFire/timeFactor) && pitch!=NOTLOUD)
     {
       var ettSkott = new projectile();
       ettSkott.init();
@@ -82,12 +82,9 @@ function projectiles() {
 
   pj.removeProjectiles= function()
   {
-    temp = pj.skott.filter(krock.checkProjectileBorderCollision);
+    var temp = pj.skott.filter(krock.checkProjectileBorderCollision);
     pj.skott.length=0;
-    for(i=0;i<temp.length;++i)
-    {
-      pj.skott[i]=temp[i];
-    }
+    pj.skott = temp;
   }
 
   pj.render = function(deltaT)
