@@ -3,7 +3,7 @@ const _OPTIMAL_RES = 1920;
 var ctx, c;
 var mousePos = {x: 0, y:0};
 var keyPressed = {};
-var pl, enemies, krock, proj;
+var pl, enemies, krock, proj, battlefield;
 var clock, prevTime;
 var w, h;
 var timeFactor = 1.0;
@@ -69,7 +69,9 @@ $(document).ready(function(){
 	button2= new button();
 	startBtn.init(w/2, h/2-40, "Start");
 	button2.init(w/2, h/2+40, "Button 2");
-
+	battlefield = new walls();
+	
+	
 	//krock.calculateCollision();
 
 	startBtn.draw();
@@ -106,10 +108,12 @@ function draw()
 	ctx.clearRect (0 , 0 , c.width, c.height);	//Clears the canvas from old data.
 
 	//DEBUGG
+
 	krock.drawGrid();
 
 	//projectile Collision
 	proj.removeProjectiles();
+
 
 	//Renders
 	krock.updateCells();
@@ -118,6 +122,8 @@ function draw()
 	pl.render((clock.getTime() - prevTime)/1000);	//render for player
 	proj.render((clock.getTime() - prevTime)/1000); // render projectiles
 
+	battlefield.drawImages();
+	
 	prevTime = clock.getTime();
 
 	requestAnimationFrame(draw);	//draw again
