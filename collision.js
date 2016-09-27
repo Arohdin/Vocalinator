@@ -76,7 +76,7 @@ function collisionDetection()
       var cIndex = 1 + Math.floor(pX/cd.cellWidth);
       var rIndex = 1 + Math.floor(pY/cd.cellHeight);
       cd.AA[rIndex][cIndex].members[1].push(u);
-      cd.cellIndexArray.push([rowIndex,colIndex]);
+      cd.cellIndexArray.push([rIndex,cIndex]);
     }
 
 
@@ -192,6 +192,7 @@ function collisionDetection()
       }
     }
   }
+
 
 
 	cd.enemyCollisionCheck = function(q,d,i)
