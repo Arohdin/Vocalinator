@@ -70,12 +70,10 @@ $(document).ready(function(){
 	startBtn.init(w/2, h/2-40, "Start");
 	button2.init(w/2, h/2+40, "Button 2");
 	battlefield = new walls();
-	
-	
-	//krock.calculateCollision();
 
-	startBtn.draw();
-	button2.draw();
+
+	//krock.calculateCollision();
+	drawMenu();
 
 
 });
@@ -96,6 +94,11 @@ $(window).resize(function(){
 	c.style.height = h;
 
 	//krock.generateGrid();
+	if(!start)
+	{
+		startBtn.init(w/2, h/2-40, "Start");
+		button2.init(w/2, h/2+40, "Button 2");
+	}
 
 });
 
@@ -116,14 +119,14 @@ function draw()
 
 
 	//Renders
+	battlefield.drawImages();
 	krock.updateCells();
 	krock.calculateCollision();
 	en.renderStack((clock.getTime() - prevTime)/1000);	//render for enemies
 	pl.render((clock.getTime() - prevTime)/1000);	//render for player
 	proj.render((clock.getTime() - prevTime)/1000); // render projectiles
 
-	battlefield.drawImages();
-	
+
 	prevTime = clock.getTime();
 
 	requestAnimationFrame(draw);	//draw again
@@ -151,4 +154,14 @@ function masterInit()
 	setInterval(function() {
 		proj.shoot();
 	},33);
+}
+
+function drawMenu()
+{
+	startBtn.draw();
+	button2.draw();
+	if(!start)
+	{
+		requestAnimationFrame(drawMenu);
+	}
 }
