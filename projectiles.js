@@ -6,7 +6,7 @@ function projectiles() {
   //variables
   pj.skott= [];
   pj.timeSinceShot;
-  pj.filteredShots;
+  pj.filteredShots=[];
 
   pj.init= function()
   {

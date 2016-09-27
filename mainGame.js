@@ -110,7 +110,6 @@ function draw()
 
 	prevTime = clock.getTime();
 
-	proj.removeProjectiles();
 	requestAnimationFrame(draw);	//draw again
 }
 

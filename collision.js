@@ -86,6 +86,9 @@ function collisionDetection()
 
   cd.updateCells = function()
   {
+    //projectile Collision
+    proj.filterProjectiles();
+    proj.removeProjectiles();
 	  //flushing
 	  for(var q = 0; q < cd.cellIndexArray.length; q++)
 	  {
@@ -139,9 +142,6 @@ function collisionDetection()
 		en.enemyStack[f].pos = cd.checkBorderCollision(en.enemyStack[f].pos, en.enemyStack[f]._collisionRadius);
 	}
 
-  //projectile Collision
-  proj.filterProjectiles();
-
   }
 
 	cd.checkBorderCollision = function(positions, radius)
@@ -179,12 +179,15 @@ function collisionDetection()
     {
       for(var j = 0; j < tempCell.members[0].length; ++j)
       {
-        var dist = getDist(proj.skott[middleCell.members[1][g]].pos, en.enemyStack[tempCell.members[0][j]].pos);
-        var rad1 = proj.skott[middleCell.members[1][g]].radius;
-        var rad2 = en.enemyStack[tempCell.members[0][j]]._collisionRadius;
-        if(dist[2] - rad1 - rad2 < 0)
+        if(middleCell.members[1][g] < proj.skott.length)
         {
-          console.log("hit");
+          var dist = getDist(proj.skott[middleCell.members[1][g]].pos, en.enemyStack[tempCell.members[0][j]].pos);
+          var rad1 = proj.skott[middleCell.members[1][g]].radius;
+          var rad2 = en.enemyStack[tempCell.members[0][j]]._collisionRadius;
+          if(dist[2] - rad1 - rad2 < 0)
+          {
+            console.log("hit");
+          }
         }
       }
     }
