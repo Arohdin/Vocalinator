@@ -68,17 +68,17 @@ function collisionDetection()
 		}
 		//console.log([cd.cellIndexArray[0][0], cd.cellIndexArray[0][1]])
 
-    /*
+
     for(var u = 0; u < proj.skott.length; ++u)
     {
-      var pX = en.enemyStack[u].pos[0];
-      var pY = en.enemyStack[u].pos[1];
+      var pX = proj.skott[u].pos[0];
+      var pY = proj.skott[u].pos[1];
       var cIndex = 1 + Math.floor(pX/cd.cellWidth);
       var rIndex = 1 + Math.floor(pY/cd.cellHeight);
       cd.AA[rIndex][cIndex].members[1].push(u);
-      cd.cellIndexArray.push([rowIndex,colIndex]);
+      cd.cellIndexArray.push([rIndex,cIndex]);
     }
-    */
+
 
 		//
 
@@ -116,7 +116,7 @@ function collisionDetection()
         for(var d = cd.cellIndexArray[i][1] - 1; d <= cd.cellIndexArray[i][1] + 1; ++d)
         {
 			       cd.enemyCollisionCheck(q,d,i);
-             //cd.projectileCollisionCheck(q,d,i);
+             cd.projectileCollisionCheck(q,d,i);
         }
       }
     }
@@ -138,9 +138,6 @@ function collisionDetection()
 		//Check collision with screen border (also moves if outside the boundries)
 		en.enemyStack[f].pos = cd.checkBorderCollision(en.enemyStack[f].pos, en.enemyStack[f]._collisionRadius);
 	}
-
-  //projectile Collision
-  proj.removeProjectiles();
 
   }
 
@@ -171,24 +168,28 @@ function collisionDetection()
 
   cd.projectileCollisionCheck = function(rowIndex, colIndex, middleIndex)
   {
-    var middleCell = cd.AA[cd.cellIndexArray[middleIndex][0], cd.cellIndexArray[middleIndex][1]];
+    var tr = cd.cellIndexArray[middleIndex][0];
+    var tc = cd.cellIndexArray[middleIndex][1];
+    var middleCell = cd.AA[tr][tc];
     var tempCell = cd.AA[rowIndex][colIndex];
-    /*
     for(var g = 0; g < middleCell.members[1].length; ++g)
     {
       for(var j = 0; j < tempCell.members[0].length; ++j)
       {
-        var dist = getDist(proj.skott[middleCell.members[1][g]].pos, en.enemyStack[tempCell.members[0][j]].pos);
-        var rad1 = proj.skott[middleCell.members[1][g]].radius;
-        var rad2 = en.enemyStack[tempCell.members[0][j]]._collisionRadius;
-        if(dist[2] - rad1 - rad2)
+        if(middleCell.members[1][g] < proj.skott.length)
         {
-          console.log("HIT");
+          var dist = getDist(proj.skott[middleCell.members[1][g]].pos, en.enemyStack[tempCell.members[0][j]].pos);
+          var rad1 = proj.skott[middleCell.members[1][g]].radius;
+          var rad2 = en.enemyStack[tempCell.members[0][j]]._collisionRadius;
+          if(dist[2] - rad1 - rad2 < 0)
+          {
+            console.log("hit");
+          }
         }
       }
     }
-    */
   }
+
 
 
 	cd.enemyCollisionCheck = function(q,d,i)

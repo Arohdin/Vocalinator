@@ -42,7 +42,7 @@ function walls()
 	w.drawImages = function()
 	{
 		loadImages(w.sources, function(images) {
-		ctx.drawImage(w.sources[0], c.width * 0.1, c.height*0.05, c.width - c.width * 0.2, c.height - c.height*0.1);
+		ctx.drawImage(w.images.battlefield, c.width * 0.1, c.height*0.05, c.width - c.width * 0.2, c.height - c.height*0.1);
 		});
 	}
 	
