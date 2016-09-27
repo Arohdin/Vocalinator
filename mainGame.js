@@ -8,6 +8,10 @@ var clock, prevTime;
 var w, h;
 var timeFactor = 1.0;
 var scaleFactor;
+var btnWidth= 320, btnHeight=80;
+var startBtn, button2;
+var start=false;
+
 
 //Waits for all the files to get ready
 $(document).ready(function(){
@@ -38,39 +42,42 @@ $(document).ready(function(){
           mousePos = getMousePos(c, evt);
     }, false);
 
+		c.addEventListener('click', function(evt) {
+						mousePos = getMousePos(c, evt);
+						if(!start)
+						{
+							start =startBtn.checkPressed(mousePos.x, mousePos.y);
+							if(start)
+							{
+								//Create and start clock
+								clock = new Date();
+								prevTime = clock.getTime();
+
+								document.body.style.cursor ="none";
+								masterInit();
+								requestAnimationFrame(draw);
+							}
+						}
+			}, false);
+
 	//CREATE GAME OBJECTS
 	pl = new player();
 	en = new enemies();
 	krock = new collisionDetection();
 	proj = new projectiles();
+	startBtn=new button();
+	button2= new button();
+	startBtn.init(w/2, h/2-40, "Start");
+	button2.init(w/2, h/2+40, "Button 2");
 	battlefield = new walls();
 	
 	
-	//Init
-	en.generateStack();
-	krock.generateGrid();
-	krock.init();
 	//krock.calculateCollision();
 
-
-	//Calls the draw function
-	ctx.font= "130px Roboto";
-	ctx.textAlign= "center";
-	ctx.fillStyle = "rgba(26, 188, 156,1.0)";
-	ctx.fillText("GO!",c.width/2,c.height/2);
-	setTimeout(function()
-	{
-		//Create and start clock
-		clock = new Date();
-		prevTime = clock.getTime();
-		draw();
-		proj.init();
+	startBtn.draw();
+	button2.draw();
 
 
-		setInterval(function() {
-			proj.shoot();
-		},33);
-	}, 1050);
 });
 
 //Things that happens on resize of window
@@ -129,4 +136,19 @@ function getMousePos(c, evt) {
           x: evt.clientX - rect.left,
           y: evt.clientY - rect.top
         };
+}
+
+
+function masterInit()
+{
+	//Init
+	en.generateStack();
+	krock.generateGrid();
+	krock.init();
+	proj.init();
+
+
+	setInterval(function() {
+		proj.shoot();
+	},33);
 }
