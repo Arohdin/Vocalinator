@@ -109,6 +109,8 @@ function draw()
 	proj.render((clock.getTime() - prevTime)/1000); // render projectiles
 
 	prevTime = clock.getTime();
+
+	proj.removeProjectiles();
 	requestAnimationFrame(draw);	//draw again
 }
 

@@ -140,7 +140,7 @@ function collisionDetection()
 	}
 
   //projectile Collision
-  proj.removeProjectiles();
+  proj.filterProjectiles();
 
   }
 
