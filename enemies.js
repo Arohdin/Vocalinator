@@ -5,7 +5,7 @@ function enemies()
   const e = this;
 
   //const
-  const maxNumber = 32;
+  const maxNumber = 6;
 
   //variables
   e.enemyStack = [];
@@ -71,7 +71,7 @@ function enemy(){
     //Variables
     e.pos;
     e.angle;
-	
+
     //init
     e.init = function(typeOf)
     {

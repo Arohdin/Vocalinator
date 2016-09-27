@@ -6,7 +6,7 @@ function projectiles() {
   //variables
   pj.skott= [];
   pj.timeSinceShot;
-  pj.filteredShots;
+  pj.filteredShots=[];
 
   pj.init= function()
   {
@@ -55,7 +55,7 @@ function projectiles() {
 
   pj.shoot = function()
   {
-    if((clock.getTime()-pj.timeSinceShot > rateOfFire*timeFactor) && pitch!=NOTLOUD)
+    if((clock.getTime()-pj.timeSinceShot > rateOfFire/timeFactor) && pitch!=NOTLOUD)
     {
       var ettSkott = new projectile();
       ettSkott.init();
