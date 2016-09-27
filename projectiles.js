@@ -6,6 +6,7 @@ function projectiles() {
   //variables
   pj.skott= [];
   pj.timeSinceShot;
+  pj.filteredShots;
 
   pj.init= function()
   {
@@ -80,11 +81,19 @@ function projectiles() {
     }
   }
 
-  pj.removeProjectiles= function()
+  pj.filterProjectiles= function()
   {
-    var temp = pj.skott.filter(krock.checkProjectileBorderCollision);
+    pj.filteredShots = pj.skott.filter(krock.checkProjectileBorderCollision);
+  }
+
+  pj.removeProjectiles = function()
+  {
     pj.skott.length=0;
-    pj.skott = temp;
+    for(i=0;i<pj.filteredShots.length;++i)
+    {
+      pj.skott[i]=pj.filteredShots[i];
+    }
+    pj.filteredShots.length=0;
   }
 
   pj.render = function(deltaT)
