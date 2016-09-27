@@ -86,9 +86,6 @@ function collisionDetection()
 
   cd.updateCells = function()
   {
-    //projectile Collision
-    proj.filterProjectiles();
-    proj.removeProjectiles();
 	  //flushing
 	  for(var q = 0; q < cd.cellIndexArray.length; q++)
 	  {

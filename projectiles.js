@@ -81,13 +81,9 @@ function projectiles() {
     }
   }
 
-  pj.filterProjectiles= function()
-  {
-    pj.filteredShots = pj.skott.filter(krock.checkProjectileBorderCollision);
-  }
-
   pj.removeProjectiles = function()
   {
+    pj.filteredShots = pj.skott.filter(krock.checkProjectileBorderCollision);
     pj.skott.length=0;
     for(i=0;i<pj.filteredShots.length;++i)
     {

@@ -99,7 +99,10 @@ function draw()
 	ctx.clearRect (0 , 0 , c.width, c.height);	//Clears the canvas from old data.
 
 	//DEBUGG
-		krock.drawGrid();
+	krock.drawGrid();
+
+	//projectile Collision
+	proj.removeProjectiles();
 
 	//Renders
 	krock.updateCells();
