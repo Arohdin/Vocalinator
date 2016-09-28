@@ -5,7 +5,7 @@ function enemies()
   const e = this;
 
   //const
-  const maxNumber = 6;
+  const maxNumber = 32;
 
   //variables
   e.enemyStack = [];
@@ -15,7 +15,7 @@ function enemies()
   {
     for(var i = 0; i < maxNumber; ++i)
     {
-      var typeIndex = getRandomInt(0,2);
+      var typeIndex = getRandomInt(0,0);
 
       if(typeIndex == 0)
       {
@@ -38,7 +38,7 @@ function enemies()
   //renders the stack of enemies (calls enemy.render());
   e.renderStack = function(dt)
   {
-    for(var i = 0; i < maxNumber; ++i)
+    for(var i = 0; i < e.enemyStack.length; ++i)
     {
       e.enemyStack[i].render(dt);
     }
@@ -52,9 +52,9 @@ function enemy(){
     const e = this;
 
     //Defaults [low,medhigh] - parameters
-	e._typeHealth = [10,5,1];
+	e._typeHealth = [5,3,1];
 	e._typeDmg = [5,2,1];
-	e._type = ["low", "medium", "high"];
+	e._type = [0, 1, 2];
 	e._typeSpeed = [100,130,170];
 	e._typeColor = ["#2c3e50", "#8e44ad", "#f39c12"];
     e._typeSize = [50, 30, 15];

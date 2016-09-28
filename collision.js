@@ -63,11 +63,13 @@ function collisionDetection()
 		  var posY = en.enemyStack[i].pos[1];
 		  var colIndex = 1 + Math.floor(posX/cd.cellWidth);
 		  var rowIndex = 1 + Math.floor(posY/cd.cellHeight);
-		  cd.AA[rowIndex][colIndex].members[0].push(i);
-		  cd.cellIndexArray.push([rowIndex,colIndex]);
+      if(cd.AA[rowIndex][colIndex].members[0].length < 1 && cd.AA[rowIndex][colIndex].members[1].length < 1)
+      {
+        cd.cellIndexArray.push([rowIndex,colIndex]);
+      }
+      cd.AA[rowIndex][colIndex].members[0].push(i);
 		}
 		//console.log([cd.cellIndexArray[0][0], cd.cellIndexArray[0][1]])
-
 
     for(var u = 0; u < proj.skott.length; ++u)
     {
@@ -75,13 +77,12 @@ function collisionDetection()
       var pY = proj.skott[u].pos[1];
       var cIndex = 1 + Math.floor(pX/cd.cellWidth);
       var rIndex = 1 + Math.floor(pY/cd.cellHeight);
+      if(cd.AA[rIndex][cIndex].members[0].length < 1 && cd.AA[rIndex][cIndex].members[1].length < 1)
+      {
+        cd.cellIndexArray.push([rIndex,cIndex]);
+      }
       cd.AA[rIndex][cIndex].members[1].push(u);
-      cd.cellIndexArray.push([rIndex,cIndex]);
     }
-
-
-		//
-
   }
 
   cd.updateCells = function()
@@ -108,7 +109,6 @@ function collisionDetection()
   {
 	  //Check collision with screen border (also moves if outside the boundries)
 	  pl.pos = cd.checkBorderCollision(pl.pos, pl._collisionRadius)
-
     for(var i = 0; i < cd.cellIndexArray.length; ++i)
     {
       for(var q = cd.cellIndexArray[i][0] - 1; q <= cd.cellIndexArray[i][0] + 1; q++)
@@ -121,23 +121,23 @@ function collisionDetection()
       }
     }
 
-	for(var f = 0; f < en.enemyStack.length; ++f)
-	{
-		var dist = getDist(pl.pos,en.enemyStack[f].pos);
-		if((dist[2] - pl._collisionRadius - en.enemyStack[f]._collisionRadius) < 0)
-		{
-			var deltaDist = Math.abs(dist[2] - pl._collisionRadius - en.enemyStack[f]._collisionRadius);
-			var tempAngle = getAngle(pl.pos, en.enemyStack[f].pos);
+  	for(var f = 0; f < en.enemyStack.length; ++f)
+  	{
+  		var dist = getDist(pl.pos,en.enemyStack[f].pos);
+  		if((dist[2] - pl._collisionRadius - en.enemyStack[f]._collisionRadius) < 0)
+  		{
+  			var deltaDist = Math.abs(dist[2] - pl._collisionRadius - en.enemyStack[f]._collisionRadius);
+  			var tempAngle = getAngle(pl.pos, en.enemyStack[f].pos);
 
-			en.enemyStack[f].pos[0] += Math.cos(tempAngle) * -deltaDist;
-			en.enemyStack[f].pos[1] += Math.sin(tempAngle) * deltaDist;
+  			en.enemyStack[f].pos[0] += Math.cos(tempAngle) * -deltaDist;
+  			en.enemyStack[f].pos[1] += Math.sin(tempAngle) * deltaDist;
 
-			pl._color = "#ff0000";
-		}
+  			pl._color = "#ff0000";
+  		}
 
-		//Check collision with screen border (also moves if outside the boundries)
-		en.enemyStack[f].pos = cd.checkBorderCollision(en.enemyStack[f].pos, en.enemyStack[f]._collisionRadius);
-	}
+  		//Check collision with screen border (also moves if outside the boundries)
+  		en.enemyStack[f].pos = cd.checkBorderCollision(en.enemyStack[f].pos, en.enemyStack[f]._collisionRadius);
+  	}
 
   }
 
@@ -170,21 +170,201 @@ function collisionDetection()
   {
     var tr = cd.cellIndexArray[middleIndex][0];
     var tc = cd.cellIndexArray[middleIndex][1];
-    var middleCell = cd.AA[tr][tc];
-    var tempCell = cd.AA[rowIndex][colIndex];
-    for(var g = 0; g < middleCell.members[1].length; ++g)
+    for(var g = 0; g < cd.AA[tr][tc].members[1].length; ++g)
     {
-      for(var j = 0; j < tempCell.members[0].length; ++j)
+      for(var j = 0; j < cd.AA[rowIndex][colIndex].members[0].length; ++j)
       {
-        if(middleCell.members[1][g] < proj.skott.length)
+        if(cd.AA[tr][tc].members[1][g] < proj.skott.length)
         {
-          var dist = getDist(proj.skott[middleCell.members[1][g]].pos, en.enemyStack[tempCell.members[0][j]].pos);
-          var rad1 = proj.skott[middleCell.members[1][g]].radius;
-          var rad2 = en.enemyStack[tempCell.members[0][j]]._collisionRadius;
+          if(!proj.skott[cd.AA[tr][tc].members[1][g]])
+          {
+            console.log("PROJ");
+            console.log(cd.AA[tr][tc]);
+          }
+          if(!en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].pos)
+          {
+            console.log("ENEMY");
+          }
+          var dist = getDist(proj.skott[cd.AA[tr][tc].members[1][g]].pos, en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].pos);
+          var rad1 = proj.skott[cd.AA[tr][tc].members[1][g]].radius;
+          var rad2 = en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]]._collisionRadius;
           if(dist[2] - rad1 - rad2 < 0)
           {
-            console.log("hit");
+            //Removes health from enemy if types matches
+            if(en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]]._type ==  proj.skott[cd.AA[tr][tc].members[1][g]]._type)
+            {
+              --en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].health;
+            }
+
+            //Deletes enemy if it's dead.
+            if(en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].health < 1)
+            {
+
+              //FIXA ATT MAN TA BORT SAKER FROM cellIndexArray
+
+              /*
+              //Removes form cellIndexArray
+              if(cd.cellIndexArray.length > 1)
+              {
+                for(var k = 0; k < cd.cellIndexArray.length; ++k)
+                {
+                  if(cd.AA[rowIndex][colIndex].members[0].length < 1 && cd.AA[rowIndex][colIndex].members[1].length < 1)
+                  {
+                    var parts = [cd.cellIndexArray.slice(0,k)];
+                    parts.push((k < (cd.cellIndexArray.length - 1)) ? cd.cellIndexArray.slice(k+1,cd.cellIndexArray.length) : []);
+                    cd.cellIndexArray.length = 0;
+                    cd.cellIndexArray = parts[0].concat[parts[1]];
+                    break;
+                  }
+                }
+              }
+              else
+              {
+                cd.cellIndexArray.length = 0;
+              }
+              */
+
+              //Removes enemy from en.enemyStack[]
+              if(en.enemyStack.length > 1)
+              {
+                var newArr = [];
+                //Save the enemies that are NOT killed
+                if(cd.AA[rowIndex][colIndex].members[0][j] > 0)
+                {
+                  var parts = [en.enemyStack.slice(0, cd.AA[rowIndex][colIndex].members[0][j])];
+                  parts.push((cd.AA[rowIndex][colIndex].members[0][j] < (en.enemyStack.length - 1)) ? en.enemyStack.slice(cd.AA[rowIndex][colIndex].members[0][j] + 1, en.enemyStack.length) : []);
+                  newArr = parts[0].concat(parts[1]);
+                }
+                else
+                {
+                  newArr = en.enemyStack.slice(1, en.enemyStack.length);
+                }
+
+                //empties enemyStack
+                en.enemyStack.length = 0;
+                //Update the stack with the enemies that are still alive.
+                en.enemyStack = newArr;
+              }
+              else
+              {
+                en.enemyStack.length = 0;
+              }
+
+              cd.adjustEnemyIndex(cd.AA[rowIndex][colIndex].members[0][j]);
+
+              //Removes enemy from Cell
+              if(cd.AA[rowIndex][colIndex].members[0].length > 1)
+              {
+                var newArr = [];
+                //save the enemies that are NOT killed
+                if(j > 0)
+                {
+                  var parts = [cd.AA[rowIndex][colIndex].members[0].slice(0,j)];
+                  parts.push((j < (cd.AA[rowIndex][colIndex].members[0].length - 1)) ? cd.AA[rowIndex][colIndex].members[0].slice(j + 1, cd.AA[rowIndex][colIndex].members[0].length) : []);
+                  newArr = parts[0].concat(parts[1]);
+                }
+                else
+                {
+                  newArr = cd.AA[rowIndex][colIndex].members[0].slice(1, cd.AA[rowIndex][colIndex].members[0].length);
+                }
+
+                //empties enemies in the cell
+                cd.AA[rowIndex][colIndex].members[0].length = 0;
+                //update enemies in cell
+                cd.AA[rowIndex][colIndex].members[0] = newArr;
+              }
+              else
+              {
+                //If there's only one enemy, the cell empties
+                cd.AA[rowIndex][colIndex].members[0].length = 0;
+              }
+            }
+
+            //Removes from game projectiles when they hit an enemy
+              if(proj.skott.length > 1)
+              {
+                var newArr = [];
+                //console.log(cd.AA[tr][tc]);
+                if(cd.AA[tr][tc].members[1][g] > 0)
+                {
+                  //Saves the projectiles that DID NOT collide
+                  var parts = [proj.skott.slice(0, cd.AA[tr][tc].members[1][g])];
+                  parts.push((cd.AA[tr][tc].members[1][g] < (proj.skott.length -1)) ? proj.skott.splice(cd.AA[tr][tc].members[1][g]+1, proj.skott.length) : []);
+                  newArr = parts[0].concat(parts[1]);
+                }
+                else
+                {
+                  newArr = proj.skott.slice(1,proj.skott.length);
+                }
+                //Empties the skott array
+                proj.skott.length = 0;
+                //Update skott with the remaining projectiles
+                proj.skott = newArr;
+              }
+              else
+              {
+                proj.skott.length = 0;
+              }
+
+              cd.adjustProjectileIndex(cd.AA[tr][tc].members[1][g]);
+
+              //Removes projectile form CELL when it hits an enemy.
+              if(cd.AA[tr][tc].members[1].length > 1)
+              {
+                var newArr = [];
+                if(g > 0)
+                {
+                  //Saves the projectiles that DID NOT Collide.
+                  var parts = [cd.AA[rowIndex][colIndex].members[1].slice(0,g)];
+                  parts.push((g < (cd.AA[rowIndex][colIndex].members[1].length - 1)) ? cd.AA[rowIndex][colIndex].members[1].slice(g+1, cd.AA[rowIndex][colIndex].members[1].length) : []);
+                  newArr = parts[0].concat(parts[1]);
+                }
+                else
+                {
+                  newArr = cd.AA[rowIndex][colIndex].members[1].slice(1,cd.AA[rowIndex][colIndex].members[1].length);
+                }
+                //Empties the cell from projectiles
+                cd.AA[rowIndex][colIndex].members[1].length = 0;
+                //Updates the cell with the remaining projectiles
+                cd.AA[rowIndex][colIndex].members[1] = newArr;
+              }
+              else
+              {
+                //console.log(cd.AA[rowIndex][colIndex].m(embers[1].length);
+                //console.log(cd.AA[rowIndex][colIndex]);
+                cd.AA[rowIndex][colIndex].members[1].length = 0;
+              }
+              //Fixes displacement of elemnts in the array
+              --g;
+              break;
           }
+        }
+      }
+    }
+  }
+
+  cd.adjustEnemyIndex = function(index)
+  {
+    for(var i = 0; i < cd.cellIndexArray.length; ++i)
+    {
+      for(var h = 0; h < cd.AA[cd.cellIndexArray[i][0]][cd.cellIndexArray[i][1]].members[0].length; ++h)
+      {
+        if(cd.AA[cd.cellIndexArray[i][0]][cd.cellIndexArray[i][1]].members[0][h] > index)
+        {
+          --cd.AA[cd.cellIndexArray[i][0]][cd.cellIndexArray[i][1]].members[0][h];
+        }
+      }
+    }
+  }
+  cd.adjustProjectileIndex = function(index)
+  {
+    for(var i = 0; i < cd.cellIndexArray.length; ++i)
+    {
+      for(var h = 0; h < cd.AA[cd.cellIndexArray[i][0]][cd.cellIndexArray[i][1]].members[1].length; ++h)
+      {
+        if(cd.AA[cd.cellIndexArray[i][0]][cd.cellIndexArray[i][1]].members[1][h] > index)
+        {
+          --cd.AA[cd.cellIndexArray[i][0]][cd.cellIndexArray[i][1]].members[1][h];
         }
       }
     }
@@ -197,47 +377,54 @@ function collisionDetection()
 	  //tempRow/col is current enemy position
 	  var tempRow = cd.cellIndexArray[i][0];
 	  var tempCol = cd.cellIndexArray[i][1];
-	  var tempAA = cd.AA[tempRow][tempCol];
-	  //current cell we're checking (around tempAA)
-	  var currAA = cd.AA[q][d];
-
-	  if(currAA.members[0].length > 0)
+    
+	  if(cd.AA[q][d].members[0].length > 0)
 	  {
-		for(var s  = 0; s < tempAA.members[0].length; ++s)
+		for(var s  = 0; s < cd.AA[tempRow][tempCol].members[0].length; ++s)
 		{
-		  for(var h = 0; h < currAA.members[0].length; ++h)
+		  for(var h = 0; h < cd.AA[q][d].members[0].length; ++h)
 		  {
-			var dist = getDist(en.enemyStack[tempAA.members[0][s]].pos, en.enemyStack[currAA.members[0][h]].pos);
-			var rad1 = en.enemyStack[tempAA.members[0][s]]._collisionRadius;
-			var rad2 = en.enemyStack[currAA.members[0][h]]._collisionRadius;
-			if(dist[2] > 0 && (dist[2] - rad1 - rad2) < 0)
-			{
-			  var newAngle = getAngle(en.enemyStack[tempAA.members[0][s]].pos, en.enemyStack[currAA.members[0][h]].pos);
-			  var moveDist = Math.abs(dist[2] - rad1 -rad2);
-			  var smallPercent;
-			  var deltaPercent;
-			  //THIS IS UGLY AS FUUCK
-			  if(en.enemyStack[currAA.members[0][h]]._size >=en.enemyStack[tempAA.members[0][s]]._size)
-			  {
-				smallPercent = en.enemyStack[tempAA.members[0][s]]._size/en.enemyStack[currAA.members[0][h]]._size;
-				deltaPercent = 1 - smallPercent;
-				en.enemyStack[currAA.members[0][h]].pos[0] += (Math.cos(newAngle)*-moveDist * smallPercent);
-				en.enemyStack[currAA.members[0][h]].pos[1] += (Math.sin(newAngle)*moveDist * smallPercent);
-				en.enemyStack[tempAA.members[0][s]].pos[0] += (Math.cos(newAngle)*moveDist * deltaPercent);
-				en.enemyStack[tempAA.members[0][s]].pos[1] += (Math.sin(newAngle)*-moveDist * deltaPercent);
-			  }
-			  else
-			  {
-				smallPercent = en.enemyStack[currAA.members[0][h]]._size/en.enemyStack[tempAA.members[0][s]]._size;
-				deltaPercent = 1 - smallPercent;
-				en.enemyStack[currAA.members[0][h]].pos[0] += (Math.cos(newAngle)*-moveDist * deltaPercent);
-				en.enemyStack[currAA.members[0][h]].pos[1] += (Math.sin(newAngle)*moveDist * deltaPercent);
-				en.enemyStack[tempAA.members[0][s]].pos[0] += (Math.cos(newAngle)*moveDist * smallPercent);
-				en.enemyStack[tempAA.members[0][s]].pos[1] += (Math.sin(newAngle)*-moveDist * smallPercent);
-			  }
-			  en.enemyStack[currAA.members[0][h]].angle = getAngle(en.enemyStack[currAA.members[0][h]].pos, pl.pos);
-			  en.enemyStack[tempAA.members[0][s]].angle = getAngle(en.enemyStack[tempAA.members[0][s]].pos, pl.pos);
-			}
+
+        if(!en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]])
+        {
+
+          //("enemyStack Length: " + en.enemyStack.length);
+          console.log(cd.AA[tempRow][tempCol].members[0][s]);
+          console.log(cd.AA[tempRow][tempCol].members[0]);
+          //console.log(en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]]);
+          //Eneymstack lengt and what id in cell is not same (too short en.stack)
+        }
+        var dist = getDist(en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos, en.enemyStack[cd.AA[q][d].members[0][h]].pos);
+        var rad1 = en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]]._collisionRadius;
+        var rad2 = en.enemyStack[cd.AA[q][d].members[0][h]]._collisionRadius;
+  			if(dist[2] > 0 && (dist[2] - rad1 - rad2) < 0)
+  			{
+  			  var newAngle = getAngle(en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos, en.enemyStack[cd.AA[q][d].members[0][h]].pos);
+  			  var moveDist = Math.abs(dist[2] - rad1 -rad2);
+  			  var smallPercent;
+  			  var deltaPercent;
+  			  //THIS IS UGLY AS FUUCK
+  			  if(en.enemyStack[cd.AA[q][d].members[0][h]]._size >=en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]]._size)
+  			  {
+  				smallPercent = en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]]._size/en.enemyStack[cd.AA[q][d].members[0][h]]._size;
+  				deltaPercent = 1 - smallPercent;
+  				en.enemyStack[cd.AA[q][d].members[0][h]].pos[0] += (Math.cos(newAngle)*-moveDist * smallPercent);
+  				en.enemyStack[cd.AA[q][d].members[0][h]].pos[1] += (Math.sin(newAngle)*moveDist * smallPercent);
+  				en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[0] += (Math.cos(newAngle)*moveDist * deltaPercent);
+  				en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[1] += (Math.sin(newAngle)*-moveDist * deltaPercent);
+  			  }
+  			  else
+  			  {
+  				smallPercent = en.enemyStack[cd.AA[q][d].members[0][h]]._size/en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]]._size;
+  				deltaPercent = 1 - smallPercent;
+  				en.enemyStack[cd.AA[q][d].members[0][h]].pos[0] += (Math.cos(newAngle)*-moveDist * deltaPercent);
+  				en.enemyStack[cd.AA[q][d].members[0][h]].pos[1] += (Math.sin(newAngle)*moveDist * deltaPercent);
+  				en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[0] += (Math.cos(newAngle)*moveDist * smallPercent);
+  				en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[1] += (Math.sin(newAngle)*-moveDist * smallPercent);
+  			  }
+  			  en.enemyStack[cd.AA[q][d].members[0][h]].angle = getAngle(en.enemyStack[cd.AA[q][d].members[0][h]].pos, pl.pos);
+  			  en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].angle = getAngle(en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos, pl.pos);
+  			}
 		  }
 		}
 	  }
@@ -266,7 +453,6 @@ function collisionDetection()
 
     return true;
   }
-
 }
 
 

@@ -6,7 +6,7 @@ function projectiles() {
   //variables
   pj.skott= [];
   pj.timeSinceShot;
-  pj.filteredShots=[];
+  pj.filteredShots = [];
 
   pj.init= function()
   {
@@ -26,10 +26,12 @@ function projectiles() {
     pro.radius;
     pro.color;
     pro.direction = [];
+    pro._type;
 
     pro.init = function()
     {
       pro.radius= 7*_scaleFactor;
+      pro._type = projectileType;
       pro.color = projColors[projectileType];
       var angle =getAngle([mousePos.x, mousePos.y], pl.pos);
       var hype=pl._collisionRadius+ pro.radius;
