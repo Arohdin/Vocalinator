@@ -2,6 +2,8 @@ function collisionDetection()
 {
   const cd = this;
 
+  cd.iterations = 20;
+
   cd._PAD = 2;
   cd.numCols = 24 + cd._PAD;
   cd.numRows = 13 + cd._PAD;
@@ -104,22 +106,27 @@ function collisionDetection()
 	  cd.init();
   }
 
-  cd.calculateCollision = function()
+  cd.calculateCollision = function(dt)
   {
 	  //Check collision with screen border (also moves if outside the boundries)
 	  pl.pos = cd.checkBorderCollision(pl.pos, pl._collisionRadius)
-
-    for(var i = 0; i < cd.cellIndexArray.length; ++i)
+    for(var b = 0; b < cd.iterations; ++b)
     {
-      for(var q = cd.cellIndexArray[i][0] - 1; q <= cd.cellIndexArray[i][0] + 1; q++)
+
+      for(var i = 0; i < cd.cellIndexArray.length; ++i)
       {
-        for(var d = cd.cellIndexArray[i][1] - 1; d <= cd.cellIndexArray[i][1] + 1; ++d)
+        for(var q = cd.cellIndexArray[i][0] - 1; q <= cd.cellIndexArray[i][0] + 1; q++)
         {
-			       cd.enemyCollisionCheck(q,d,i);
-             cd.projectileCollisionCheck(q,d,i);
+          for(var d = cd.cellIndexArray[i][1] - 1; d <= cd.cellIndexArray[i][1] + 1; ++d)
+          {
+               cd.enemyCollisionCheck(q,d,i);
+               cd.projectileCollisionCheck(q,d,i);
+          }
         }
       }
+      cd.updateCells();
     }
+
 
   	for(var f = 0; f < en.enemyStack.length; ++f)
   	{
@@ -377,19 +384,19 @@ function collisionDetection()
   			  {
   				smallPercent = en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]]._size/en.enemyStack[cd.AA[q][d].members[0][h]]._size;
   				deltaPercent = 1 - smallPercent;
-  				en.enemyStack[cd.AA[q][d].members[0][h]].pos[0] += (Math.cos(newAngle)*-moveDist * smallPercent);
-  				en.enemyStack[cd.AA[q][d].members[0][h]].pos[1] += (Math.sin(newAngle)*moveDist * smallPercent);
-  				en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[0] += (Math.cos(newAngle)*moveDist * deltaPercent);
-  				en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[1] += (Math.sin(newAngle)*-moveDist * deltaPercent);
+  				en.enemyStack[cd.AA[q][d].members[0][h]].pos[0] += (Math.cos(newAngle)*-moveDist * smallPercent * (1/cd.iterations));
+  				en.enemyStack[cd.AA[q][d].members[0][h]].pos[1] += (Math.sin(newAngle)*moveDist * smallPercent * (1/cd.iterations));
+  				en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[0] += (Math.cos(newAngle)*moveDist * deltaPercent * (1/cd.iterations));
+  				en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[1] += (Math.sin(newAngle)*-moveDist * deltaPercent * (1/cd.iterations));
   			  }
   			  else
   			  {
   				smallPercent = en.enemyStack[cd.AA[q][d].members[0][h]]._size/en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]]._size;
   				deltaPercent = 1 - smallPercent;
-  				en.enemyStack[cd.AA[q][d].members[0][h]].pos[0] += (Math.cos(newAngle)*-moveDist * deltaPercent);
-  				en.enemyStack[cd.AA[q][d].members[0][h]].pos[1] += (Math.sin(newAngle)*moveDist * deltaPercent);
-  				en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[0] += (Math.cos(newAngle)*moveDist * smallPercent);
-  				en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[1] += (Math.sin(newAngle)*-moveDist * smallPercent);
+  				en.enemyStack[cd.AA[q][d].members[0][h]].pos[0] += (Math.cos(newAngle)*-moveDist * deltaPercent * (1/cd.iterations));
+  				en.enemyStack[cd.AA[q][d].members[0][h]].pos[1] += (Math.sin(newAngle)*moveDist * deltaPercent * (1/cd.iterations));
+  				en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[0] += (Math.cos(newAngle)*moveDist * smallPercent * (1/cd.iterations));
+  				en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[1] += (Math.sin(newAngle)*-moveDist * smallPercent * (1/cd.iterations));
   			  }
   			  en.enemyStack[cd.AA[q][d].members[0][h]].angle = getAngle(en.enemyStack[cd.AA[q][d].members[0][h]].pos, pl.pos);
   			  en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].angle = getAngle(en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos, pl.pos);
