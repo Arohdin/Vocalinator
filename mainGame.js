@@ -8,8 +8,8 @@ var clock, prevTime;
 var w, h;
 var timeFactor = 1.0;
 var scaleFactor;
-var btnWidth= 320, btnHeight=80;
-var startBtn, button2;
+var btnWidth= 320, btnHeight=80, btnMargin=80;
+var mainMenu, calMenu;
 var start=false;
 var deathRow;
 
@@ -45,19 +45,45 @@ $(document).ready(function(){
 
 		c.addEventListener('click', function(evt) {
 						mousePos = getMousePos(c, evt);
-						if(!start)
+						if(mainMenu.active)
 						{
-							start =startBtn.checkPressed(mousePos.x, mousePos.y);
-							if(start)
-							{
-								//Create and start clock
-								clock = new Date();
-								prevTime = clock.getTime();
+							var pressed=mainMenu.checkPressed(mousePos.x, mousePos.y);
 
-								document.body.style.cursor ="none";
-								masterInit();
-								requestAnimationFrame(draw);
-							}
+								if(pressed==START)
+								{
+
+									mainMenu.active=false;
+									//Create and start clock
+									clock = new Date();
+									prevTime = clock.getTime();
+
+									document.body.style.cursor ="none";
+									masterInit();
+									requestAnimationFrame(draw);
+								}
+								else if(pressed==CALIBRATE)
+								{
+									mainMenu.active=false;
+									calMenu.active=true;
+								}
+						}
+
+						else if(calMenu.active)
+						{
+							var pressed=calMenu.checkPressed(mousePos.x, mousePos.y);
+								if(pressed==SETHIGH)
+								{
+									setHigh();
+								}
+								else if (pressed==SETLOW)
+								{
+									setLow();
+								}
+								else if(pressed==BACK)
+								{
+									calMenu.active=false;
+									mainMenu.active=true;
+								}
 						}
 			}, false);
 
@@ -66,10 +92,17 @@ $(document).ready(function(){
 	en = new enemies();
 	krock = new collisionDetection();
 	proj = new projectiles();
-	startBtn=new button();
-	button2= new button();
-	startBtn.init(w/2, h/2-40, "Start");
-	button2.init(w/2, h/2+40, "Button 2");
+	mainMenu=new menu();
+	calMenu=new menu();
+
+	mainMenu.active=true;
+	mainMenu.addButton("Start");
+	mainMenu.addButton("Calibrate");
+
+	calMenu.addButton("Set high");
+	calMenu.addButton("Set low");
+	calMenu.addButton("Back");
+
 	battlefield = new walls();
 	deathRow = new deathRow();
 
@@ -96,10 +129,9 @@ $(window).resize(function(){
 	c.style.height = h;
 
 	//krock.generateGrid();
-	if(!start)
+	if(mainMenu.active)
 	{
-		startBtn.init(w/2, h/2-40, "Start");
-		button2.init(w/2, h/2+40, "Button 2");
+		mainMenu.resize();
 	}
 
 	krock.updateCells();
@@ -163,9 +195,16 @@ function masterInit()
 
 function drawMenu()
 {
-	startBtn.draw();
-	button2.draw();
-	if(!start)
+	ctx.clearRect (0 , 0 , c.width, c.height);	//Clears the canvas from old data.
+	if(mainMenu.active)
+	{
+		mainMenu.draw();
+	}
+	else if(calMenu.active)
+	{
+		calMenu.draw();
+	}
+	if(mainMenu.active || calMenu.active);
 	{
 		requestAnimationFrame(drawMenu);
 	}

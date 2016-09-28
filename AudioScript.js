@@ -101,11 +101,21 @@ function getPitch()
 function setHigh()
 {
   high=pitch;
+  calMenu.message="High set to " + Math.floor(high);
+  setTimeout(function ()
+  {
+    calMenu.message="";
+  }, 2000);
 }
 
 function setLow()
 {
   low=pitch;
+  calMenu.message="low set to " + Math.floor(low);
+  setTimeout(function ()
+  {
+    calMenu.message="";
+  }, 2000);
 }
 
 function setStep()
