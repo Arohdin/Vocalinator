@@ -5,7 +5,7 @@ function player(){
 
 	//default values;
 	p.DEF_HEALTH = 10;
-	p.DEF_SPEED = 370.0;
+	p.DEF_SPEED = 250.0;
 	p.DEF_DEACC = 1 - (0.1 * timeFactor);
 	p.DEF_THRESH = 25;
 
@@ -14,7 +14,7 @@ function player(){
 	p.angle = 0.0;
 	p.speed = p.DEF_SPEED;
 	p.vel = [0,0];
-	p._size = 40 * _scaleFactor;
+	p._size = 35 * _scaleFactor;
 	p.pos = [w/2, h/2];
 	p._color = "#3498db";
 	p._collisionRadius = generateCollisionMesh(p._size);

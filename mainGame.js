@@ -1,5 +1,5 @@
 //VARIABLES
-const _OPTIMAL_RES = 1920;
+const _OPTIMAL_RES = 1920 * 0.8;	//0.8 due to 0.1 border on both sides
 var ctx, c;
 var mousePos = {x: 0, y:0};
 var keyPressed = {};
@@ -11,6 +11,7 @@ var scaleFactor;
 var btnWidth= 320, btnHeight=80;
 var startBtn, button2;
 var start=false;
+var deathRow;
 
 
 //Waits for all the files to get ready
@@ -70,6 +71,7 @@ $(document).ready(function(){
 	startBtn.init(w/2, h/2-40, "Start");
 	button2.init(w/2, h/2+40, "Button 2");
 	battlefield = new walls();
+	deathRow = new deathRow();
 
 
 	//krock.calculateCollision();
@@ -100,6 +102,8 @@ $(window).resize(function(){
 		button2.init(w/2, h/2+40, "Button 2");
 	}
 
+	krock.updateCells();
+
 });
 
 
@@ -125,6 +129,7 @@ function draw()
 	en.renderStack((clock.getTime() - prevTime)/1000);	//render for enemies
 	pl.render((clock.getTime() - prevTime)/1000);	//render for player
 	proj.render((clock.getTime() - prevTime)/1000); // render projectiles
+	deathRow.draw((clock.getTime() - prevTime)/1000);
 
 
 	prevTime = clock.getTime();

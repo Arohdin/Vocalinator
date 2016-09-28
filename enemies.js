@@ -55,9 +55,9 @@ function enemy(){
 	e._typeHealth = [5,3,1];
 	e._typeDmg = [5,2,1];
 	e._type = [0, 1, 2];
-	e._typeSpeed = [100,130,170];
+	e._typeSpeed = [50,80,120];
 	e._typeColor = ["#2c3e50", "#8e44ad", "#f39c12"];
-    e._typeSize = [50, 30, 15];
+    e._typeSize = [35, 20, 10];
 
     //type specifics;
     e.health;

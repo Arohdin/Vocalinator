@@ -63,13 +63,12 @@ function collisionDetection()
 		  var posY = en.enemyStack[i].pos[1];
 		  var colIndex = 1 + Math.floor(posX/cd.cellWidth);
 		  var rowIndex = 1 + Math.floor(posY/cd.cellHeight);
-      if(cd.AA[rowIndex][colIndex].members[0].length < 1 && cd.AA[rowIndex][colIndex].members[1].length < 1)
-      {
+      //if(cd.AA[rowIndex][colIndex].members[0].length < 1 && cd.AA[rowIndex][colIndex].members[1].length < 1)
+      //{
         cd.cellIndexArray.push([rowIndex,colIndex]);
-      }
+      //}
       cd.AA[rowIndex][colIndex].members[0].push(i);
 		}
-		//console.log([cd.cellIndexArray[0][0], cd.cellIndexArray[0][1]])
 
     for(var u = 0; u < proj.skott.length; ++u)
     {
@@ -77,10 +76,10 @@ function collisionDetection()
       var pY = proj.skott[u].pos[1];
       var cIndex = 1 + Math.floor(pX/cd.cellWidth);
       var rIndex = 1 + Math.floor(pY/cd.cellHeight);
-      if(cd.AA[rIndex][cIndex].members[0].length < 1 && cd.AA[rIndex][cIndex].members[1].length < 1)
-      {
+      //if(cd.AA[rIndex][cIndex].members[0].length < 1 && cd.AA[rIndex][cIndex].members[1].length < 1)
+      //{
         cd.cellIndexArray.push([rIndex,cIndex]);
-      }
+      //}
       cd.AA[rIndex][cIndex].members[1].push(u);
     }
   }
@@ -109,6 +108,7 @@ function collisionDetection()
   {
 	  //Check collision with screen border (also moves if outside the boundries)
 	  pl.pos = cd.checkBorderCollision(pl.pos, pl._collisionRadius)
+
     for(var i = 0; i < cd.cellIndexArray.length; ++i)
     {
       for(var q = cd.cellIndexArray[i][0] - 1; q <= cd.cellIndexArray[i][0] + 1; q++)
@@ -145,22 +145,22 @@ function collisionDetection()
 	{
 		var returnValues = positions;
 		//x
-		if((positions[0] - radius) < 0)
+		if((positions[0] - radius) < c.width*0.1)
 		{
-			returnValues[0] = radius;
+			returnValues[0] = c.width*0.1 + radius;
 		}
-		else if(positions[0] + radius > c.width)
+		else if(positions[0] + radius > c.width*0.9)
 		{
-			returnValues[0] = c.width - radius;
+			returnValues[0] = c.width*0.9 - radius;
 		}
 		//y
-		if(positions[1] - radius < 0)
+		if(positions[1] - radius < c.height*0.05)
 		{
-			returnValues[1] = radius;
+			returnValues[1] = c.height*0.05 + radius;
 		}
-		else if(positions[1] + radius > c.height)
+		else if(positions[1] + radius > c.height*0.95)
 		{
-			returnValues[1] = c.height - radius;
+			returnValues[1] = c.height*0.95 - radius;
 		}
 
 		return returnValues;
@@ -200,29 +200,8 @@ function collisionDetection()
             if(en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].health < 1)
             {
 
-              //FIXA ATT MAN TA BORT SAKER FROM cellIndexArray
-
-              /*
-              //Removes form cellIndexArray
-              if(cd.cellIndexArray.length > 1)
-              {
-                for(var k = 0; k < cd.cellIndexArray.length; ++k)
-                {
-                  if(cd.AA[rowIndex][colIndex].members[0].length < 1 && cd.AA[rowIndex][colIndex].members[1].length < 1)
-                  {
-                    var parts = [cd.cellIndexArray.slice(0,k)];
-                    parts.push((k < (cd.cellIndexArray.length - 1)) ? cd.cellIndexArray.slice(k+1,cd.cellIndexArray.length) : []);
-                    cd.cellIndexArray.length = 0;
-                    cd.cellIndexArray = parts[0].concat[parts[1]];
-                    break;
-                  }
-                }
-              }
-              else
-              {
-                cd.cellIndexArray.length = 0;
-              }
-              */
+              deathRow.row.push(new deadEnemy());
+              deathRow.row[deathRow.row.length - 1].init(en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].pos, en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]]._size, en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].angle, en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]]._color);
 
               //Removes enemy from en.enemyStack[]
               if(en.enemyStack.length > 1)
@@ -377,23 +356,13 @@ function collisionDetection()
 	  //tempRow/col is current enemy position
 	  var tempRow = cd.cellIndexArray[i][0];
 	  var tempCol = cd.cellIndexArray[i][1];
-    
+
 	  if(cd.AA[q][d].members[0].length > 0)
 	  {
 		for(var s  = 0; s < cd.AA[tempRow][tempCol].members[0].length; ++s)
 		{
 		  for(var h = 0; h < cd.AA[q][d].members[0].length; ++h)
 		  {
-
-        if(!en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]])
-        {
-
-          //("enemyStack Length: " + en.enemyStack.length);
-          console.log(cd.AA[tempRow][tempCol].members[0][s]);
-          console.log(cd.AA[tempRow][tempCol].members[0]);
-          //console.log(en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]]);
-          //Eneymstack lengt and what id in cell is not same (too short en.stack)
-        }
         var dist = getDist(en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos, en.enemyStack[cd.AA[q][d].members[0][h]].pos);
         var rad1 = en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]]._collisionRadius;
         var rad2 = en.enemyStack[cd.AA[q][d].members[0][h]]._collisionRadius;
@@ -467,7 +436,6 @@ function cell(inx, iny, indx, indy)
 	t.dy = indy;
 
   //holds the index in the enemyStack
-
 	t.members = new Array(2); //[enemies, projectiles]
 	for(var q = 0; q < t.members.length; ++q)
 	{
