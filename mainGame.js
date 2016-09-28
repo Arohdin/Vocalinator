@@ -112,7 +112,7 @@ function draw()
 
 	//DEBUGG
 
-	krock.drawGrid();
+	//krock.drawGrid();
 
 	//projectile Collision
 	proj.removeProjectiles();

@@ -14,7 +14,7 @@ function projectiles() {
   }
 
   //constants
-  const projColors = ["#3498db", "#2ecc71", "#e74c3c"];
+  const projColors = ["#2c3e50", "#8e44ad", "#f39c12"];
   const speed = 1100;
   const rateOfFire = 150;
 
@@ -57,7 +57,7 @@ function projectiles() {
 
   pj.shoot = function()
   {
-    if((clock.getTime()-pj.timeSinceShot > rateOfFire/timeFactor) && pitch!=NOTLOUD)
+    if((clock.getTime()-pj.timeSinceShot > rateOfFire*timeFactor) && pitch!=NOTLOUD)
     {
       var ettSkott = new projectile();
       ettSkott.init();

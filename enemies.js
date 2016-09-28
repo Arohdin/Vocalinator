@@ -5,7 +5,7 @@ function enemies()
   const e = this;
 
   //const
-  const maxNumber = 32;
+  const maxNumber = 16;
 
   //variables
   e.enemyStack = [];
@@ -15,7 +15,7 @@ function enemies()
   {
     for(var i = 0; i < maxNumber; ++i)
     {
-      var typeIndex = getRandomInt(0,0);
+      var typeIndex = getRandomInt(0,2);
 
       if(typeIndex == 0)
       {
@@ -102,7 +102,7 @@ function enemy(){
       //drawLineBetween(e.pos, pl.pos, "rgba(231, 76, 60, 0.3)", 0.10);
       e.updatePosition(dt);
       e.draw();
-      drawCollisionMesh(e._collisionRadius, e.pos, "rgba(231, 76, 60, 0.8)");
+      //drawCollisionMesh(e._collisionRadius, e.pos, "rgba(231, 76, 60, 0.8)");
 		//drawCollisionMesh(1,[en.enemyStack[0].pos[0],en.enemyStack[0].pos[1]],"rgba(255,0,0,1.0)");
     }
 
