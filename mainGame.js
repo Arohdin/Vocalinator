@@ -12,6 +12,7 @@ var btnWidth= 320, btnHeight=80, btnMargin=80;
 var mainMenu, calMenu;
 var start=false;
 var deathRow;
+var gp;
 
 
 //Waits for all the files to get ready
@@ -155,6 +156,7 @@ function draw()
 
 
 	//Renders
+	updateGamepad();
 	battlefield.drawImages();
 	krock.updateCells();
 	krock.calculateCollision();

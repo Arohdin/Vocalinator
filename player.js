@@ -1,3 +1,5 @@
+var gamepadThreshold = 0.001;
+var gamepadconnected=false;
 function player(){
 
 	//Define this
@@ -51,8 +53,13 @@ function player(){
 		if(keyPressed[87]){yDirection += -1;}
 		if (keyPressed[83]){yDirection += 1;}
 
+		if(gamepadconnected && (Math.abs(gp.axes[0])>gamepadThreshold || Math.abs(gp.axes[1])>gamepadThreshold))
+		{
+			p.vel[0]=p.speed*gp.axes[0];
+			p.vel[1]=p.speed*gp.axes[1];
+		}
 		//If we're moving diagonaly we calculate the hyp to make sure the speed limit is not violated.
-		if((xDirection != 0) && (yDirection != 0))
+		else if((xDirection != 0) && (yDirection != 0))
 		{
 			var newSpeed = Math.sqrt(Math.pow(p.speed, 2) / 2);
 			p.vel = [newSpeed * xDirection, newSpeed * yDirection];
@@ -135,3 +142,23 @@ function player(){
 		keyPressed[e.keyCode] = false;
 	} ,false);
 };
+
+window.addEventListener("gamepadconnected", connecthandler);
+window.addEventListener("gamepaddisconnected", disconnecthandler);
+
+function connecthandler(e) {
+	console.log("connected");
+	gamepadconnected=true;
+  gp=e.gamepad;
+}
+
+function disconnecthandler(e) {
+	console.log("discconnected");
+	gamepadconnected=false;
+  delete gp;
+}
+
+function updateGamepad()
+{
+	gp = navigator.getGamepads ? navigator.getGamepads()[0] : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads()[0] : []);
+}

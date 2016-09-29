@@ -2,7 +2,7 @@ function collisionDetection()
 {
   const cd = this;
 
-  cd.iterations = 20;
+  cd.iterations = 4;
 
   cd._PAD = 2;
   cd.numCols = 24 + cd._PAD;
