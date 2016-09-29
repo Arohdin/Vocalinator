@@ -14,6 +14,10 @@ var start=false;
 var deathRow;
 var gp;
 
+$(window).focus(function() {
+	clock = new Date();
+	prevTime = clock.getTime();
+});
 
 //Waits for all the files to get ready
 $(document).ready(function(){
