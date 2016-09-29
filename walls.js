@@ -6,11 +6,12 @@ function walls()
 	//ref to this
 	const w = this;
 
+	//MAKE THIS A FUNCTION OF THIS OBJECT
 	function loadImages(sources, callback)
 	{
 
 
-    w.images = {};
+    w.images = [];
     w.loadedImages = 0;
     w.numImages = 0;
 
@@ -22,7 +23,7 @@ function walls()
         }
         for(var src in w.sources) {
           w.images[src] = new Image();
-          w.images[src].onload = function() {
+          w.images[src].onload = function() { //ONLY RUNS FIRST TIME IMAGE IS LOADED
             if(++w.loadedImages >= w.numImages) {
               callback(w.images);
             }
@@ -32,6 +33,7 @@ function walls()
 
 	}
 
+	//MOVE THIS
 	w.sources = {
         battlefield: 'Images/highResBattlefield.png'
      };
@@ -41,9 +43,11 @@ function walls()
 	//This is the function that is called from the draw-loop in main
 	w.drawImages = function()
 	{
-		loadImages(w.sources, function(images) {
+		//THIS SHOULD ONLY RUN ONCE, CREATE A INIT FUNCTION
+		loadImages(w.sources, function(images) { //REMOVE CALLBACK AND USE ONLY RENDER
 		ctx.drawImage(w.images.battlefield, c.width * 0.1, c.height*0.05, c.width - c.width * 0.2, c.height - c.height*0.1);
 		});
+		//CREATE A LOOP THAT GOES THROUGH ALL THE ELEMENTS (IMAGES) STORED
 		ctx.drawImage(w.images.battlefield, c.width * 0.1, c.height*0.05, c.width - c.width * 0.2, c.height - c.height*0.1);
 	}
 
