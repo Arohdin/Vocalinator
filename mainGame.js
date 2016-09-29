@@ -192,6 +192,7 @@ function masterInit()
 	krock.generateGrid();
 	krock.init();
 	proj.init();
+	battlefield.init();
 
 
 	setInterval(function() {

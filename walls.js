@@ -5,15 +5,25 @@ function walls()
 {
 	//ref to this
 	const w = this;
-
-	//MAKE THIS A FUNCTION OF THIS OBJECT
-	function loadImages(sources, callback)
+	
+	w.init = function()
 	{
 
-
+	w.ParallaxSPEED = 0.05;
     w.images = [];
     w.loadedImages = 0;
     w.numImages = 0;
+	
+	battlefieldStartX = c.width * 0.1;
+	battlefieldStartY = c.height*0.05;
+	battlefieldWidth  = c.width * 0.8;
+	battlefieldHeight = c.height* 0.9;
+	
+	w.sources = {
+		background: 'images/space.png',
+		battlefield: 'Images/highResBattlefield.png'
+    };
+
 
 
 
@@ -21,34 +31,45 @@ function walls()
         for(var src in w.sources) {
           w.numImages++;
         }
+		
+		
         for(var src in w.sources) {
           w.images[src] = new Image();
-          w.images[src].onload = function() { //ONLY RUNS FIRST TIME IMAGE IS LOADED
+          w.images[src].onload = function() {
             if(++w.loadedImages >= w.numImages) {
-              callback(w.images);
+              
             }
           };
           w.images[src].src = w.sources[src];
         }
 
+		
+		
+		w.images.battlefield.style.filter = "alpha(opacity=50)";
+		w.images.battlefield.style.opacity = 0.5;
 	}
 
-	//MOVE THIS
-	w.sources = {
-        battlefield: 'Images/highResBattlefield.png'
-     };
 
 
-	//THIS DOES NOT WORK?
-	//This is the function that is called from the draw-loop in main
+
+
 	w.drawImages = function()
 	{
-		//THIS SHOULD ONLY RUN ONCE, CREATE A INIT FUNCTION
-		loadImages(w.sources, function(images) { //REMOVE CALLBACK AND USE ONLY RENDER
-		ctx.drawImage(w.images.battlefield, c.width * 0.1, c.height*0.05, c.width - c.width * 0.2, c.height - c.height*0.1);
-		});
-		//CREATE A LOOP THAT GOES THROUGH ALL THE ELEMENTS (IMAGES) STORED
-		ctx.drawImage(w.images.battlefield, c.width * 0.1, c.height*0.05, c.width - c.width * 0.2, c.height - c.height*0.1);
+		//Normalize player position to battlefield. Far left -> x = 0. Far right -> x = 1.
+		parX = (pl.pos[0] - battlefieldStartX) / ( battlefieldWidth);
+		parY = (pl.pos[1] - battlefieldStartY) / ( battlefieldHeight);
+		
+
+		
+		//Draw background bigger than the screen so we can create parallax effect
+		ctx.drawImage(w.images.background, -c.width*w.ParallaxSPEED * parX, -c.height*w.ParallaxSPEED*parY, c.width+c.width*w.ParallaxSPEED, c.height+c.height*w.ParallaxSPEED);
+		
+		
+		ctx.globalAlpha = 0.7;
+		ctx.drawImage(w.images.battlefield, battlefieldStartX, battlefieldStartY, battlefieldWidth, battlefieldHeight);
+		ctx.globalAlpha = 1.0;
+		
+		
 	}
 
 
