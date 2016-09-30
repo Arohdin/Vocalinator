@@ -59,6 +59,10 @@ function projectiles() {
   {
     if((clock.getTime()-pj.timeSinceShot > rateOfFire*timeFactor) && pitch!=NOTLOUD)
     {
+      if(gamepadUsed && !(Math.abs(gp.axes[2])>gamepadThreshold || Math.abs(gp.axes[3])>gamepadThreshold))
+      {
+        return;
+      }
       var ettSkott = new projectile();
       ettSkott.init();
       pj.skott.push(ettSkott);

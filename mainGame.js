@@ -13,6 +13,10 @@ var mainMenu, calMenu;
 var start=false;
 var deathRow;
 var gp;
+var crosshairRadius = 100;
+var timeSinceMouse, idleTime=300;
+var gamepadUsed=false;
+
 
 
 //Waits for all the files to get ready
@@ -41,7 +45,8 @@ $(document).ready(function(){
 
 	//EventListeners
 	c.addEventListener('mousemove', function(evt) {
-          mousePos = getMousePos(c, evt);
+      mousePos = getMousePos(c, evt);
+			gamepadUsed=false;
     }, false);
 
 		c.addEventListener('click', function(evt) {
@@ -52,14 +57,11 @@ $(document).ready(function(){
 
 								if(pressed==START)
 								{
-
 									mainMenu.active=false;
 									//Create and start clock
-									clock = new Date();
 									prevTime = clock.getTime();
 
 									document.body.style.cursor ="none";
-									masterInit();
 									requestAnimationFrame(draw);
 								}
 								else if(pressed==CALIBRATE)
@@ -95,6 +97,7 @@ $(document).ready(function(){
 	proj = new projectiles();
 	mainMenu=new menu();
 	calMenu=new menu();
+	clock = new Date();
 
 	mainMenu.active=true;
 	mainMenu.addButton("Start");
@@ -106,6 +109,18 @@ $(document).ready(function(){
 
 	battlefield = new walls();
 	deathRow = new deathRow();
+
+	//Init
+	en.generateStack();
+	krock.generateGrid();
+	proj.init();
+	krock.init();
+
+	updateGamepad();
+	if(gp)
+	{
+		gamepadconnected=true;
+	}
 
 
 	//krock.calculateCollision();
@@ -156,10 +171,25 @@ function draw()
 
 
 	//Renders
+
 	updateGamepad();
+	if(gamepadconnected && (Math.abs(gp.axes[2])>gamepadThreshold || Math.abs(gp.axes[3])>gamepadThreshold))
+	{
+		gamepadUsed=true;
+		mousePos=getJoystickPos();
+	}
+	else if(gamepadconnected && gamepadUsed)
+	{
+		var angle=getAngle([mousePos.x, mousePos.y], pl.pos);
+		mousePos={
+			x:pl.pos[0]+pl._collisionRadius*_scaleFactor*Math.cos(angle),
+			y:pl.pos[1]+pl._collisionRadius*_scaleFactor*Math.sin(angle)
+		};
+	}
 	battlefield.drawImages();
 	krock.updateCells();
 	krock.calculateCollision();
+	proj.shoot();
 	en.renderStack((clock.getTime() - prevTime)/1000);	//render for enemies
 	pl.render((clock.getTime() - prevTime)/1000);	//render for player
 	proj.render((clock.getTime() - prevTime)/1000); // render projectiles
@@ -173,26 +203,20 @@ function draw()
 
 //gets the mouse coordinates...
 function getMousePos(c, evt) {
-        var rect = c.getBoundingClientRect();
-        return {
-          x: evt.clientX - rect.left,
-          y: evt.clientY - rect.top
-        };
+		var rect = c.getBoundingClientRect();
+		return {
+			x: evt.clientX - rect.left,
+			y: evt.clientY - rect.top
+		};
 }
 
 
-function masterInit()
+function getJoystickPos()
 {
-	//Init
-	en.generateStack();
-	krock.generateGrid();
-	krock.init();
-	proj.init();
-
-
-	setInterval(function() {
-		proj.shoot();
-	},33);
+		return{
+			x: pl.pos[0] + gp.axes[2]*crosshairRadius*_scaleFactor,
+			y: pl.pos[1] + gp.axes[3]*crosshairRadius*_scaleFactor
+		};
 }
 
 function drawMenu()

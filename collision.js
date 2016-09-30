@@ -67,6 +67,8 @@ function collisionDetection()
 		  var rowIndex = 1 + Math.floor(posY/cd.cellHeight);
       //if(cd.AA[rowIndex][colIndex].members[0].length < 1 && cd.AA[rowIndex][colIndex].members[1].length < 1)
       //{
+      var abc = (colIndex < 0 || rowIndex < 0) ? console.log(en.enemyStack[i].pos) : "abc";
+      //console.log(rowIndex + " " + colIndex);
         cd.cellIndexArray.push([rowIndex,colIndex]);
       //}
       cd.AA[rowIndex][colIndex].members[0].push(i);
@@ -364,7 +366,8 @@ function collisionDetection()
 	  var tempRow = cd.cellIndexArray[i][0];
 	  var tempCol = cd.cellIndexArray[i][1];
 
-	  if(cd.AA[q][d].members[0].length > 0)
+    //This if-statement is the savior of this script
+	  if(cd.AA[q] && cd.AA[q][d] && cd.AA[q][d].members[0].length > 0)
 	  {
 		for(var s  = 0; s < cd.AA[tempRow][tempCol].members[0].length; ++s)
 		{

@@ -149,12 +149,13 @@ window.addEventListener("gamepaddisconnected", disconnecthandler);
 function connecthandler(e) {
 	console.log("connected");
 	gamepadconnected=true;
-  gp=e.gamepad;
+  gp=navigator.getGamepads()[e.gamepad.index];;
 }
 
 function disconnecthandler(e) {
 	console.log("discconnected");
 	gamepadconnected=false;
+	gamepadUsed=false;
   delete gp;
 }
 
