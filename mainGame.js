@@ -17,6 +17,7 @@ var crosshairRadius = 100;
 var timeSinceMouse, idleTime=300;
 var gamepadUsed=false;
 var gui;
+var paused=false;
 
 
 $(window).focus(function() {
@@ -254,11 +255,13 @@ function drawMenu()
 function pause()
 {
 	timeFactor=0.0;
+	paused=true;
 }
 function resume()
 {
 	timeFactor=1.0;
-		console.log("FOCUS!");
-		clock = new Date();
-		prevTime = clock.getTime();
+	console.log("FOCUS!");
+	clock = new Date();
+	prevTime = clock.getTime();
+	pause=false;
 }

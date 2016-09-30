@@ -57,7 +57,7 @@ function projectiles() {
 
   pj.shoot = function()
   {
-    if((clock.getTime()-pj.timeSinceShot > rateOfFire*timeFactor) && pitch!=NOTLOUD)
+    if(!paused && (clock.getTime()-pj.timeSinceShot > rateOfFire*timeFactor) && pitch!=NOTLOUD)
     {
       if(gamepadUsed && !(Math.abs(gp.axes[2])>gamepadThreshold || Math.abs(gp.axes[3])>gamepadThreshold))
       {

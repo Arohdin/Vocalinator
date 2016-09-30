@@ -56,6 +56,7 @@ function GUI()
   g.draw=function()
   {
     ctx.fillStyle = "#27ae60";
+    ctx.font= "28px Roboto";
     for(var i=0; i<g.messages.length;++i)
     {
       if(g.messages[i]!="")
