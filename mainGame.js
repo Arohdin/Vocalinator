@@ -18,6 +18,10 @@ var timeSinceMouse, idleTime=300;
 var gamepadUsed=false;
 
 
+$(window).focus(function() {
+	clock = new Date();
+	prevTime = clock.getTime();
+});
 
 //Waits for all the files to get ready
 $(document).ready(function(){
@@ -122,6 +126,13 @@ $(document).ready(function(){
 		gamepadconnected=true;
 	}
 
+	//Init
+	en.generateStack();
+	krock.generateGrid();
+	krock.init();
+	proj.init();
+	battlefield.init();
+
 
 	//krock.calculateCollision();
 	drawMenu();
@@ -217,6 +228,7 @@ function getJoystickPos()
 			x: pl.pos[0] + gp.axes[2]*crosshairRadius*_scaleFactor,
 			y: pl.pos[1] + gp.axes[3]*crosshairRadius*_scaleFactor
 		};
+
 }
 
 function drawMenu()

@@ -82,7 +82,6 @@ function enemy(){
       {
         var randIntX = getRandomInt(0, c.width);
         var randIntY = getRandomInt(0, c.height);
-        if(randIntX < 0 || randIntY <0 )
       }while(getDist(pl.pos,[randIntX,randIntY])[2] < (c.width*0.10)); //Enemies can't spawn closer than this (percent of width)
 
       //Creates enemy of right type and sets properties accordningly
