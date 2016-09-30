@@ -20,6 +20,7 @@ volumeNode.gain.value = 0.0;
 var errorCallback = function(e) {console.log('Mic error!', e);};
 var high =400, low=200, step =((high-low)/3.0), picth, projectileType;
 const LOW=0, MEDIUM=1, HIGH=2, NOTLOUD=-1;
+var dBThreshold=170;
 
 navigator.getUserMedia({audio: true}, function(stream)
 {
