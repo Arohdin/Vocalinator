@@ -100,22 +100,39 @@ function getPitch()
 
 function setHigh()
 {
-  high=pitch;
-  calMenu.message="High set to " + Math.floor(high);
-  setTimeout(function ()
+  var temp=pitch;
+
+  if(temp==NOTLOUD)
   {
-    calMenu.message="";
-  }, 2000);
+    gui.setMessage("Louder plz!" + Math.floor(high), 2, TOP_RIGHT);
+    return;
+  }
+  else if(temp >low)
+  {
+    gui.setMessage("Sing higher than low" + Math.floor(high), 2, TOP_RIGHT);
+    return;
+  }
+  high=temp;
+  gui.setMessage("High set to " + Math.floor(high), 2, TOP_RIGHT);
+  setStep();
 }
 
 function setLow()
 {
-  low=pitch;
-  calMenu.message="low set to " + Math.floor(low);
-  setTimeout(function ()
+  var temp=pitch;
+  if(temp==NOTLOUD)
   {
-    calMenu.message="";
-  }, 2000);
+    gui.setMessage("Louder plz!" + Math.floor(high), 2, TOP_RIGHT);
+    return;
+  }
+  else if(temp <high)
+  {
+    gui.setMessage("Sing lower than high" + Math.floor(high), 2, TOP_RIGHT);
+    return;
+  }
+  low=temp;
+  gui.setMessage("low set to " + Math.floor(low), 2, TOP_RIGHT);
+  setStep();
 }
 
 function setStep()

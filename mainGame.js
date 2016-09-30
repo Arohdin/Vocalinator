@@ -16,6 +16,7 @@ var gp;
 var crosshairRadius = 100;
 var timeSinceMouse, idleTime=300;
 var gamepadUsed=false;
+var gui;
 
 
 $(window).focus(function() {
@@ -110,6 +111,7 @@ $(document).ready(function(){
 	mainMenu=new menu();
 	calMenu=new menu();
 	clock = new Date();
+	gui =new GUI();
 
 	mainMenu.active=true;
 	mainMenu.addButton("Start");
@@ -134,6 +136,7 @@ $(document).ready(function(){
 	krock.init();
 	proj.init();
 	battlefield.init();
+	gui.init();
 
 
 	//krock.calculateCollision();
@@ -205,6 +208,7 @@ function draw()
 	pl.render((clock.getTime() - prevTime)/1000);	//render for player
 	proj.render((clock.getTime() - prevTime)/1000); // render projectiles
 	deathRow.draw((clock.getTime() - prevTime)/1000);
+	gui.draw();
 
 
 	prevTime = clock.getTime();
@@ -242,6 +246,7 @@ function drawMenu()
 	{
 		calMenu.draw();
 	}
+	gui.draw();
 	if(mainMenu.active || calMenu.active);
 	{
 		requestAnimationFrame(drawMenu);
