@@ -34,7 +34,7 @@ function projectiles() {
       pro._type = projectileType;
       pro.color = projColors[projectileType];
       var angle =getAngle([mousePos.x, mousePos.y], pl.pos);
-      var hype=pl._collisionRadius+ pro.radius;
+      var hype=pl._collisionRadius;
 
       pro.direction = [Math.cos(angle), -Math.sin(angle)];
       pro.pos = [pl.pos[0] + pro.direction[0]*hype, pl.pos[1] + pro.direction[1]*hype];
