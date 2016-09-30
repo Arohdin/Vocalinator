@@ -3,7 +3,7 @@ const _OPTIMAL_RES = 1920 * 0.8;	//0.8 due to 0.1 border on both sides
 var ctx, c;
 var mousePos = {x: 0, y:0};
 var keyPressed = {};
-var pl, enemies, krock, proj, battlefield;
+var pl, enemies, krock, proj, battlefield, bh;
 var clock, prevTime;
 var w, h;
 var timeFactor = 1.0;
@@ -107,6 +107,7 @@ $(document).ready(function(){
 	calMenu=new menu();
 	clock = new Date();
 	gui =new GUI();
+	bh=new holes();
 
 	mainMenu.active=true;
 	mainMenu.addButton("Start");
@@ -132,6 +133,7 @@ $(document).ready(function(){
 	proj.init();
 	battlefield.init();
 	gui.init();
+	bh.addHole(50,50,400,[c.width/2,c.height/2]);
 
 
 	//krock.calculateCollision();
@@ -197,13 +199,14 @@ function draw()
 		};
 	}
 	battlefield.drawImages();
+	bh.renderHoles();
 	krock.updateCells();
 	krock.calculateCollision();
 	proj.shoot();
 	en.renderStack((clock.getTime() - prevTime)/1000);	//render for enemies
-	pl.render((clock.getTime() - prevTime)/1000);	//render for player
-	proj.render((clock.getTime() - prevTime)/1000); // render projectiles
 	deathRow.draw((clock.getTime() - prevTime)/1000);
+	proj.render((clock.getTime() - prevTime)/1000); // render projectiles
+	pl.render((clock.getTime() - prevTime)/1000);	//render for player
 	gui.draw();
 
 
