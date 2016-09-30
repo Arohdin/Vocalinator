@@ -53,7 +53,7 @@ function player(){
 		if(keyPressed[87]){yDirection += -1;}
 		if (keyPressed[83]){yDirection += 1;}
 
-		if(gamepadconnected && (Math.abs(gp.axes[0])>gamepadThreshold || Math.abs(gp.axes[1])>gamepadThreshold))
+		if(gp && (Math.abs(gp.axes[0])>gamepadThreshold || Math.abs(gp.axes[1])>gamepadThreshold))
 		{
 			p.vel[0]=p.speed*gp.axes[0];
 			p.vel[1]=p.speed*gp.axes[1];

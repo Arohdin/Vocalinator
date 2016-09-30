@@ -184,7 +184,7 @@ function draw()
 	//Renders
 
 	updateGamepad();
-	if(gamepadconnected && (Math.abs(gp.axes[2])>gamepadThreshold || Math.abs(gp.axes[3])>gamepadThreshold))
+	if(gp && (Math.abs(gp.axes[2])>gamepadThreshold || Math.abs(gp.axes[3])>gamepadThreshold))
 	{
 		gamepadUsed=true;
 		mousePos=getJoystickPos();
