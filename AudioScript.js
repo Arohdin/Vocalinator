@@ -115,7 +115,7 @@ function setHigh()
     gui.setTimedMessage("Louder plz!", TOP_RIGHT, 2);
     return;
   }
-  else if(temp >low)
+  else if(temp <low)
   {
     gui.setTimedMessage("Sing higher than low", TOP_RIGHT, 2);
     return;
@@ -133,7 +133,7 @@ function setLow()
     gui.setTimedMessage("Louder plz!", TOP_RIGHT, 2);
     return;
   }
-  else if(temp <high)
+  else if(temp >high)
   {
     gui.setTimedMessage("Sing lower than high", TOP_RIGHT, 2);
     return;
