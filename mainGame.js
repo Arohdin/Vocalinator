@@ -20,13 +20,9 @@ var gui;
 var paused=false;
 
 
-$(window).focus(function() {
-	resume();
-});
+$(window).focus(resume);
 
-$(window).blur(function() {
-	pause();
-});
+$(window).blur(pause);
 
 //Waits for all the files to get ready
 $(document).ready(function(){
