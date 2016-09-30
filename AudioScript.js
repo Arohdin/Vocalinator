@@ -121,7 +121,7 @@ function setHigh()
     return;
   }
   high=temp;
-  gui.setTimedMessage("High set to " + Math.floor(high), TOP_LEFT, 2);
+  gui.setTimedMessage("High set to " + Math.floor(high), TOP_RIGHT, 2);
   setStep();
 }
 
