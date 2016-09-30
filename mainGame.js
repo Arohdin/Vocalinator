@@ -263,5 +263,5 @@ function resume()
 	console.log("FOCUS!");
 	clock = new Date();
 	prevTime = clock.getTime();
-	pause=false;
+	paused=false;
 }
