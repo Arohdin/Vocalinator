@@ -65,12 +65,11 @@ function collisionDetection()
 		  var posY = en.enemyStack[i].pos[1];
 		  var colIndex = 1 + Math.floor(posX/cd.cellWidth);
 		  var rowIndex = 1 + Math.floor(posY/cd.cellHeight);
-      //if(cd.AA[rowIndex][colIndex].members[0].length < 1 && cd.AA[rowIndex][colIndex].members[1].length < 1)
-      //{
-      var abc = (colIndex < 0 || rowIndex < 0) ? console.log(en.enemyStack[i].pos) : "abc";
+      if(cd.AA[rowIndex][colIndex].members[0].length < 1 && cd.AA[rowIndex][colIndex].members[1].length < 1)
+      {
       //console.log(rowIndex + " " + colIndex);
         cd.cellIndexArray.push([rowIndex,colIndex]);
-      //}
+      }
       cd.AA[rowIndex][colIndex].members[0].push(i);
 		}
 
@@ -80,10 +79,10 @@ function collisionDetection()
       var pY = proj.skott[u].pos[1];
       var cIndex = 1 + Math.floor(pX/cd.cellWidth);
       var rIndex = 1 + Math.floor(pY/cd.cellHeight);
-      //if(cd.AA[rIndex][cIndex].members[0].length < 1 && cd.AA[rIndex][cIndex].members[1].length < 1)
-      //{
+      if(cd.AA[rIndex][cIndex].members[0].length < 1 && cd.AA[rIndex][cIndex].members[1].length < 1)
+      {
         cd.cellIndexArray.push([rIndex,cIndex]);
-      //}
+      }
       cd.AA[rIndex][cIndex].members[1].push(u);
     }
   }
