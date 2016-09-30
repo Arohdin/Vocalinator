@@ -1,5 +1,7 @@
 var gamepadThreshold = 0.001;
 var gamepadconnected=false;
+
+const STARTLIVES=3;
 function player(){
 
 	//Define this
@@ -20,6 +22,7 @@ function player(){
 	p.pos = [w/2, h/2];
 	p._color = "#3498db";
 	p._collisionRadius = generateCollisionMesh(p._size);
+	p.lives =STARTLIVES;
 
 	//Function that renders the player
 	p.render = function(dt)
@@ -140,6 +143,21 @@ function player(){
 
 	window.addEventListener("keyup", function(e){
 		keyPressed[e.keyCode] = false;
+
+		//pausing via button
+		if(e.keyCode==80 && !mainMenu.active && !calMenu.active)
+		{
+			if(!paused)
+			{
+				pause();
+				disableCollision=true;
+			}
+			else
+			{
+				resume();
+				disableCollision=false;
+			}
+		}
 	} ,false);
 };
 
@@ -149,7 +167,7 @@ window.addEventListener("gamepaddisconnected", disconnecthandler);
 function connecthandler(e) {
 	console.log("connected");
 	gamepadconnected=true;
-  gp=navigator.getGamepads()[e.gamepad.index];;
+  gp=navigator.getGamepads ? navigator.getGamepads()[0] : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads()[0] : []);
 }
 
 function disconnecthandler(e) {

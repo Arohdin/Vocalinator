@@ -140,7 +140,9 @@ function collisionDetection()
   			en.enemyStack[f].pos[0] += Math.cos(tempAngle) * -deltaDist;
   			en.enemyStack[f].pos[1] += Math.sin(tempAngle) * deltaDist;
 
-  			pl._color = "#ff0000";
+        //player dies
+        playerDeath=true;
+        disableCollision=true;
   		}
 
   		//Check collision with screen border (also moves if outside the boundries)
@@ -235,6 +237,12 @@ function collisionDetection()
               else
               {
                 en.enemyStack.length = 0;
+
+                //all enemies are dead and new enemies are spawned
+                hud.countdown(function()
+                {
+                  respawnEnemies();
+                });
               }
 
               cd.adjustEnemyIndex(cd.AA[rowIndex][colIndex].members[0][j]);

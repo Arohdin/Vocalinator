@@ -20,7 +20,6 @@ volumeNode.gain.value = 0.0;
 var errorCallback = function(e) {console.log('Mic error!', e);};
 var high =400, low=200, step =((high-low)/3.0), picth, projectileType;
 const LOW=0, MEDIUM=1, HIGH=2, NOTLOUD=-1;
-var dBThreshold=230;
 
 navigator.getUserMedia({audio: true}, function(stream)
 {
@@ -112,16 +111,16 @@ function setHigh()
 
   if(temp==NOTLOUD)
   {
-    gui.setTimedMessage("Louder plz!", TOP_RIGHT, 2);
+    hud.setTimedMessage("Louder plz!", TOP_RIGHT, 2);
     return;
   }
   else if(temp <low)
   {
-    gui.setTimedMessage("Sing higher than low", TOP_RIGHT, 2);
+    hud.setTimedMessage("Sing higher than low", TOP_RIGHT, 2);
     return;
   }
   high=temp;
-  gui.setTimedMessage("High set to " + Math.floor(high), TOP_RIGHT, 2);
+  hud.setTimedMessage("High set to " + Math.floor(high), TOP_RIGHT, 2);
   setStep();
 }
 
@@ -130,16 +129,16 @@ function setLow()
   var temp=pitch;
   if(temp==NOTLOUD)
   {
-    gui.setTimedMessage("Louder plz!", TOP_RIGHT, 2);
+    hud.setTimedMessage("Louder plz!", TOP_RIGHT, 2);
     return;
   }
   else if(temp >high)
   {
-    gui.setTimedMessage("Sing lower than high", TOP_RIGHT, 2);
+    hud.setTimedMessage("Sing lower than high", TOP_RIGHT, 2);
     return;
   }
   low=temp;
-  gui.setTimedMessage("low set to " + Math.floor(low), TOP_RIGHT, 2);
+  hud.setTimedMessage("low set to " + Math.floor(low), TOP_RIGHT, 2);
   setStep();
 }
 

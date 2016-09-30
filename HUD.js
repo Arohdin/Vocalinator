@@ -1,5 +1,5 @@
 const TOP_LEFT=0, TOP_RIGHT=1, MIDDLE=2, BOTTOM_LEFT=3,BOTTOM_RIGHT=4;
-function GUI()
+function HUD()
 {
   const g=this;
   /*  Messages structure
@@ -73,6 +73,23 @@ function GUI()
 
     g.messages[index]="";
 
+  }
+  g.countdown=function(callback)
+  {
+    g.setMessage("3", MIDDLE);
+    setTimeout(function()
+    {
+      g.setMessage("2", MIDDLE);
+      setTimeout(function()
+      {
+        g.setMessage("1",MIDDLE);
+        setTimeout(function()
+        {
+          g.clearMessage(MIDDLE);
+          callback();
+        },1000);
+      },1000);
+    },1000);
   }
 
 }
