@@ -18,6 +18,7 @@ var timeSinceMouse, idleTime=300;
 var gamepadUsed=false;
 var gui;
 var paused=false;
+var joystickAngle;
 
 
 $(window).focus(resume);
@@ -186,13 +187,13 @@ function draw()
 	{
 		gamepadUsed=true;
 		mousePos=getJoystickPos();
+		joystickAngle=getAngle([mousePos.x, mousePos.y], pl.pos);
 	}
 	else if(gamepadconnected && gamepadUsed)
 	{
-		var angle=getAngle([mousePos.x, mousePos.y], pl.pos);
 		mousePos={
-			x:pl.pos[0]+pl._collisionRadius*_scaleFactor*Math.cos(angle),
-			y:pl.pos[1]+pl._collisionRadius*_scaleFactor*Math.sin(angle)
+			x:pl.pos[0]+pl._collisionRadius*_scaleFactor*Math.cos(joystickAngle),
+			y:pl.pos[1]-pl._collisionRadius*_scaleFactor*Math.sin(joystickAngle)
 		};
 	}
 	battlefield.drawImages();
