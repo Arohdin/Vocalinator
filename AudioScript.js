@@ -20,6 +20,7 @@ volumeNode.gain.value = 0.0;
 var errorCallback = function(e) {console.log('Mic error!', e);};
 var high =400, low=200, step =((high-low)/3.0), picth, projectileType;
 const LOW=0, MEDIUM=1, HIGH=2, NOTLOUD=-1;
+var dBThreshold=230;
 
 navigator.getUserMedia({audio: true}, function(stream)
 {
@@ -80,6 +81,15 @@ function getPitch()
   analyzer.getByteFrequencyData(amplitudeArray);
   var max= 0.0;
   var maxIndex=0;
+  for(var i=0;i<amplitudeArray.length;++i)
+  {
+    if(amplitudeArray[i]>max)
+    max=amplitudeArray[i]
+  }
+  if(max<dBThreshold)
+  return NOTLOUD;
+
+  max=0.0;
 
   //Use algorithm to "amplify" the percieved frequency
   for(var i =0; 5*i < Math.floor(analyzer.frequencyBinCount/5); ++i)
@@ -92,8 +102,6 @@ function getPitch()
       maxIndex=i;
     }
   }
-  if(max< 0.5*Math.pow(10.0,47.0)) // 47
-  return NOTLOUD;
 
   return frequencyArray[maxIndex];
 }
