@@ -80,8 +80,8 @@ function enemy(){
       //randomize a start position
       do
       {
-        var randIntX = getRandomInt(0, c.width);
-        var randIntY = getRandomInt(0, c.height);
+        var randIntX = getRandomInt(c.width * 0.1, c.width * 0.8);
+        var randIntY = getRandomInt(c.height*0.05, c.height* 0.9);
       }while(getDist(pl.pos,[randIntX,randIntY])[2] < (c.width*0.10)); //Enemies can't spawn closer than this (percent of width)
 
       //Creates enemy of right type and sets properties accordningly
@@ -113,6 +113,10 @@ function enemy(){
       e.angle = getAngle(e.pos, pl.pos);
       e.pos[0] += (-e.speed * Math.cos(e.angle) * dt * timeFactor * _scaleFactor);
       e.pos[1] += (e.speed * Math.sin(e.angle) * dt * timeFactor *_scaleFactor);
+      if(!e.pos[0] || !e.pos[1] || e.pos[0]<0.0 || e.pos[1]<0.0)
+      {
+        console.log(e);
+      }
     }
 
     //draws the enemy on the screen

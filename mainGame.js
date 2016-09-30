@@ -19,8 +19,14 @@ var gamepadUsed=false;
 
 
 $(window).focus(function() {
-	clock = new Date();
-	prevTime = clock.getTime();
+	timeFactor=1.0;
+		console.log("FOCUS!");
+		clock = new Date();
+		prevTime = clock.getTime();
+});
+
+$(window).blur(function() {
+	timeFactor=0.0;
 });
 
 //Waits for all the files to get ready
@@ -63,7 +69,9 @@ $(document).ready(function(){
 								{
 									mainMenu.active=false;
 									//Create and start clock
+									clock = new Date();
 									prevTime = clock.getTime();
+									console.log(clock.getTime()-prevTime);
 
 									document.body.style.cursor ="none";
 									requestAnimationFrame(draw);
@@ -114,12 +122,6 @@ $(document).ready(function(){
 	battlefield = new walls();
 	deathRow = new deathRow();
 
-	//Init
-	en.generateStack();
-	krock.generateGrid();
-	proj.init();
-	krock.init();
-
 	updateGamepad();
 	if(gp)
 	{
@@ -136,8 +138,6 @@ $(document).ready(function(){
 
 	//krock.calculateCollision();
 	drawMenu();
-
-
 });
 
 //Things that happens on resize of window
