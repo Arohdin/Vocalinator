@@ -112,16 +112,16 @@ function setHigh()
 
   if(temp==NOTLOUD)
   {
-    gui.setMessage("Louder plz!" + Math.floor(high), 2, TOP_RIGHT);
+    gui.setTimedMessage("Louder plz!", TOP_RIGHT, 2);
     return;
   }
   else if(temp >low)
   {
-    gui.setMessage("Sing higher than low" + Math.floor(high), 2, TOP_RIGHT);
+    gui.setTimedMessage("Sing higher than low", TOP_RIGHT, 2);
     return;
   }
   high=temp;
-  gui.setMessage("High set to " + Math.floor(high), 2, TOP_RIGHT);
+  gui.setTimedMessage("High set to " + Math.floor(high), TOP_LEFT, 2);
   setStep();
 }
 
@@ -130,16 +130,16 @@ function setLow()
   var temp=pitch;
   if(temp==NOTLOUD)
   {
-    gui.setMessage("Louder plz!" + Math.floor(high), 2, TOP_RIGHT);
+    gui.setTimedMessage("Louder plz!", TOP_RIGHT, 2);
     return;
   }
   else if(temp <high)
   {
-    gui.setMessage("Sing lower than high" + Math.floor(high), 2, TOP_RIGHT);
+    gui.setTimedMessage("Sing lower than high", TOP_RIGHT, 2);
     return;
   }
   low=temp;
-  gui.setMessage("low set to " + Math.floor(low), 2, TOP_RIGHT);
+  gui.setTimedMessage("low set to " + Math.floor(low), TOP_RIGHT, 2);
   setStep();
 }
 

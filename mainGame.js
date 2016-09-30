@@ -20,14 +20,11 @@ var gui;
 
 
 $(window).focus(function() {
-	timeFactor=1.0;
-		console.log("FOCUS!");
-		clock = new Date();
-		prevTime = clock.getTime();
+	resume();
 });
 
 $(window).blur(function() {
-	timeFactor=0.0;
+	pause();
 });
 
 //Waits for all the files to get ready
@@ -163,6 +160,7 @@ $(window).resize(function(){
 	{
 		mainMenu.resize();
 	}
+	gui.resize();
 
 	krock.updateCells();
 
@@ -251,4 +249,16 @@ function drawMenu()
 	{
 		requestAnimationFrame(drawMenu);
 	}
+}
+
+function pause()
+{
+	timeFactor=0.0;
+}
+function resume()
+{
+	timeFactor=1.0;
+		console.log("FOCUS!");
+		clock = new Date();
+		prevTime = clock.getTime();
 }
