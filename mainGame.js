@@ -374,7 +374,7 @@ function dealWithGamepad()
 	}
 
 
-	if(isButtonPressed(gp.buttons[9]) && !wasPressed)
+	if(gp && isButtonPressed(gp.buttons[9]) && !wasPressed)
 	{
 		//pausing via button
 		if( !mainMenu.active && !calMenu.active)
@@ -392,7 +392,7 @@ function dealWithGamepad()
 			}
 		}
 	}
-	else if(!isButtonPressed(gp.buttons[9]) && wasPressed)
+	else if( gp &&!isButtonPressed(gp.buttons[9]) && wasPressed)
 	{
 		wasPressed=false;
 	}
