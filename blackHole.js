@@ -11,34 +11,7 @@ function holes()
 
   h.removeHole = function(index)
   {
-    var ind;
-    for(var i = 0; i < dR.row.length; ++i)
-    {
-      if(dR.row[i].timeLived * dR.row[i].timeBeforeGone > 1)
-      {
-        ind = i;
-      }
-    }
-
-    if(dR.row.length > 1)
-    {
-      if(ind > 0)
-      {
-        var parts = [dR.row.slice(0, ind)];
-        parts.push((ind < (dR.row.length - 1)) ? dR.row.slice(ind + 1, dR.row.length) : []);
-        newArr = parts[0].concat(parts[1]);
-      }
-      else
-      {
-        newArr = dR.row.slice(1, dR.row.length);
-      }
-      dR.row.length = 0;
-      dR.row = newArr;
-    }
-    else
-    {
-      dR.row.length = 0;
-    }
+    h.allHoles.splice(index,1);
   }
 
   h.renderHoles = function()

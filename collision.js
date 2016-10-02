@@ -94,10 +94,6 @@ function collisionDetection()
 	  {
 		  for(var s = 0; s < cd.AA[cd.cellIndexArray[q][0]][cd.cellIndexArray[q][1]].members.length; ++s)
 		  {
-        for(var h = 0; h < cd.AA[cd.cellIndexArray[q][0]][cd.cellIndexArray[q][1]].members[s].length; ++h)
-        {
-          cd.AA[cd.cellIndexArray[q][0]][cd.cellIndexArray[q][1]].members[s][h].length = 0;
-        }
         cd.AA[cd.cellIndexArray[q][0]][cd.cellIndexArray[q][1]].members[s].length = 0;
 			}
 	  }
@@ -141,8 +137,12 @@ function collisionDetection()
   			en.enemyStack[f].pos[1] += Math.sin(tempAngle) * deltaDist;
 
         //player dies
-        playerDeath=true;
-        disableCollision=true;
+        if(!godMode)
+        {
+          playerDeath=true;
+          disableCollision=true;
+        }
+
   		}
 
   		//Check collision with screen border (also moves if outside the boundries)
@@ -186,11 +186,13 @@ function collisionDetection()
       {
         if(cd.AA[tr][tc].members[1][g] < proj.skott.length)
         {
+          //DEBUGG
           if(!proj.skott[cd.AA[tr][tc].members[1][g]])
           {
             console.log("PROJ");
             console.log(cd.AA[tr][tc]);
           }
+          //DEBUGG
           if(!en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].pos)
           {
             console.log("ENEMY");
@@ -209,35 +211,15 @@ function collisionDetection()
             //Deletes enemy if it's dead.
             if(en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].health < 1)
             {
-
+              //Handles death animations
               deathRow.row.push(new deadEnemy());
               deathRow.row[deathRow.row.length - 1].init(en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].pos, en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]]._size, en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].angle, en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]]._color);
 
               //Removes enemy from en.enemyStack[]
-              if(en.enemyStack.length > 1)
-              {
-                var newArr = [];
-                //Save the enemies that are NOT killed
-                if(cd.AA[rowIndex][colIndex].members[0][j] > 0)
-                {
-                  var parts = [en.enemyStack.slice(0, cd.AA[rowIndex][colIndex].members[0][j])];
-                  parts.push((cd.AA[rowIndex][colIndex].members[0][j] < (en.enemyStack.length - 1)) ? en.enemyStack.slice(cd.AA[rowIndex][colIndex].members[0][j] + 1, en.enemyStack.length) : []);
-                  newArr = parts[0].concat(parts[1]);
-                }
-                else
-                {
-                  newArr = en.enemyStack.slice(1, en.enemyStack.length);
-                }
+              en.enemyStack.splice(cd.AA[rowIndex][colIndex].members[0][j],1);
 
-                //empties enemyStack
-                en.enemyStack.length = 0;
-                //Update the stack with the enemies that are still alive.
-                en.enemyStack = newArr;
-              }
-              else
+              if(en.enemyStack.length == 0)
               {
-                en.enemyStack.length = 0;
-
                 //all enemies are dead and new enemies are spawned
                 hud.countdown(function()
                 {
@@ -245,91 +227,22 @@ function collisionDetection()
                 });
               }
 
+              //Adjusts the index in the array in the cell
               cd.adjustEnemyIndex(cd.AA[rowIndex][colIndex].members[0][j]);
 
               //Removes enemy from Cell
-              if(cd.AA[rowIndex][colIndex].members[0].length > 1)
-              {
-                var newArr = [];
-                //save the enemies that are NOT killed
-                if(j > 0)
-                {
-                  var parts = [cd.AA[rowIndex][colIndex].members[0].slice(0,j)];
-                  parts.push((j < (cd.AA[rowIndex][colIndex].members[0].length - 1)) ? cd.AA[rowIndex][colIndex].members[0].slice(j + 1, cd.AA[rowIndex][colIndex].members[0].length) : []);
-                  newArr = parts[0].concat(parts[1]);
-                }
-                else
-                {
-                  newArr = cd.AA[rowIndex][colIndex].members[0].slice(1, cd.AA[rowIndex][colIndex].members[0].length);
-                }
-
-                //empties enemies in the cell
-                cd.AA[rowIndex][colIndex].members[0].length = 0;
-                //update enemies in cell
-                cd.AA[rowIndex][colIndex].members[0] = newArr;
-              }
-              else
-              {
-                //If there's only one enemy, the cell empties
-                cd.AA[rowIndex][colIndex].members[0].length = 0;
-              }
+              cd.AA[rowIndex][colIndex].members[0].splice(j,1);
             }
 
-            //Removes from game projectiles when they hit an enemy
-              if(proj.skott.length > 1)
-              {
-                var newArr = [];
-                //console.log(cd.AA[tr][tc]);
-                if(cd.AA[tr][tc].members[1][g] > 0)
-                {
-                  //Saves the projectiles that DID NOT collide
-                  var parts = [proj.skott.slice(0, cd.AA[tr][tc].members[1][g])];
-                  parts.push((cd.AA[tr][tc].members[1][g] < (proj.skott.length -1)) ? proj.skott.splice(cd.AA[tr][tc].members[1][g]+1, proj.skott.length) : []);
-                  newArr = parts[0].concat(parts[1]);
-                }
-                else
-                {
-                  newArr = proj.skott.slice(1,proj.skott.length);
-                }
-                //Empties the skott array
-                proj.skott.length = 0;
-                //Update skott with the remaining projectiles
-                proj.skott = newArr;
-              }
-              else
-              {
-                proj.skott.length = 0;
-              }
+              //Removes from game projectiles when they hit an enemy
+              proj.skott.splice(cd.AA[tr][tc].members[1][g],1);
 
               cd.adjustProjectileIndex(cd.AA[tr][tc].members[1][g]);
 
               //Removes projectile form CELL when it hits an enemy.
-              if(cd.AA[tr][tc].members[1].length > 1)
-              {
-                var newArr = [];
-                if(g > 0)
-                {
-                  //Saves the projectiles that DID NOT Collide.
-                  var parts = [cd.AA[rowIndex][colIndex].members[1].slice(0,g)];
-                  parts.push((g < (cd.AA[rowIndex][colIndex].members[1].length - 1)) ? cd.AA[rowIndex][colIndex].members[1].slice(g+1, cd.AA[rowIndex][colIndex].members[1].length) : []);
-                  newArr = parts[0].concat(parts[1]);
-                }
-                else
-                {
-                  newArr = cd.AA[rowIndex][colIndex].members[1].slice(1,cd.AA[rowIndex][colIndex].members[1].length);
-                }
-                //Empties the cell from projectiles
-                cd.AA[rowIndex][colIndex].members[1].length = 0;
-                //Updates the cell with the remaining projectiles
-                cd.AA[rowIndex][colIndex].members[1] = newArr;
-              }
-              else
-              {
-                //console.log(cd.AA[rowIndex][colIndex].m(embers[1].length);
-                //console.log(cd.AA[rowIndex][colIndex]);
-                cd.AA[rowIndex][colIndex].members[1].length = 0;
-              }
-              //Fixes displacement of elemnts in the array
+              cd.AA[tr][tc].members[1].splice(g,1);
+
+              //compensates the iterator in the for-loop for displacement of elemnts in the array
               --g;
               break;
           }
@@ -351,6 +264,7 @@ function collisionDetection()
       }
     }
   }
+
   cd.adjustProjectileIndex = function(index)
   {
     for(var i = 0; i < cd.cellIndexArray.length; ++i)
@@ -376,44 +290,49 @@ function collisionDetection()
     //This if-statement is the savior of this script
 	  if(cd.AA[q] && cd.AA[q][d] && cd.AA[q][d].members[0].length > 0)
 	  {
-		for(var s  = 0; s < cd.AA[tempRow][tempCol].members[0].length; ++s)
-		{
-		  for(var h = 0; h < cd.AA[q][d].members[0].length; ++h)
-		  {
-        var dist = getDist(en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos, en.enemyStack[cd.AA[q][d].members[0][h]].pos);
-        var rad1 = en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]]._collisionRadius;
-        var rad2 = en.enemyStack[cd.AA[q][d].members[0][h]]._collisionRadius;
-  			if(dist[2] > 0 && (dist[2] - rad1 - rad2) < 0)
-  			{
-  			  var newAngle = getAngle(en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos, en.enemyStack[cd.AA[q][d].members[0][h]].pos);
-  			  var moveDist = Math.abs(dist[2] - rad1 -rad2);
-  			  var smallPercent;
-  			  var deltaPercent;
-  			  //THIS IS UGLY AS FUUCK
-  			  if(en.enemyStack[cd.AA[q][d].members[0][h]]._size >=en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]]._size)
-  			  {
-  				smallPercent = en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]]._size/en.enemyStack[cd.AA[q][d].members[0][h]]._size;
-  				deltaPercent = 1 - smallPercent;
-  				en.enemyStack[cd.AA[q][d].members[0][h]].pos[0] += (Math.cos(newAngle)*-moveDist * smallPercent * (1/cd.iterations));
-  				en.enemyStack[cd.AA[q][d].members[0][h]].pos[1] += (Math.sin(newAngle)*moveDist * smallPercent * (1/cd.iterations));
-  				en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[0] += (Math.cos(newAngle)*moveDist * deltaPercent * (1/cd.iterations));
-  				en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[1] += (Math.sin(newAngle)*-moveDist * deltaPercent * (1/cd.iterations));
-  			  }
-  			  else
-  			  {
-  				smallPercent = en.enemyStack[cd.AA[q][d].members[0][h]]._size/en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]]._size;
-  				deltaPercent = 1 - smallPercent;
-  				en.enemyStack[cd.AA[q][d].members[0][h]].pos[0] += (Math.cos(newAngle)*-moveDist * deltaPercent * (1/cd.iterations));
-  				en.enemyStack[cd.AA[q][d].members[0][h]].pos[1] += (Math.sin(newAngle)*moveDist * deltaPercent * (1/cd.iterations));
-  				en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[0] += (Math.cos(newAngle)*moveDist * smallPercent * (1/cd.iterations));
-  				en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[1] += (Math.sin(newAngle)*-moveDist * smallPercent * (1/cd.iterations));
-  			  }
-  			  en.enemyStack[cd.AA[q][d].members[0][h]].angle = getAngle(en.enemyStack[cd.AA[q][d].members[0][h]].pos, pl.pos);
-  			  en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].angle = getAngle(en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos, pl.pos);
-  			}
-		  }
-		}
+  		for(var s  = 0; s < cd.AA[tempRow][tempCol].members[0].length; ++s)
+  		{
+  		  for(var h = 0; h < cd.AA[q][d].members[0].length; ++h)
+  		  {
+          var dist = getDist(en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos, en.enemyStack[cd.AA[q][d].members[0][h]].pos);
+          var rad1 = en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]]._collisionRadius;
+          var rad2 = en.enemyStack[cd.AA[q][d].members[0][h]]._collisionRadius;
+    			if(dist[2] > 0 && (dist[2] - rad1 - rad2) < 0)
+    			{
+    			  var newAngle = getAngle(en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos, en.enemyStack[cd.AA[q][d].members[0][h]].pos);
+    			  var moveDist = Math.abs(dist[2] - rad1 -rad2);
+    			  var smallPercent;
+    			  var deltaPercent;
+    			  //THIS IS UGLY AS FUUCK
+    			  if(en.enemyStack[cd.AA[q][d].members[0][h]]._size >=en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]]._size)
+    			  {
+    				smallPercent = en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]]._size/en.enemyStack[cd.AA[q][d].members[0][h]]._size;
+    				deltaPercent = 1 - smallPercent;
+    				en.enemyStack[cd.AA[q][d].members[0][h]].pos[0] += (Math.cos(newAngle)*-moveDist * smallPercent * (1/cd.iterations));
+    				en.enemyStack[cd.AA[q][d].members[0][h]].pos[1] += (Math.sin(newAngle)*moveDist * smallPercent * (1/cd.iterations));
+    				en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[0] += (Math.cos(newAngle)*moveDist * deltaPercent * (1/cd.iterations));
+    				en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[1] += (Math.sin(newAngle)*-moveDist * deltaPercent * (1/cd.iterations));
+    			  }
+    			  else
+    			  {
+    				smallPercent = en.enemyStack[cd.AA[q][d].members[0][h]]._size/en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]]._size;
+    				deltaPercent = 1 - smallPercent;
+    				en.enemyStack[cd.AA[q][d].members[0][h]].pos[0] += (Math.cos(newAngle)*-moveDist * deltaPercent * (1/cd.iterations));
+    				en.enemyStack[cd.AA[q][d].members[0][h]].pos[1] += (Math.sin(newAngle)*moveDist * deltaPercent * (1/cd.iterations));
+    				en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[0] += (Math.cos(newAngle)*moveDist * smallPercent * (1/cd.iterations));
+    				en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[1] += (Math.sin(newAngle)*-moveDist * smallPercent * (1/cd.iterations));
+    			  }
+    			  en.enemyStack[cd.AA[q][d].members[0][h]].angle = getAngle(en.enemyStack[cd.AA[q][d].members[0][h]].pos, pl.pos);
+    			  en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].angle = getAngle(en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos, pl.pos);
+    			}
+  		  }
+  		}
 	  }
+    else if(!cd.AA[q] && !cd.AA[q][d])
+    {
+      //DEBUGG
+      console.log(cd.AA[q][d]);
+    }
 	}
 
   cd.checkProjectileBorderCollision = function(projektil)

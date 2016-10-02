@@ -20,6 +20,8 @@ var paused=false;
 var joystickAngle;
 var playerDeath=false, disableCollision=false, waveFinished=false, wasPressed=false;
 
+var godMode = false;
+
 
 $(window).focus(function()
 {
