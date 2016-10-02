@@ -135,6 +135,7 @@ function collisionDetection()
 
   			en.enemyStack[f].pos[0] += Math.cos(tempAngle) * -deltaDist;
   			en.enemyStack[f].pos[1] += Math.sin(tempAngle) * deltaDist;
+        en.enemyStack[f].angle = tempAngle;
 
         //player dies
         if(!godMode)
