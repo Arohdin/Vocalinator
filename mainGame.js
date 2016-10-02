@@ -252,7 +252,7 @@ function drawMenu()
 	}
 	else if(calMenu.active)
 	{
-		calMenu.draw();a
+		calMenu.draw();
 	}
 	hud.draw();
 	if(mainMenu.active || calMenu.active);
