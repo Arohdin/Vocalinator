@@ -125,30 +125,49 @@ function collisionDetection()
     }
 
 
-  	for(var f = 0; f < en.enemyStack.length; ++f)
-  	{
-  		var dist = getDist(pl.pos,en.enemyStack[f].pos);
-  		if((dist[2] - pl._collisionRadius - en.enemyStack[f]._collisionRadius) < 0)
-  		{
-  			var deltaDist = Math.abs(dist[2] - pl._collisionRadius - en.enemyStack[f]._collisionRadius);
-  			var tempAngle = getAngle(pl.pos, en.enemyStack[f].pos);
-
-  			en.enemyStack[f].pos[0] += Math.cos(tempAngle) * -deltaDist;
-  			en.enemyStack[f].pos[1] += Math.sin(tempAngle) * deltaDist;
-        en.enemyStack[f].angle = tempAngle;
-
-        //player dies
-        if(!godMode)
+    if(!disablePlayerCollision)
+    {
+      for(var f = 0; f < en.enemyStack.length; ++f)
+      {
+        var dist = getDist(pl.pos,en.enemyStack[f].pos);
+        if((dist[2] - pl._collisionRadius - en.enemyStack[f]._collisionRadius) < 0)
         {
-          playerDeath=true;
-          disableCollision=true;
+          var deltaDist = Math.abs(dist[2] - pl._collisionRadius - en.enemyStack[f]._collisionRadius);
+          var tempAngle = getAngle(pl.pos, en.enemyStack[f].pos);
+
+          en.enemyStack[f].pos[0] += Math.cos(tempAngle) * -deltaDist;
+          en.enemyStack[f].pos[1] += Math.sin(tempAngle) * deltaDist;
+          en.enemyStack[f].angle = tempAngle;
+
+          //player dies
+          if(!godMode)
+          {
+            playerDeath=true;
+            disableCollision=true;
+          }
         }
 
-  		}
+        //Check collision with screen border (also moves if outside the boundries)
+        en.enemyStack[f].pos = cd.checkBorderCollision(en.enemyStack[f].pos, en.enemyStack[f]._collisionRadius);
+      }
+    }
 
-  		//Check collision with screen border (also moves if outside the boundries)
-  		en.enemyStack[f].pos = cd.checkBorderCollision(en.enemyStack[f].pos, en.enemyStack[f]._collisionRadius);
-  	}
+    if(!pl.teleporting)
+    {
+      l1:
+      for(var i = 0; i < bh.linkedHoles.length; ++i)
+      {
+        for(var k = 0; k < bh.linkedHoles[i].length; ++k)
+        {
+          if(getDist(pl.pos,bh.allHoles[bh.linkedHoles[i][k]].pos)[2] - pl._collisionRadius - bh.allHoles[bh.linkedHoles[i][k]].drawRadius < 0)
+          {
+            var ind = (k == bh.linkedHoles[i].length - 1) ? ind = 0 : ind = k+1;
+            pl.initGhosts(bh.allHoles[bh.linkedHoles[i][k]].pos, bh.allHoles[bh.linkedHoles[i][ind]].pos, bh.allHoles[bh.linkedHoles[i][ind]].drawRadius);
+            break l1;
+          }
+        }
+      }
+    }
 
   }
 

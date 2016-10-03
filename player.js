@@ -24,6 +24,15 @@ function player(){
 	p._collisionRadius = generateCollisionMesh(p._size);
 	p.lives =STARTLIVES;
 
+	p.teleporting = false;
+	p.ghostsPos = [];
+	p.inHolePos;
+	p.outHolePos;
+	p.outHoleRadius;
+	p.numberOfGhosts = 40;
+	p.initialGodState = godMode;
+	p.inAngle;
+
 	//Function that renders the player
 	p.render = function(dt)
 	{
@@ -31,10 +40,18 @@ function player(){
 		drawLineBetween(p.pos, [mousePos.x, mousePos.y], "rgba(0, 0, 0, 1.0)", 0.5);	//Draw line between player and the crosshair
 		drawCrosshair();	//Draws the crosshair on the screeen
 
-		p.calc();	//Calculates the behaivour of the movement
-		p.updatePosition(dt);	//Uppdates the position
-		p.draw();	//Draws the player on screen
-		//drawCollisionMesh(p._collisionRadius, p.pos, "rgba(231, 76, 60, 0.5)");	//Draw the collision circle
+		if(!p.teleporting)
+		{
+			p.calc();	//Calculates the behaivour of the movement
+			p.updatePosition(dt);	//Uppdates the position
+			p.draw();	//Draws the player on screen
+			//drawCollisionMesh(p._collisionRadius, p.pos, "rgba(231, 76, 60, 0.5)");	//Draw the collision circle
+		}
+		else
+		{
+			p.teleportPlayer(dt);
+			p.drawGhosts(dt);
+		}
 	}
 
 	p.calc = function()
@@ -122,6 +139,83 @@ function player(){
 	p.getCollisionMeshBoundary = function()
 	{
 		return p._collisionRadius;
+	}
+
+	p.teleportPlayer = function(dt)
+	{
+		var dist = getDist(p.inHolePos, p.outHolePos);
+		var ang = getAngle(p.inHolePos, p.outHolePos);
+
+
+
+		for(var i = 0; i < p.ghostsPos.length; ++i)
+		{
+			p.ghostsPos[i][0] += _scaleFactor * timeFactor * dt * -1 * Math.cos(ang) * dist[2] * 1.0 *(i/(i+0.5));
+			p.ghostsPos[i][1] += _scaleFactor * timeFactor * dt * Math.sin(ang) * dist[2] * 1.0 * (i/(i+0.5));
+		}
+
+
+		p.pos[0] += _scaleFactor * timeFactor * dt * -1 * Math.cos(ang) * 1.0 * dist[2];
+		p.pos[1] += _scaleFactor * timeFactor * dt * Math.sin(ang) * 1.0 * dist[2];
+
+		if(getDist(p.outHolePos, p.pos)[2] < 5*_scaleFactor)
+		{
+			p.ghostsPos.length = 0;
+			p.angle = getAngle([mousePos.x, mousePos.y], p.pos);
+			p.pos[0] +=- 1.1 * Math.cos(p.inAngle) * (p.outHoleRadius + p._collisionRadius);
+			p.pos[1] += 1.1 *Math.sin(p.inAngle) * (p.outHoleRadius + p._collisionRadius);
+			p.vel[0] = p.speed * -1 * Math.cos(p.inAngle);
+			p.vel[1] = p.speed * Math.sin(p.inAngle);
+			p.teleporting = false;
+			godMode = p.initialGodState;
+			disablePlayerCollision = false;
+		}
+	}
+
+	p.initGhosts = function(inPos, outPos, outHoleRad)
+	{
+		godMode = true;
+		disablePlayerCollision = true;
+		p.outHoleRadius = outHoleRad;
+		p.teleporting = true;
+		p.inHolePos = inPos;
+		p.outHolePos = outPos;
+		p.inAngle = getAngle(inPos,outPos);
+		//console.log(p.outHoleRadius);
+
+
+		p.pos[0] = inPos[0];
+		p.pos[1] = inPos[1];
+
+		for(var i = 0; i < p.numberOfGhosts; ++i)
+		{
+			var a = p.pos[0];
+			var b = p.pos[1];
+			p.ghostsPos.push([a,b]);
+		}
+	}
+
+	p.drawGhosts = function()
+	{
+		for(var i = 0; i < p.ghostsPos.length; ++i)
+		{
+			//ctx.globalAlpha = (i+1)/p.ghostsPos.length;
+			ctx.fillStyle = "white";
+
+			ctx.beginPath();
+			if(p._size * (i+1)/p.ghostsPos.length * 2 < p._size)
+			{
+				ctx.arc(p.ghostsPos[i][0], p.ghostsPos[i][1], p._collisionRadius * (i+1)/p.ghostsPos.length * 2, 0, 2 * Math.PI, false);
+			}
+			else
+			{
+				ctx.arc(p.ghostsPos[i][0], p.ghostsPos[i][1], p._collisionRadius * (i+1)/p.ghostsPos.length, 0, 2 * Math.PI, false);
+			}
+			ctx.closePath();
+			ctx.fill();
+
+			ctx.globalAlpha = 1.0;
+		}
 	}
 
 	//Draws the crosshair of the player.

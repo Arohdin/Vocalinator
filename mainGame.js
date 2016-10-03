@@ -19,6 +19,7 @@ var hud;
 var paused=false;
 var joystickAngle;
 var playerDeath=false, disableCollision=false, waveFinished=false, wasPressed=false;
+var disablePlayerCollision = false;
 
 var godMode = false;
 
@@ -153,7 +154,15 @@ $(document).ready(function(){
 	proj.init();
 	battlefield.init();
 	hud.init();
-	bh.addHole(50,50,400,[c.width/2,c.height/2]);
+
+	bh.addHole(50,10,80,[c.width/4,c.height/4]);
+	bh.addHole(50,25,120,[3*c.width/4,c.height/4]);
+	bh.addHole(50,10,80,[3*c.width/4,3*c.height/4]);
+	bh.linkHoles([0,1,2]);
+	//bh.allHoles[1].setTimeout(4000);
+	//bh.allHoles[1].isTimeDependant(true);
+
+
 
 
 	//krock.calculateCollision();
@@ -205,11 +214,12 @@ function draw()
 
 	//Renders
 	battlefield.drawImages();
-	bh.renderHoles();
+	bh.renderHoles(clock.getTime() - prevTime);	//in parameter is dt in ms
 	krock.updateCells();
 	//Collision is disabled when player is killed so that so that playerDeath isn't reset every time collision is checked after player has disabled
 	if(!disableCollision)
 	krock.calculateCollision();
+	bh.renderLinks(clock.getTime() - prevTime);
 	proj.shoot();
 	en.renderStack((clock.getTime() - prevTime)/1000);	//render for enemies
 	deathRow.draw((clock.getTime() - prevTime)/1000);
