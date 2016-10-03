@@ -65,7 +65,7 @@ function holes()
       if(inIndecis.length > 1)
       {
         h.linkedHoles.push(inIndecis);
-        console.log("Link established");
+        //console.log("Link established");
       }
     }
   }
@@ -105,6 +105,10 @@ function holes()
       for(q = 0; q < h.linkedHoles[i].length - 1; ++q)
       {
         h.allHoles[h.linkedHoles[i][q]].renderLinks(h.allHoles[h.linkedHoles[i][q]].pos, h.allHoles[h.linkedHoles[i][q + 1]].pos);
+        if(h.linkedHoles[i].length > 2 && q == (h.linkedHoles[i].length - 2))
+        {
+          h.allHoles[h.linkedHoles[i][q]].renderLinks(h.allHoles[h.linkedHoles[i][0]].pos, h.allHoles[h.linkedHoles[i].length - 1].pos);
+        }
       }
     }
   }
@@ -119,7 +123,7 @@ function blackHole(inMass, inDrawRad, inEffectRad, inPos)
   b.mass = inMass;
   b.drawRadius = inDrawRad * _scaleFactor;
   b.effectRadius = inEffectRad * _scaleFactor;
-  b.color = "green";
+  b.color = "black";
   b.pos = inPos;
 
   b.isLinked = false;
@@ -143,7 +147,7 @@ function blackHole(inMass, inDrawRad, inEffectRad, inPos)
   b.drawEffectiveArea = function()
   {
     ctx.globalAlpha = 0.3;
-    ctx.fillStyle = "orange";
+    ctx.fillStyle = "darkblue";
 
     ctx.beginPath();
     ctx.arc(b.pos[0], b.pos[1], b.effectRadius, 0, 2 * Math.PI,false);

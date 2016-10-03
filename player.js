@@ -11,7 +11,7 @@ function player(){
 	p.DEF_HEALTH = 10;
 	p.DEF_SPEED = 250.0;
 	p.DEF_DEACC = 1 - (0.1 * timeFactor);
-	p.DEF_THRESH = 25;
+	p.DEF_THRESH = 30;
 
 	//Variables
 	p.health = p.DEF_HEALTH;
@@ -150,8 +150,8 @@ function player(){
 
 		for(var i = 0; i < p.ghostsPos.length; ++i)
 		{
-			p.ghostsPos[i][0] += _scaleFactor * timeFactor * dt * -1 * Math.cos(ang) * dist[2] * 1.0 *(i/(i+0.5));
-			p.ghostsPos[i][1] += _scaleFactor * timeFactor * dt * Math.sin(ang) * dist[2] * 1.0 * (i/(i+0.5));
+			p.ghostsPos[i][0] += _scaleFactor * timeFactor * dt * -1 * Math.cos(ang) * dist[2] * 1.0 *(i/(i+1.5));
+			p.ghostsPos[i][1] += _scaleFactor * timeFactor * dt * Math.sin(ang) * dist[2] * 1.0 * (i/(i+1.5));
 		}
 
 
@@ -199,19 +199,19 @@ function player(){
 	{
 		for(var i = 0; i < p.ghostsPos.length; ++i)
 		{
-			//ctx.globalAlpha = (i+1)/p.ghostsPos.length;
-			ctx.fillStyle = "white";
+			ctx.globalAlpha = (i+1)/p.ghostsPos.length * 4;
+			ctx.fillStyle = "rgb(236, 240, 241)";
 
 			ctx.beginPath();
-			if(p._size * (i+1)/p.ghostsPos.length * 2 < p._size)
+			if(p._size * (i+1)/p.ghostsPos.length * 1.7 < p._size)
 			{
-				ctx.arc(p.ghostsPos[i][0], p.ghostsPos[i][1], p._collisionRadius * (i+1)/p.ghostsPos.length * 2, 0, 2 * Math.PI, false);
+				ctx.arc(p.ghostsPos[i][0], p.ghostsPos[i][1], p._collisionRadius * (i+1)/p.ghostsPos.length * 1.4, 0, 2 * Math.PI, false);
 			}
 			else
 			{
 				ctx.arc(p.ghostsPos[i][0], p.ghostsPos[i][1], p._collisionRadius * (i+1)/p.ghostsPos.length, 0, 2 * Math.PI, false);
 			}
-			ctx.closePath();
+			//ctx.closePath();
 			ctx.fill();
 
 			ctx.globalAlpha = 1.0;
