@@ -17,8 +17,9 @@ function player(){
 	p.health = p.DEF_HEALTH;
 	p.angle = 0.0;
 	p.speed = p.DEF_SPEED;
+	p.flySpeed = p.speed * 3;
 	p.vel = [0,0];
-	p._size = 35 * _scaleFactor;
+	p._size = 50 * _scaleFactor;
 	p.pos = [w/2, h/2];
 	p._color = "#3498db";
 	p._collisionRadius = generateCollisionMesh(p._size);
@@ -31,28 +32,32 @@ function player(){
 	p.outHoleRadius;
 	p.numberOfGhosts = 40;
 	p.initialGodState = godMode;
+	p.canTeleport = true;
+
+	p.hasTeleportedFor = 0;	//s
+
 	p.inAngle;
 	p.images = [];
-	
-	
+
+
 	p.loadPlayerImage = function()
 	{
-	
+
 	p.sources = {
 		playerSprite: 'images/player.png'
     };
-	
+
 	for(var src in p.sources) {
          p.images[src] = new Image();
          p.images[src].onload = function() {
-         
+
           };
           p.images[src].src = p.sources[src];
 		  console.log("LOADED");
         }
 
-	}	
-		
+	}
+
 	//Function that renders the player
 	p.render = function(dt)
 	{
@@ -156,7 +161,7 @@ function player(){
 		//ctx.fillRect(-p._size/2,-p._size/2, p._size, p._size);	//draws the rect relative to the new origin and rotation
 		ctx.drawImage(p.images.playerSprite, p.pos[0]-(42*0.75*_scaleFactor), p.pos[1]-(52*0.75*_scaleFactor), 84*0.75*_scaleFactor, 104*0.75*_scaleFactor);
 		ctx.restore();	//Loads the saved state.
-		
+
 	}
 
 	p.getCollisionMeshBoundary = function()
@@ -166,37 +171,43 @@ function player(){
 
 	p.teleportPlayer = function(dt)
 	{
+		var playerSpeed = p.flySpeed * _scaleFactor * timeFactor;
 		var dist = getDist(p.inHolePos, p.outHolePos);
 		var ang = getAngle(p.inHolePos, p.outHolePos);
 
+		var secToFinish = dist[2]/playerSpeed;
 
+		p.hasTeleportedFor += dt;
 
-		for(var i = 0; i < p.ghostsPos.length; ++i)
+		if(p.hasTeleportedFor >= secToFinish)
 		{
-			p.ghostsPos[i][0] += _scaleFactor * timeFactor * dt * -1 * Math.cos(ang) * dist[2] * 1.0 *(i/(i+1.5));
-			p.ghostsPos[i][1] += _scaleFactor * timeFactor * dt * Math.sin(ang) * dist[2] * 1.0 * (i/(i+1.5));
-		}
-
-
-		p.pos[0] += _scaleFactor * timeFactor * dt * -1 * Math.cos(ang) * 1.0 * dist[2];
-		p.pos[1] += _scaleFactor * timeFactor * dt * Math.sin(ang) * 1.0 * dist[2];
-
-		if(getDist(p.outHolePos, p.pos)[2] < 5*_scaleFactor)
-		{
+			p.hasTeleportedFor = 0;
 			p.ghostsPos.length = 0;
 			p.angle = getAngle([mousePos.x, mousePos.y], p.pos);
-			p.pos[0] +=- 1.1 * Math.cos(p.inAngle) * (p.outHoleRadius + p._collisionRadius);
-			p.pos[1] += 1.1 *Math.sin(p.inAngle) * (p.outHoleRadius + p._collisionRadius);
+			p.pos[0] += -Math.cos(p.inAngle) * (p.outHoleRadius + p._collisionRadius);
+			p.pos[1] += Math.sin(p.inAngle) * (p.outHoleRadius + p._collisionRadius);
 			p.vel[0] = p.speed * -1 * Math.cos(p.inAngle);
 			p.vel[1] = p.speed * Math.sin(p.inAngle);
 			p.teleporting = false;
 			godMode = p.initialGodState;
 			disablePlayerCollision = false;
+			setTimeout(function(){ p.canTeleport = true; }, 200);
+		}
+		else
+		{
+			for(var i = 0; i < p.ghostsPos.length; ++i)
+			{
+				p.ghostsPos[i][0] += playerSpeed * dt * -1 * Math.cos(ang) * 1.0 *(i/(i+1.5));
+				p.ghostsPos[i][1] += playerSpeed * dt * Math.sin(ang) * 1.0 * (i/(i+1.5));
+			}
+			p.pos[0] += playerSpeed * dt * -1 * Math.cos(ang) * 1.0;
+			p.pos[1] += playerSpeed * dt * Math.sin(ang) * 1.0;
 		}
 	}
 
 	p.initGhosts = function(inPos, outPos, outHoleRad)
 	{
+		p.canTeleport = false;
 		godMode = true;
 		disablePlayerCollision = true;
 		p.outHoleRadius = outHoleRad;
@@ -223,7 +234,7 @@ function player(){
 		for(var i = 0; i < p.ghostsPos.length; ++i)
 		{
 			ctx.globalAlpha = (i+1)/p.ghostsPos.length * 4;
-			ctx.fillStyle = "rgb(236, 240, 241)";
+			ctx.fillStyle = "rgb(255, 255, 255)";
 
 			ctx.beginPath();
 			if(p._size * (i+1)/p.ghostsPos.length * 1.7 < p._size)

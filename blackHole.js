@@ -4,29 +4,11 @@ function holes()
 
   h.allHoles = [];
   h.linkedHoles = [];
-  h.images = [];
 
-  h.addHole = function(inMass, inDrawRad, inEffectRad, inPos)
+  h.addHole = function(inMass, inDrawRad, inEffectRad, inPos, inRotateTime)
   {
-    h.allHoles.push(new blackHole(inMass, inDrawRad, inEffectRad, inPos));
-  }
-
-  h.loadBlackHoleImage = function()
-  {
-
-  h.sources = {
-    blackHoleSprite: 'images/hole.png'
-    };
-
-  for(var src in h.sources) {
-         h.images[src] = new Image();
-         h.images[src].onload = function() {
-
-          };
-          h.images[src].src = b.sources[src];
-      console.log("LOADED");
-        }
-
+    h.allHoles.push(new blackHole(inMass, inDrawRad, inEffectRad, inPos, inRotateTime));
+    h.allHoles[h.allHoles.length-1].loadBlackHoleImage();
   }
 
   //should not be called
@@ -56,12 +38,13 @@ function holes()
     }
   }
 
-  h.renderHoles = function()
+  h.renderHoles = function(msdt)
   {
+    h.updateHoles(msdt);
     for(var i = 0; i < h.allHoles.length; ++i)
     {
-      h.allHoles[i].render();
       h.allHoles[i].drawEffectiveArea();
+      h.allHoles[i].render(msdt/1000);
     }
   }
 
@@ -137,7 +120,7 @@ function holes()
 
 
 
-function blackHole(inMass, inDrawRad, inEffectRad, inPos)
+function blackHole(inMass, inDrawRad, inEffectRad, inPos, inRotateTime)
 {
   const b = this;
 
@@ -146,6 +129,9 @@ function blackHole(inMass, inDrawRad, inEffectRad, inPos)
   b.effectRadius = inEffectRad * _scaleFactor;
   b.color = "black";
   b.pos = inPos;
+  b.images = [];
+  b.angle = 0;
+  b.rotateTime = inRotateTime;
 
   b.isLinked = false;
   b.timeDependant = false;
@@ -154,15 +140,20 @@ function blackHole(inMass, inDrawRad, inEffectRad, inPos)
 
   b.linkId = -1; //what  id to spawn by (not used atm)
 
-  b.render = function()
+  b.render = function(dt)
   {
-	  ctx.fillStyle = b.color;
+    b.angle += Math.PI * 2 * (dt/b.rotateTime);
+    if(b.angle > Math.PI * 2)
+    {
+      b.angle = 0;
+    }
 
-    ctx.beginPath();
-    ctx.arc(b.pos[0], b.pos[1], b.drawRadius, 0, 2 * Math.PI,false);
-    ctx.closePath();
-    ctx.fill();
-
+    ctx.save();
+    ctx.translate(b.pos[0], b.pos[1]);
+    ctx.rotate(-b.angle);
+    ctx.translate(-b.pos[0], -b.pos[1]);
+    ctx.drawImage(b.images.blackHoleSprite, b.pos[0] - b.drawRadius, b.pos[1]- b.drawRadius, b.drawRadius*2,  b.drawRadius*2);
+    ctx.restore();
   }
 
   b.drawEffectiveArea = function()
@@ -180,10 +171,10 @@ function blackHole(inMass, inDrawRad, inEffectRad, inPos)
 
   b.renderLinks = function(pos1,pos2)
   {
-    ctx.globalAlpha = 0.2;
-    ctx.strokeStyle = "red";
-    ctx.setLineDash([5, 15]);
-    ctx.lineWidth = 5 * _scaleFactor;
+    ctx.globalAlpha = 0.8;
+    ctx.strokeStyle = "white";
+    ctx.setLineDash([5*_scaleFactor, 15*_scaleFactor]);
+    ctx.lineWidth = 2 * _scaleFactor;
 
     ctx.beginPath();
     ctx.moveTo(pos1[0],pos1[1]);
@@ -208,6 +199,24 @@ function blackHole(inMass, inDrawRad, inEffectRad, inPos)
   b.setTimeout = function(ms)
   {
     b.timeToLive = ms;
+  }
+
+  b.loadBlackHoleImage = function()
+  {
+
+  b.sources = {
+    blackHoleSprite: 'images/hole.png'
+    };
+
+  for(var src in b.sources) {
+         b.images[src] = new Image();
+         b.images[src].onload = function() {
+
+          };
+          b.images[src].src = b.sources[src];
+      console.log("LOADED");
+        }
+
   }
 
 }

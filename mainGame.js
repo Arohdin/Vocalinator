@@ -21,7 +21,7 @@ var joystickAngle;
 var playerDeath=false, disableCollision=false, waveFinished=false, wasPressed=false;
 var disablePlayerCollision = false;
 
-var godMode = true;
+var godMode = false;
 
 
 $(window).focus(function()
@@ -156,11 +156,11 @@ $(document).ready(function(){
 	hud.init();
 	pl.loadPlayerImage();
 
-	bh.addHole(50,10,40,[c.width/4, c.height/4]);
-	bh.addHole(50,25,55,[3*c.width/4,c.height/4]);
-	bh.addHole(50,10,30,[3*c.width/4,3*c.height/4]);
-	bh.addHole(50,15,30,[c.width/2, 3 * c.height/5]);
-	bh.addHole(50,10,50,[c.width/4, 3*c.height/4]);
+	bh.addHole(50,50,80,[c.width/6		,		c.height/6], 		3);
+	bh.addHole(50,50,80,[5*c.width/6	,		c.height/6], 		4);
+	bh.addHole(50,50,80,[5*c.width/6	,		5*c.height/6], 	6);
+	bh.addHole(50,50,80,[3*c.width/6	,		4*c.height/6],	2);
+	bh.addHole(50,50,80,[c.width/6		, 	5*c.height/6],	10);
 	bh.linkHoles([0,1,2,3,4]);
 
 

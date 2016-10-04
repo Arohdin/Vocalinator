@@ -152,7 +152,7 @@ function collisionDetection()
       }
     }
 
-    if(!pl.teleporting)
+    if(!pl.teleporting && pl.canTeleport)
     {
       l1:
       for(var i = 0; i < bh.linkedHoles.length; ++i)
