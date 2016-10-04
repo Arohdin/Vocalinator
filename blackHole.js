@@ -128,6 +128,7 @@ function blackHole(inMass, inDrawRad, inEffectRad, inPos, inRotateTime)
   b.mass = inMass;
   b.drawRadius = inDrawRad * _scaleFactor;
   b.effectRadius = inEffectRad * _scaleFactor;
+  b.collisionRadius = b.drawRadius * 0.25;
   b.color = "black";
   b.pos = inPos;
   b.images = [];

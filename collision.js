@@ -181,10 +181,10 @@ function collisionDetection()
       {
         for(var k = 0; k < bh.linkedHoles[i].length; ++k)
         {
-          if(getDist(pl.pos,bh.allHoles[bh.linkedHoles[i][k]].pos)[2] - pl._collisionRadius - bh.allHoles[bh.linkedHoles[i][k]].drawRadius < 0)
+          if(getDist(pl.pos,bh.allHoles[bh.linkedHoles[i][k]].pos)[2] - pl._collisionRadius - bh.allHoles[bh.linkedHoles[i][k]].collisionRadius < 0)
           {
             var ind = (k == bh.linkedHoles[i].length - 1) ? ind = 0 : ind = k+1;
-            pl.initGhosts(bh.allHoles[bh.linkedHoles[i][k]].pos, bh.allHoles[bh.linkedHoles[i][ind]].pos, bh.allHoles[bh.linkedHoles[i][ind]].drawRadius);
+            pl.initGhosts(bh.allHoles[bh.linkedHoles[i][k]].pos, bh.allHoles[bh.linkedHoles[i][ind]].pos, bh.allHoles[bh.linkedHoles[i][ind]].collisionRadius);
             break l1;
           }
         }

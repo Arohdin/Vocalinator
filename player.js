@@ -184,8 +184,8 @@ function player(){
 			p.hasTeleportedFor = 0;
 			p.ghostsPos.length = 0;
 			p.angle = getAngle([mousePos.x, mousePos.y], p.pos);
-			p.pos[0] += -Math.cos(p.inAngle) * (p.outHoleRadius + p._collisionRadius);
-			p.pos[1] += Math.sin(p.inAngle) * (p.outHoleRadius + p._collisionRadius);
+			p.pos[0] += -Math.cos(p.inAngle) * (p.outHoleRadius*0.25 + p._collisionRadius);
+			p.pos[1] += Math.sin(p.inAngle) * (p.outHoleRadius*0.25 + p._collisionRadius);
 			p.vel[0] = p.speed * -1 * Math.cos(p.inAngle);
 			p.vel[1] = p.speed * Math.sin(p.inAngle);
 			p.teleporting = false;
@@ -206,12 +206,12 @@ function player(){
 		}
 	}
 
-	p.initGhosts = function(inPos, outPos, outHoleRad)
+	p.initGhosts = function(inPos, outPos, outHoleColisionRad)
 	{
 		p.canTeleport = false;
 		godMode = true;
 		disablePlayerCollision = true;
-		p.outHoleRadius = outHoleRad;
+		p.outHoleRadius = outHoleColisionRad;
 		p.teleporting = true;
 		p.inHolePos = inPos;
 		p.outHolePos = outPos;
