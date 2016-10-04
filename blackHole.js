@@ -4,25 +4,26 @@ function holes()
 
   h.allHoles = [];
   h.linkedHoles = [];
+  h.images = [];
 
   h.addHole = function(inMass, inDrawRad, inEffectRad, inPos)
   {
     h.allHoles.push(new blackHole(inMass, inDrawRad, inEffectRad, inPos));
   }
 
-  b.loadBlackHoleImage = function()
+  h.loadBlackHoleImage = function()
   {
 
-  b.sources = {
+  h.sources = {
     blackHoleSprite: 'images/hole.png'
     };
 
-  for(var src in b.sources) {
-         b.images[src] = new Image();
-         b.images[src].onload = function() {
+  for(var src in h.sources) {
+         h.images[src] = new Image();
+         h.images[src].onload = function() {
 
           };
-          b.images[src].src = b.sources[src];
+          h.images[src].src = b.sources[src];
       console.log("LOADED");
         }
 
