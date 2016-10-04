@@ -162,17 +162,6 @@ $(document).ready(function(){
 	bh.addHole(50,15,30,[c.width/2, 3 * c.height/5]);
 	bh.addHole(50,10,50,[c.width/4, 3*c.height/4]);
 	bh.linkHoles([0,1,2,3,4]);
-	bh.allHoles[2].setTimeout(10000);
-	bh.allHoles[2].isTimeDependant(true);
-	bh.allHoles[4].setTimeout(15000);
-	bh.allHoles[4].isTimeDependant(true);
-	bh.allHoles[0].setTimeout(25000);
-	bh.allHoles[0].isTimeDependant(true);
-	//bh.allHoles[1].setTimeout(30000);
-	//bh.allHoles[1].isTimeDependant(true);
-	//bh.allHoles[3].setTimeout(30000);
-	//bh.allHoles[3].isTimeDependant(true);
-	console.log("BUGG: DOES NOT REMOVE LAST BLACKHOLE OR LAST BLACKHOLE INDEX");
 
 
 	//krock.calculateCollision();

@@ -10,6 +10,24 @@ function holes()
     h.allHoles.push(new blackHole(inMass, inDrawRad, inEffectRad, inPos));
   }
 
+  p.loadPlayerImage = function()
+  {
+
+  p.sources = {
+    playerSprite: 'images/player.png'
+    };
+
+  for(var src in p.sources) {
+         p.images[src] = new Image();
+         p.images[src].onload = function() {
+
+          };
+          p.images[src].src = p.sources[src];
+      console.log("LOADED");
+        }
+
+  }
+
   //should not be called
   h.removeHole = function(index)
   {
