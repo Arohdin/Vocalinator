@@ -10,7 +10,7 @@ function holes()
     h.allHoles.push(new blackHole(inMass, inDrawRad, inEffectRad, inPos));
   }
 
-  p.loadPlayerImage = function()
+  b.loadBlackHoleImage = function()
   {
 
   b.sources = {
