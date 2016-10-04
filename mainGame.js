@@ -167,8 +167,8 @@ $(document).ready(function(){
 	bh.allHoles[4].isTimeDependant(true);
 	bh.allHoles[0].setTimeout(25000);
 	bh.allHoles[0].isTimeDependant(true);
-	bh.allHoles[1].setTimeout(30000);
-	bh.allHoles[1].isTimeDependant(true);
+	//bh.allHoles[1].setTimeout(30000);
+	//bh.allHoles[1].isTimeDependant(true);
 	//bh.allHoles[3].setTimeout(30000);
 	//bh.allHoles[3].isTimeDependant(true);
 	console.log("BUGG: DOES NOT REMOVE LAST BLACKHOLE OR LAST BLACKHOLE INDEX");
