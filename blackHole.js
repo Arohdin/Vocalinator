@@ -13,14 +13,16 @@ function holes()
   //should not be called
   h.removeHole = function(index)
   {
+    //remove
     if(h.allHoles[index].isLinked)
     {
       h.removeLink(index,h.allHoles[index].linkId);
     }
     h.allHoles.splice(index,1);
+
   }
 
-  h.renderHoles = function(msdt)
+  h.updateHoles = function(msdt)
   {
     for(var i = 0; i < h.allHoles.length; ++i)
     {
@@ -29,18 +31,18 @@ function holes()
         h.allHoles[i].hasLivedFor += msdt;
         if(h.allHoles[i].hasLivedFor >= h.allHoles[i].timeToLive)
         {
-          h.removeHole(i);
-          if(i > 1)
-          {
-            --i;
-          }
+          h.allHoles[i].removeHole(i);
         }
       }
-      if(h.allHoles.length > 0)
-      {
-        h.allHoles[i].render();
-        h.allHoles[i].drawEffectiveArea();
-      }
+    }
+  }
+
+  h.renderHoles = function()
+  {
+    for(var i = 0; i < h.allHoles.length; ++i)
+    {
+      h.allHoles[i].render();
+      h.allHoles[i].drawEffectiveArea();
     }
   }
 
@@ -72,29 +74,29 @@ function holes()
 
   h.removeLink = function(index, linkId)
   {
-    for(var i = 0; i < h.linkedHoles[linkId].length; ++i)
+    //remove links
+    for(var q = 0; q < h.linkedHoles[linkId].length; ++q)
     {
-      if(h.linkedHoles[linkId][i] == index)
+      if(h.linkedHoles[linkId][q] == index)
       {
-        h.linkedHoles[linkId].splice(i,1);
+        h.linkedHoles[linkId].splice(q,1);
       }
     }
 
-    for(var i = 0; i < h.linkedHoles.length; ++i)
+    //Adjust
+    for(var k = 0; k < h.linkedHoles[linkId].length; ++k)
     {
-      for(var j = 0; j < h.linkedHoles[i].length; ++j)
+      if(k >= index)
       {
-        if(h.linkedHoles[i][j] > index)
-        {
-          --h.linkedHoles[i][j];
-        }
+        --h.linkedHoles[linkId][k];
       }
     }
 
+    //check if it is the last item
     if(h.linkedHoles[linkId].length == 1)
     {
-      h.allHoles[h.linkedHoles[linkId][0]].isLinked = false;
-      //WTF
+      h.removeHole(h.linkedHoles[linkId][0]);
+      h.linkedHoles.splice(linkId,1);
     }
   }
 
