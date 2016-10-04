@@ -1,4 +1,10 @@
 const TOP_LEFT=0, TOP_RIGHT=1, MIDDLE=2, BOTTOM_LEFT=3,BOTTOM_RIGHT=4;
+
+function Mesage()
+{
+  const m=this;
+  m.msg;
+}
 function HUD()
 {
   const g=this;
@@ -55,7 +61,7 @@ function HUD()
 
   g.draw=function()
   {
-    ctx.fillStyle = "#27ae60";
+    ctx.fillStyle = "#ecf0f1";
     ctx.font= "28px Roboto";
     for(var i=0; i<g.messages.length;++i)
     {
