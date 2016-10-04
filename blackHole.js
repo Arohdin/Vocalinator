@@ -4,6 +4,7 @@ function holes()
 
   h.allHoles = [];
   h.linkedHoles = [];
+  h.enableGravity = true;
 
   h.addHole = function(inMass, inDrawRad, inEffectRad, inPos, inRotateTime)
   {
@@ -43,7 +44,7 @@ function holes()
     h.updateHoles(msdt);
     for(var i = 0; i < h.allHoles.length; ++i)
     {
-      h.allHoles[i].drawEffectiveArea();
+      //h.allHoles[i].drawEffectiveArea();
       h.allHoles[i].render(msdt/1000);
     }
   }
@@ -148,12 +149,24 @@ function blackHole(inMass, inDrawRad, inEffectRad, inPos, inRotateTime)
       b.angle = 0;
     }
 
+    var scale = Math.abs(Math.cos(b.angle/2));
+
     ctx.save();
     ctx.translate(b.pos[0], b.pos[1]);
     ctx.rotate(-b.angle);
     ctx.translate(-b.pos[0], -b.pos[1]);
     ctx.drawImage(b.images.blackHoleSprite, b.pos[0] - b.drawRadius, b.pos[1]- b.drawRadius, b.drawRadius*2,  b.drawRadius*2);
     ctx.restore();
+
+    ctx.save();
+    ctx.translate(b.pos[0], b.pos[1]);
+    ctx.rotate(-b.angle*0.5);
+    ctx.translate(-b.pos[0], -b.pos[1]);
+    ctx.globalAlpha = 0.1;
+    ctx.drawImage(b.images.blackHoleSprite, b.pos[0] - (b.effectRadius*scale), b.pos[1]- (b.effectRadius*scale), b.effectRadius*2*scale,  b.effectRadius*2*scale);
+    ctx.globalAlpha = 1.0;
+    ctx.restore();
+
   }
 
   b.drawEffectiveArea = function()

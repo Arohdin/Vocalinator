@@ -6,7 +6,6 @@ var keyPressed = {};
 var pl, enemies, krock, proj, battlefield, bh;
 var clock, prevTime;
 var w, h;
-var timeFactor = 1.0;
 var scaleFactor;
 var btnWidth= 320, btnHeight=80, btnMargin=80;
 var mainMenu, calMenu;
@@ -18,11 +17,12 @@ var gamepadUsed=false;
 var hud;
 var paused=false;
 var joystickAngle;
-var playerDeath=false, disableCollision=false, waveFinished=false, wasPressed=false;
+var playerDeath=false, disableCollision=false, wasPressed=false;
 var disablePlayerCollision = false;
+var backupTime;
 
 var godMode = true;
-
+var timeFactor = 1.0;
 
 $(window).focus(function()
 {
@@ -43,6 +43,7 @@ $(document).ready(function(){
 
 	//DEBUG
 	//console.log("ready");
+	backupTime = timeFactor;
 
 	//Linking and creating the canvas stuffs
 	c = document.getElementById("theCanvas");
@@ -156,11 +157,11 @@ $(document).ready(function(){
 	hud.init();
 	pl.loadPlayerImage();
 
-	bh.addHole(50,50,80,[c.width/6		,		c.height/6], 		3);
-	bh.addHole(50,50,80,[5*c.width/6	,		c.height/6], 		4);
-	bh.addHole(50,50,80,[5*c.width/6	,		5*c.height/6], 	6);
-	bh.addHole(50,50,80,[3*c.width/6	,		4*c.height/6],	2);
-	bh.addHole(50,50,80,[c.width/6		, 	5*c.height/6],	10);
+	bh.addHole(1,50,120,[c.width/6		,		c.height/6], 		10);
+	bh.addHole(5,50,120,[5*c.width/6	,		c.height/6], 		10);
+	bh.addHole(2,50,120,[5*c.width/6	,		5*c.height/6], 	10);
+	bh.addHole(1,50,120,[3*c.width/6	,		4*c.height/6],	10);
+	bh.addHole(6,50,120,[c.width/6		, 	5*c.height/6],	10);
 	bh.linkHoles([0,1,2,3,4]);
 
 
@@ -217,7 +218,7 @@ function draw()
 	krock.updateCells();
 	//Collision is disabled when player is killed so that so that playerDeath isn't reset every time collision is checked after player has disabled
 	if(!disableCollision)
-	krock.calculateCollision();
+	krock.calculateCollision((clock.getTime() - prevTime)/1000);
 	bh.renderLinks(clock.getTime() - prevTime);
 	proj.shoot();
 	en.renderStack((clock.getTime() - prevTime)/1000);	//render for enemies
@@ -313,7 +314,7 @@ function resume()
 		document.body.style.cursor ="none";
 
 		hud.clearMessage(MIDDLE);
-		timeFactor=1.0;
+		timeFactor= backupTime;
 		console.log("resume");
 		clock = new Date();
 		prevTime = clock.getTime();

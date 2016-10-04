@@ -124,6 +124,28 @@ function collisionDetection()
       cd.updateCells();
     }
 
+    //Gravity
+    if(bh.enableGravity)
+    {
+      for(var j = 0; j < proj.skott.length; ++j)
+      {
+        for(var k = 0; k < bh.allHoles.length; ++k)
+        {
+          var d = getDist([proj.skott[j].pos[0], proj.skott[j].pos[1]], [bh.allHoles[k].pos[0],bh.allHoles[k].pos[1]]);
+          if(d[2] < bh.allHoles[k].effectRadius)
+          {
+            var m = bh.allHoles[k].mass;
+            var a = getAngle(proj.skott[j].pos, bh.allHoles[k].pos);
+
+            proj.skott[j].direction[0] -= Math.cos(a) * dt * _scaleFactor * timeFactor * m;
+            proj.skott[j].direction[1] += Math.sin(a) * dt *_scaleFactor * timeFactor * m;
+          }
+        }
+      }
+      cd.updateCells();
+    }
+
+
 
     if(!disablePlayerCollision)
     {
@@ -238,7 +260,7 @@ function collisionDetection()
               //Removes enemy from en.enemyStack[]
               en.enemyStack.splice(cd.AA[rowIndex][colIndex].members[0][j],1);
 
-              if(en.enemyStack.length == 0)
+              if(en.enemyStack.length == 0 && maxNumber != 0)
               {
                 //all enemies are dead and new enemies are spawned
                 hud.countdown(function()

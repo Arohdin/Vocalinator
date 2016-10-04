@@ -49,3 +49,12 @@ function drawCollisionMesh(rad, pos, color)
   ctx.lineWidth = 2;
   ctx.stroke();
 }
+
+function normalize(inArr)
+{
+  var length = getDist([0,0], inArr)[2];
+  inArr[0] = inArr[0]/length;
+  inArr[1] = inArr[1]/length;
+
+  return inArr;
+}
