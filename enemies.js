@@ -5,7 +5,7 @@ function enemies()
   const e = this;
 
   //const
-  const maxNumber = 0;
+  e.maxNumber = 16;
 
 
   //variables
@@ -14,7 +14,7 @@ function enemies()
   //Populates the array with enemies of different types.
   e.generateStack = function()
   {
-    for(var i = 0; i < maxNumber; ++i)
+    for(var i = 0; i < e.maxNumber; ++i)
     {
       var typeIndex = getRandomInt(0,2);
 

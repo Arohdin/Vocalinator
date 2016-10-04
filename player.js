@@ -202,6 +202,7 @@ function player(){
 			}
 			p.pos[0] += playerSpeed * dt * -1 * Math.cos(ang) * 1.0;
 			p.pos[1] += playerSpeed * dt * Math.sin(ang) * 1.0;
+			p.angle = ang = getAngle( p.outHolePos, p.inHolePos);
 		}
 	}
 
@@ -231,15 +232,15 @@ function player(){
 
 	p.drawGhosts = function()
 	{
-		for(var i = 0; i < p.ghostsPos.length; ++i)
+		for(var i = 0; i < p.ghostsPos.length-10; ++i)
 		{
-			ctx.globalAlpha = (i+1)/p.ghostsPos.length * 4;
-			ctx.fillStyle = "rgb(255, 255, 255)";
+			ctx.globalAlpha = (i+1)/p.ghostsPos.length;
+			ctx.fillStyle = "rgb(227, 140, 45)";
 
 			ctx.beginPath();
-			if(p._size * (i+1)/p.ghostsPos.length * 1.7 < p._size)
+			if(p._size * (i+1)/p.ghostsPos.length * 2 < p._size)
 			{
-				ctx.arc(p.ghostsPos[i][0], p.ghostsPos[i][1], p._collisionRadius * (i+1)/p.ghostsPos.length * 1.4, 0, 2 * Math.PI, false);
+				ctx.arc(p.ghostsPos[i][0], p.ghostsPos[i][1], p._collisionRadius * (i+1)/p.ghostsPos.length * 1.3, 0, 2 * Math.PI, false);
 			}
 			else
 			{
@@ -250,6 +251,9 @@ function player(){
 
 			ctx.globalAlpha = 1.0;
 		}
+		ctx.globalAlpha = 1.0;
+		p.draw();
+		ctx.globalAlpha = 1.0;
 	}
 
 	function drawCrosshairLine(playerPos, mPos)

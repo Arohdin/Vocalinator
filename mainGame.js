@@ -21,7 +21,7 @@ var playerDeath=false, disableCollision=false, wasPressed=false;
 var disablePlayerCollision = false;
 var backupTime;
 
-var godMode = true;
+var godMode = false;
 var timeFactor = 1.0;
 
 $(window).focus(function()

@@ -260,7 +260,7 @@ function collisionDetection()
               //Removes enemy from en.enemyStack[]
               en.enemyStack.splice(cd.AA[rowIndex][colIndex].members[0][j],1);
 
-              if(en.enemyStack.length == 0 && maxNumber != 0)
+              if(en.enemyStack.length == 0 && en.maxNumber != 0)
               {
                 //all enemies are dead and new enemies are spawned
                 hud.countdown(function()
