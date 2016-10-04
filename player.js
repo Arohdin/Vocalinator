@@ -58,11 +58,11 @@ function player(){
 
 	}
 
+
 	//Function that renders the player
 	p.render = function(dt)
 	{
-
-		drawLineBetween(p.pos, [mousePos.x, mousePos.y], "rgba(255, 255, 255, 1.0)", 0.5);	//Draw line between player and the crosshair
+		drawCrosshairLine([p.pos[0], p.pos[1]], [mousePos.x, mousePos.y]);//Draw line between player and the crosshair
 		drawCrosshair();	//Draws the crosshair on the screeen
 
 		if(!p.teleporting)
@@ -252,15 +252,43 @@ function player(){
 		}
 	}
 
+	function drawCrosshairLine(playerPos, mPos)
+	{
+		var grad= ctx.createLinearGradient(playerPos[0], playerPos[1], mPos[0], mPos[1]);
+		grad.addColorStop(0, "RGBA(255,255,255,1.0)");
+		grad.addColorStop(0.5, "RGBA(255,255,255,0.7)");
+		grad.addColorStop(0.8, "RGBA(255,255,255,0.0)");
+
+		ctx.strokeStyle = grad;
+		ctx.lineWidth = 1.5 * _scaleFactor;
+
+		ctx.beginPath();
+		ctx.moveTo(playerPos[0], playerPos[1]);
+		ctx.lineTo(mPos[0], mPos[1]);
+
+		ctx.stroke();
+	}
+
 	//Draws the crosshair of the player.
 	function drawCrosshair()
 	{
-	  //DRAW CROSSHAIR
-	  ctx.fillStyle = "#e74c3c";
-	  ctx.beginPath();
-	  ctx.arc(mousePos.x, mousePos.y, 4, 0, 2 * Math.PI, false);
-	  ctx.closePath();
-	  ctx.fill();
+		var scaler = 4;
+		var a = getAngle([mousePos.x, mousePos.y], [p.pos[0], p.pos[1]]);
+		ctx.fillStyle = "#e74c3c";
+
+		ctx.save();
+		ctx.translate(mousePos.x, mousePos.y);
+		ctx.rotate(-a);
+		//top
+		ctx.fillRect(-0.5 * scaler * _scaleFactor, -1 * scaler * _scaleFactor, 1 * scaler * _scaleFactor, -2 * scaler * _scaleFactor);
+		//right
+		ctx.fillRect(1 * scaler * _scaleFactor, -0.5 * scaler * _scaleFactor, 2 * scaler * _scaleFactor, 1 * scaler * _scaleFactor);
+		//bot
+		ctx.fillRect(-0.5 * scaler * _scaleFactor, 1 * scaler * _scaleFactor, 1 * scaler * _scaleFactor, 2 * scaler * _scaleFactor);
+		//left
+		ctx.fillRect(-1 * scaler * _scaleFactor, -0.5 * scaler * _scaleFactor, -2 * scaler * _scaleFactor, 1 * scaler * _scaleFactor);
+
+		ctx.restore();
 	}
 
 	//Event listneres....

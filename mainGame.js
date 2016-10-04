@@ -21,7 +21,7 @@ var joystickAngle;
 var playerDeath=false, disableCollision=false, waveFinished=false, wasPressed=false;
 var disablePlayerCollision = false;
 
-var godMode = false;
+var godMode = true;
 
 
 $(window).focus(function()
