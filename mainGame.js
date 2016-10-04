@@ -21,7 +21,7 @@ var joystickAngle;
 var playerDeath=false, disableCollision=false, waveFinished=false, wasPressed=false;
 var disablePlayerCollision = false;
 
-var godMode = false;
+var godMode = true;
 
 
 $(window).focus(function()
@@ -154,6 +154,7 @@ $(document).ready(function(){
 	proj.init();
 	battlefield.init();
 	hud.init();
+	pl.loadPlayerImage();
 
 	bh.addHole(50,10,40,[c.width/4, c.height/4]);
 	bh.addHole(50,25,55,[3*c.width/4,c.height/4]);

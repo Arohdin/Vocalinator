@@ -32,7 +32,27 @@ function player(){
 	p.numberOfGhosts = 40;
 	p.initialGodState = godMode;
 	p.inAngle;
+	p.images = [];
+	
+	
+	p.loadPlayerImage = function()
+	{
+	
+	p.sources = {
+		playerSprite: 'images/player.png'
+    };
+	
+	for(var src in p.sources) {
+         p.images[src] = new Image();
+         p.images[src].onload = function() {
+         
+          };
+          p.images[src].src = p.sources[src];
+		  console.log("LOADED");
+        }
 
+	}	
+		
 	//Function that renders the player
 	p.render = function(dt)
 	{
@@ -132,8 +152,11 @@ function player(){
 		ctx.save();	//Saves the state of the canvas
 		ctx.translate(p.pos[0], p.pos[1]);	//translate the drawing origin to the position of the object
 		ctx.rotate(-p.angle);	//Rotates the grid/coordinates (canvas)
-		ctx.fillRect(-p._size/2,-p._size/2, p._size, p._size);	//draws the rect relative to the new origin and rotation
+		ctx.translate(-p.pos[0], -p.pos[1]);
+		//ctx.fillRect(-p._size/2,-p._size/2, p._size, p._size);	//draws the rect relative to the new origin and rotation
+		ctx.drawImage(p.images.playerSprite, p.pos[0]-(42*0.75*_scaleFactor), p.pos[1]-(52*0.75*_scaleFactor), 84*0.75*_scaleFactor, 104*0.75*_scaleFactor);
 		ctx.restore();	//Loads the saved state.
+		
 	}
 
 	p.getCollisionMeshBoundary = function()
