@@ -37,7 +37,7 @@ function player(){
 	p.render = function(dt)
 	{
 
-		drawLineBetween(p.pos, [mousePos.x, mousePos.y], "rgba(0, 0, 0, 1.0)", 0.5);	//Draw line between player and the crosshair
+		drawLineBetween(p.pos, [mousePos.x, mousePos.y], "rgba(255, 255, 255, 1.0)", 0.5);	//Draw line between player and the crosshair
 		drawCrosshair();	//Draws the crosshair on the screeen
 
 		if(!p.teleporting)
