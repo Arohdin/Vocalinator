@@ -13,16 +13,16 @@ function holes()
   p.loadPlayerImage = function()
   {
 
-  p.sources = {
-    playerSprite: 'images/player.png'
+  b.sources = {
+    blackHoleSprite: 'images/hole.png'
     };
 
-  for(var src in p.sources) {
-         p.images[src] = new Image();
-         p.images[src].onload = function() {
+  for(var src in b.sources) {
+         b.images[src] = new Image();
+         b.images[src].onload = function() {
 
           };
-          p.images[src].src = p.sources[src];
+          b.images[src].src = b.sources[src];
       console.log("LOADED");
         }
 
