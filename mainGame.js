@@ -267,6 +267,8 @@ function getJoystickPos()
 function drawMenu()
 {
 	ctx.clearRect (0 , 0 , c.width, c.height);	//Clears the canvas from old data.
+
+	battlefield.drawImages();
 	if(mainMenu.active)
 	{
 		mainMenu.draw();

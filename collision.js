@@ -175,22 +175,22 @@ function collisionDetection()
 	{
 		var returnValues = positions;
 		//x
-		if((positions[0] - radius) < c.width*0.1)
+		if((positions[0] - radius) < c.width*0)
 		{
-			returnValues[0] = c.width*0.1 + radius;
+			returnValues[0] = c.width*0 + radius;
 		}
-		else if(positions[0] + radius > c.width*0.9)
+		else if(positions[0] + radius > c.width*1.0)
 		{
-			returnValues[0] = c.width*0.9 - radius;
+			returnValues[0] = c.width*1.0 - radius;
 		}
 		//y
-		if(positions[1] - radius < c.height*0.05)
+		if(positions[1] - radius < c.height*0)
 		{
-			returnValues[1] = c.height*0.05 + radius;
+			returnValues[1] = c.height*0 + radius;
 		}
-		else if(positions[1] + radius > c.height*0.95)
+		else if(positions[1] + radius > c.height*1.0)
 		{
-			returnValues[1] = c.height*0.95 - radius;
+			returnValues[1] = c.height*1.0 - radius;
 		}
 
 		return returnValues;

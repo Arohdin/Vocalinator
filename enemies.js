@@ -58,7 +58,7 @@ function enemy(){
 	e._typeDmg = [5,2,1];
 	e._type = [0, 1, 2];
 	e._typeSpeed = [50,80,120];
-	e._typeColor = ["#2c3e50", "#8e44ad", "#f39c12"];
+	e._typeColor = ["#EF4836", "rgb(46, 204, 113)", "#f39c12"];
     e._typeSize = [35, 20, 10];
 
     //type specifics;

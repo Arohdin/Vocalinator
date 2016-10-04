@@ -14,7 +14,7 @@ function projectiles() {
   }
 
   //constants
-  const projColors = ["#2c3e50", "#8e44ad", "#f39c12"];
+  const projColors = ["#EF4836", "rgb(46, 204, 113a)", "#f39c12"];
   const speed = 1100;
   const rateOfFire = 150;
 
