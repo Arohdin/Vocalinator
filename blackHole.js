@@ -4,7 +4,7 @@ function holes()
 
   h.allHoles = [];
   h.linkedHoles = [];
-  h.enableGravity = true;
+  h.enableGravity = enableGravity;
 
   h.addHole = function(inMass, inDrawRad, inEffectRad, inPos, inRotateTime)
   {

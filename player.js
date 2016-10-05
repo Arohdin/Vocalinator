@@ -32,7 +32,7 @@ function player(){
 	p.outHoleRadius;
 	p.numberOfGhosts = 40;
 	p.initialGodState = godMode;
-	p.canTeleport = true;
+	p.canTeleport = enablePlayerTeleport;
 
 	p.hasTeleportedFor = 0;	//s
 

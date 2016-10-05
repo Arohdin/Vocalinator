@@ -21,8 +21,12 @@ var playerDeath=false, disableCollision=false, wasPressed=false;
 var disablePlayerCollision = false;
 var backupTime;
 
-var godMode = true;
-var timeFactor = 0.2;
+var godMode = false;
+var timeFactor = 1.0;
+var enablePlayerTeleport = true;
+var enableProjectileTeleport = true;
+var enableGravity = true;
+
 
 $(window).focus(function()
 {

@@ -62,7 +62,7 @@ function HUD()
   g.draw=function()
   {
     ctx.fillStyle = "#ecf0f1";
-    ctx.font= "28px Roboto";
+    ctx.font= "56px Roboto";
     for(var i=0; i<g.messages.length;++i)
     {
       if(g.messages[i]!="")

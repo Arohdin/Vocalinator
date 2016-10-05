@@ -140,22 +140,25 @@ function collisionDetection()
             proj.skott[j].direction[0] -= Math.cos(a) * dt * _scaleFactor * timeFactor * m  * (1-(d[2]/bh.allHoles[k].effectRadius/2));
             proj.skott[j].direction[1] += Math.sin(a) * dt *_scaleFactor * timeFactor * m * (1-(d[2]/bh.allHoles[k].effectRadius/2));
           }
-          if(d[2] - bh.allHoles[k].collisionRadius - proj.skott[j].radius < 0)
+          if(enableProjectileTeleport)
           {
-            var q = bh.allHoles[k].linkId;
-            var f = 0;
-            for(var g = 0; g < bh.linkedHoles[q].length; ++g)
+            if(d[2] - bh.allHoles[k].collisionRadius - proj.skott[j].radius < 0)
             {
-              if(bh.linkedHoles[q][g] == k)
+              var q = bh.allHoles[k].linkId;
+              var f = 0;
+              for(var g = 0; g < bh.linkedHoles[q].length; ++g)
               {
-                f = g;
+                if(bh.linkedHoles[q][g] == k)
+                {
+                  f = g;
+                }
               }
+              var ind = (f == bh.linkedHoles[q].length - 1) ? ind = 0 : ind = f+1;
+              var asd = bh.linkedHoles[q][ind];
+              proj.skott[j].pos[0] = bh.allHoles[asd].pos[0] + Math.cos(proj.skott[j].angle) * (bh.allHoles[asd].collisionRadius + proj.skott[j].radius * 2);
+              proj.skott[j].pos[1] = bh.allHoles[asd].pos[1] - Math.sin(proj.skott[j].angle) * (bh.allHoles[asd].collisionRadius + proj.skott[j].radius * 2);
+              cd.updateCells();
             }
-            var ind = (f == bh.linkedHoles[q].length - 1) ? ind = 0 : ind = f+1;
-            var asd = bh.linkedHoles[q][ind];
-            proj.skott[j].pos[0] = bh.allHoles[asd].pos[0] + Math.cos(proj.skott[j].angle) * (bh.allHoles[asd].collisionRadius + proj.skott[j].radius * 2);
-            proj.skott[j].pos[1] = bh.allHoles[asd].pos[1] - Math.sin(proj.skott[j].angle) * (bh.allHoles[asd].collisionRadius + proj.skott[j].radius * 2);
-            cd.updateCells();
           }
         }
       }

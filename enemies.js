@@ -5,7 +5,7 @@ function enemies()
   const e = this;
 
   //const
-  e.maxNumber = 0;
+  e.maxNumber = 16;
 
 
   //variables
