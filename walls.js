@@ -6,10 +6,12 @@ function walls()
 	//ref to this
 	const w = this;
 
-	w.init = function()
-	{
+	w.playerRef;
 
-	w.ParallaxSPEED = 0.05;
+	w.init = function(plRef)
+	{
+		w.playerRef = plRef;
+		w.ParallaxSPEED = 0.05;
     w.images = [];
     w.loadedImages = 0;
     w.numImages = 0;
@@ -56,8 +58,8 @@ function walls()
 	w.drawImages = function()
 	{
 		//Normalize player position to battlefield. Far left -> x = 0. Far right -> x = 1.
-		parX = (pl.pos[0] - battlefieldStartX) / ( battlefieldWidth);
-		parY = (pl.pos[1] - battlefieldStartY) / ( battlefieldHeight);
+		parX = (w.playerRef.pos[0] - battlefieldStartX) / ( battlefieldWidth);
+		parY = (w.playerRef.pos[1] - battlefieldStartY) / ( battlefieldHeight);
 
 
 

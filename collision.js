@@ -12,6 +12,17 @@ function collisionDetection()
   cd.AA;
   cd.cellIndexArray = [];
 
+  cd.playerRef;
+  cd.projectileRef;
+  cd.enemyStackRef;
+
+  cd.linkRefs = function(plRef, enRef, projRef)
+  {
+    cd.playerRef = plRef;
+    cd.projectileRef = projRef;
+    cd.enemyStackRef = enRef;
+  }
+
   cd.generateGrid = function()
   {
     cd.cellWidth = c.width / (cd.numCols - cd._PAD);
@@ -59,10 +70,10 @@ function collisionDetection()
   cd.init = function()
   {
 		//Init for enemies
-		for(var i = 0; i < en.enemyStack.length; ++i)
+		for(var i = 0; i < cd.enemyStackRef.enemyStack.length; ++i)
 		{
-		  var posX = en.enemyStack[i].pos[0];
-		  var posY = en.enemyStack[i].pos[1];
+		  var posX = cd.enemyStackRef.enemyStack[i].pos[0];
+		  var posY = cd.enemyStackRef.enemyStack[i].pos[1];
 		  var colIndex = 1 + Math.floor(posX/cd.cellWidth);
 		  var rowIndex = 1 + Math.floor(posY/cd.cellHeight);
       if(cd.AA[rowIndex][colIndex].members[0].length < 1 && cd.AA[rowIndex][colIndex].members[1].length < 1)
@@ -73,10 +84,10 @@ function collisionDetection()
       cd.AA[rowIndex][colIndex].members[0].push(i);
 		}
 
-    for(var u = 0; u < proj.skott.length; ++u)
+    for(var u = 0; u < cd.projectileRef.skott.length; ++u)
     {
-      var pX = proj.skott[u].pos[0];
-      var pY = proj.skott[u].pos[1];
+      var pX = cd.projectileRef.skott[u].pos[0];
+      var pY = cd.projectileRef.skott[u].pos[1];
       var cIndex = 1 + Math.floor(pX/cd.cellWidth);
       var rIndex = 1 + Math.floor(pY/cd.cellHeight);
       if(cd.AA[rIndex][cIndex].members[0].length < 1 && cd.AA[rIndex][cIndex].members[1].length < 1)
@@ -106,7 +117,7 @@ function collisionDetection()
   cd.calculateCollision = function(dt)
   {
 	  //Check collision with screen border (also moves if outside the boundries)
-	  pl.pos = cd.checkBorderCollision(pl.pos, pl._collisionRadius)
+	  cd.playerRef.pos = cd.checkBorderCollision(cd.playerRef.pos, cd.playerRef._collisionRadius)
     for(var b = 0; b < cd.iterations; ++b)
     {
 
@@ -127,22 +138,22 @@ function collisionDetection()
     //Gravity
     if(bh.enableGravity)
     {
-      for(var j = 0; j < proj.skott.length; ++j)
+      for(var j = 0; j < cd.projectileRef.skott.length; ++j)
       {
         for(var k = 0; k < bh.allHoles.length; ++k)
         {
-          var d = getDist([proj.skott[j].pos[0], proj.skott[j].pos[1]], [bh.allHoles[k].pos[0],bh.allHoles[k].pos[1]]);
+          var d = getDist([cd.projectileRef.skott[j].pos[0], cd.projectileRef.skott[j].pos[1]], [bh.allHoles[k].pos[0],bh.allHoles[k].pos[1]]);
           if(d[2] < bh.allHoles[k].effectRadius)
           {
             var m = bh.allHoles[k].mass;
-            var a = getAngle(proj.skott[j].pos, bh.allHoles[k].pos);
+            var a = getAngle(cd.projectileRef.skott[j].pos, bh.allHoles[k].pos);
 
-            proj.skott[j].direction[0] -= Math.cos(a) * dt * _scaleFactor * timeFactor * m  * (1-(d[2]/bh.allHoles[k].effectRadius/2));
-            proj.skott[j].direction[1] += Math.sin(a) * dt *_scaleFactor * timeFactor * m * (1-(d[2]/bh.allHoles[k].effectRadius/2));
+            cd.projectileRef.skott[j].direction[0] -= Math.cos(a) * dt * _scaleFactor * timeFactor * m  * (1-(d[2]/bh.allHoles[k].effectRadius/2));
+            cd.projectileRef.skott[j].direction[1] += Math.sin(a) * dt *_scaleFactor * timeFactor * m * (1-(d[2]/bh.allHoles[k].effectRadius/2));
           }
           if(enableProjectileTeleport)
           {
-            if(d[2] - bh.allHoles[k].collisionRadius - proj.skott[j].radius < 0)
+            if(d[2] - bh.allHoles[k].collisionRadius - cd.projectileRef.skott[j].radius < 0)
             {
               var q = bh.allHoles[k].linkId;
               var f = 0;
@@ -155,8 +166,8 @@ function collisionDetection()
               }
               var ind = (f == bh.linkedHoles[q].length - 1) ? ind = 0 : ind = f+1;
               var asd = bh.linkedHoles[q][ind];
-              proj.skott[j].pos[0] = bh.allHoles[asd].pos[0] + Math.cos(proj.skott[j].angle) * (bh.allHoles[asd].collisionRadius + proj.skott[j].radius * 2);
-              proj.skott[j].pos[1] = bh.allHoles[asd].pos[1] - Math.sin(proj.skott[j].angle) * (bh.allHoles[asd].collisionRadius + proj.skott[j].radius * 2);
+              cd.projectileRef.skott[j].pos[0] = bh.allHoles[asd].pos[0] + Math.cos(cd.projectileRef.skott[j].angle) * (bh.allHoles[asd].collisionRadius + cd.projectileRef.skott[j].radius * 2);
+              cd.projectileRef.skott[j].pos[1] = bh.allHoles[asd].pos[1] - Math.sin(cd.projectileRef.skott[j].angle) * (bh.allHoles[asd].collisionRadius + cd.projectileRef.skott[j].radius * 2);
               cd.updateCells();
             }
           }
@@ -169,17 +180,17 @@ function collisionDetection()
 
     if(!disablePlayerCollision)
     {
-      for(var f = 0; f < en.enemyStack.length; ++f)
+      for(var f = 0; f < cd.enemyStackRef.enemyStack.length; ++f)
       {
-        var dist = getDist(pl.pos,en.enemyStack[f].pos);
-        if((dist[2] - pl._collisionRadius - en.enemyStack[f]._collisionRadius) < 0)
+        var dist = getDist(cd.playerRef.pos,cd.enemyStackRef.enemyStack[f].pos);
+        if((dist[2] - cd.playerRef._collisionRadius - cd.enemyStackRef.enemyStack[f]._collisionRadius) < 0)
         {
-          var deltaDist = Math.abs(dist[2] - pl._collisionRadius - en.enemyStack[f]._collisionRadius);
-          var tempAngle = getAngle(pl.pos, en.enemyStack[f].pos);
+          var deltaDist = Math.abs(dist[2] - cd.playerRef._collisionRadius - cd.enemyStackRef.enemyStack[f]._collisionRadius);
+          var tempAngle = getAngle(cd.playerRef.pos, cd.enemyStackRef.enemyStack[f].pos);
 
-          en.enemyStack[f].pos[0] += Math.cos(tempAngle) * -deltaDist;
-          en.enemyStack[f].pos[1] += Math.sin(tempAngle) * deltaDist;
-          en.enemyStack[f].angle = tempAngle;
+          cd.enemyStackRef.enemyStack[f].pos[0] += Math.cos(tempAngle) * -deltaDist;
+          cd.enemyStackRef.enemyStack[f].pos[1] += Math.sin(tempAngle) * deltaDist;
+          cd.enemyStackRef.enemyStack[f].angle = tempAngle;
 
           //player dies
           if(!godMode)
@@ -190,21 +201,21 @@ function collisionDetection()
         }
 
         //Check collision with screen border (also moves if outside the boundries)
-        en.enemyStack[f].pos = cd.checkBorderCollision(en.enemyStack[f].pos, en.enemyStack[f]._collisionRadius);
+        cd.enemyStackRef.enemyStack[f].pos = cd.checkBorderCollision(cd.enemyStackRef.enemyStack[f].pos, cd.enemyStackRef.enemyStack[f]._collisionRadius);
       }
     }
 
-    if(!pl.teleporting && pl.canTeleport)
+    if(!cd.playerRef.teleporting && cd.playerRef.canTeleport)
     {
       l1:
       for(var i = 0; i < bh.linkedHoles.length; ++i)
       {
         for(var k = 0; k < bh.linkedHoles[i].length; ++k)
         {
-          if(getDist(pl.pos,bh.allHoles[bh.linkedHoles[i][k]].pos)[2] - pl._collisionRadius - bh.allHoles[bh.linkedHoles[i][k]].collisionRadius < 0)
+          if(getDist(cd.playerRef.pos,bh.allHoles[bh.linkedHoles[i][k]].pos)[2] - cd.playerRef._collisionRadius - bh.allHoles[bh.linkedHoles[i][k]].collisionRadius < 0)
           {
             var ind = (k == bh.linkedHoles[i].length - 1) ? ind = 0 : ind = k+1;
-            pl.initGhosts(bh.allHoles[bh.linkedHoles[i][k]].pos, bh.allHoles[bh.linkedHoles[i][ind]].pos, bh.allHoles[bh.linkedHoles[i][ind]].collisionRadius);
+            cd.playerRef.initGhosts(bh.allHoles[bh.linkedHoles[i][k]].pos, bh.allHoles[bh.linkedHoles[i][ind]].pos, bh.allHoles[bh.linkedHoles[i][ind]].collisionRadius);
             break l1;
           }
         }
@@ -246,41 +257,41 @@ function collisionDetection()
     {
       for(var j = 0; j < cd.AA[rowIndex][colIndex].members[0].length; ++j)
       {
-        if(cd.AA[tr][tc].members[1][g] < proj.skott.length)
+        if(cd.AA[tr][tc].members[1][g] < cd.projectileRef.skott.length)
         {
           //DEBUGG
-          if(!proj.skott[cd.AA[tr][tc].members[1][g]])
+          if(!cd.projectileRef.skott[cd.AA[tr][tc].members[1][g]])
           {
             console.log("PROJ");
             console.log(cd.AA[tr][tc]);
           }
           //DEBUGG
-          if(!en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].pos)
+          if(!cd.enemyStackRef.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].pos)
           {
             console.log("ENEMY");
           }
-          var dist = getDist(proj.skott[cd.AA[tr][tc].members[1][g]].pos, en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].pos);
-          var rad1 = proj.skott[cd.AA[tr][tc].members[1][g]].radius;
-          var rad2 = en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]]._collisionRadius;
+          var dist = getDist(cd.projectileRef.skott[cd.AA[tr][tc].members[1][g]].pos, cd.enemyStackRef.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].pos);
+          var rad1 = cd.projectileRef.skott[cd.AA[tr][tc].members[1][g]].radius;
+          var rad2 = cd.enemyStackRef.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]]._collisionRadius;
           if(dist[2] - rad1 - rad2 < 0)
           {
             //Removes health from enemy if types matches
-            if(en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]]._type ==  proj.skott[cd.AA[tr][tc].members[1][g]]._type)
+            if(cd.enemyStackRef.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]]._type ==  cd.projectileRef.skott[cd.AA[tr][tc].members[1][g]]._type)
             {
-              --en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].health;
+              --cd.enemyStackRef.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].health;
             }
 
             //Deletes enemy if it's dead.
-            if(en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].health < 1)
+            if(cd.enemyStackRef.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].health < 1)
             {
               //Handles death animations
-              deathRow.row.push(new deadEnemy());
-              deathRow.row[deathRow.row.length - 1].init(en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].pos, en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]]._size, en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].angle, en.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]]._color);
+              deathRow.enemyRow.push(new deadEnemy(deathRow));
+              deathRow.enemyRow[deathRow.enemyRow.length - 1].init(cd.enemyStackRef.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].pos, cd.enemyStackRef.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]]._size, cd.enemyStackRef.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].angle, cd.enemyStackRef.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]]._color);
 
-              //Removes enemy from en.enemyStack[]
-              en.enemyStack.splice(cd.AA[rowIndex][colIndex].members[0][j],1);
+              //Removes enemy from cd.enemyStackRef.enemyStack[]
+              cd.enemyStackRef.enemyStack.splice(cd.AA[rowIndex][colIndex].members[0][j],1);
 
-              if(en.enemyStack.length == 0 && en.maxNumber != 0)
+              if(cd.enemyStackRef.enemyStack.length == 0 && cd.enemyStackRef.maxNumber != 0)
               {
                 //all enemies are dead and new enemies are spawned
                 hud.countdown(function()
@@ -297,7 +308,7 @@ function collisionDetection()
             }
 
               //Removes from game projectiles when they hit an enemy
-              proj.skott.splice(cd.AA[tr][tc].members[1][g],1);
+              cd.projectileRef.skott.splice(cd.AA[tr][tc].members[1][g],1);
 
               cd.adjustProjectileIndex(cd.AA[tr][tc].members[1][g]);
 
@@ -356,36 +367,36 @@ function collisionDetection()
   		{
   		  for(var h = 0; h < cd.AA[q][d].members[0].length; ++h)
   		  {
-          var dist = getDist(en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos, en.enemyStack[cd.AA[q][d].members[0][h]].pos);
-          var rad1 = en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]]._collisionRadius;
-          var rad2 = en.enemyStack[cd.AA[q][d].members[0][h]]._collisionRadius;
+          var dist = getDist(cd.enemyStackRef.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos, cd.enemyStackRef.enemyStack[cd.AA[q][d].members[0][h]].pos);
+          var rad1 = cd.enemyStackRef.enemyStack[cd.AA[tempRow][tempCol].members[0][s]]._collisionRadius;
+          var rad2 = cd.enemyStackRef.enemyStack[cd.AA[q][d].members[0][h]]._collisionRadius;
     			if(dist[2] > 0 && (dist[2] - rad1 - rad2) < 0)
     			{
-    			  var newAngle = getAngle(en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos, en.enemyStack[cd.AA[q][d].members[0][h]].pos);
+    			  var newAngle = getAngle(cd.enemyStackRef.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos, cd.enemyStackRef.enemyStack[cd.AA[q][d].members[0][h]].pos);
     			  var moveDist = Math.abs(dist[2] - rad1 -rad2);
     			  var smallPercent;
     			  var deltaPercent;
     			  //THIS IS UGLY AS FUUCK
-    			  if(en.enemyStack[cd.AA[q][d].members[0][h]]._size >=en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]]._size)
+    			  if(cd.enemyStackRef.enemyStack[cd.AA[q][d].members[0][h]]._size >=cd.enemyStackRef.enemyStack[cd.AA[tempRow][tempCol].members[0][s]]._size)
     			  {
-    				smallPercent = en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]]._size/en.enemyStack[cd.AA[q][d].members[0][h]]._size;
+    				smallPercent = cd.enemyStackRef.enemyStack[cd.AA[tempRow][tempCol].members[0][s]]._size/cd.enemyStackRef.enemyStack[cd.AA[q][d].members[0][h]]._size;
     				deltaPercent = 1 - smallPercent;
-    				en.enemyStack[cd.AA[q][d].members[0][h]].pos[0] += (Math.cos(newAngle)*-moveDist * smallPercent * (1/cd.iterations));
-    				en.enemyStack[cd.AA[q][d].members[0][h]].pos[1] += (Math.sin(newAngle)*moveDist * smallPercent * (1/cd.iterations));
-    				en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[0] += (Math.cos(newAngle)*moveDist * deltaPercent * (1/cd.iterations));
-    				en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[1] += (Math.sin(newAngle)*-moveDist * deltaPercent * (1/cd.iterations));
+    				cd.enemyStackRef.enemyStack[cd.AA[q][d].members[0][h]].pos[0] += (Math.cos(newAngle)*-moveDist * smallPercent * (1/cd.iterations));
+    				cd.enemyStackRef.enemyStack[cd.AA[q][d].members[0][h]].pos[1] += (Math.sin(newAngle)*moveDist * smallPercent * (1/cd.iterations));
+    				cd.enemyStackRef.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[0] += (Math.cos(newAngle)*moveDist * deltaPercent * (1/cd.iterations));
+    				cd.enemyStackRef.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[1] += (Math.sin(newAngle)*-moveDist * deltaPercent * (1/cd.iterations));
     			  }
     			  else
     			  {
-    				smallPercent = en.enemyStack[cd.AA[q][d].members[0][h]]._size/en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]]._size;
+    				smallPercent = cd.enemyStackRef.enemyStack[cd.AA[q][d].members[0][h]]._size/cd.enemyStackRef.enemyStack[cd.AA[tempRow][tempCol].members[0][s]]._size;
     				deltaPercent = 1 - smallPercent;
-    				en.enemyStack[cd.AA[q][d].members[0][h]].pos[0] += (Math.cos(newAngle)*-moveDist * deltaPercent * (1/cd.iterations));
-    				en.enemyStack[cd.AA[q][d].members[0][h]].pos[1] += (Math.sin(newAngle)*moveDist * deltaPercent * (1/cd.iterations));
-    				en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[0] += (Math.cos(newAngle)*moveDist * smallPercent * (1/cd.iterations));
-    				en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[1] += (Math.sin(newAngle)*-moveDist * smallPercent * (1/cd.iterations));
+    				cd.enemyStackRef.enemyStack[cd.AA[q][d].members[0][h]].pos[0] += (Math.cos(newAngle)*-moveDist * deltaPercent * (1/cd.iterations));
+    				cd.enemyStackRef.enemyStack[cd.AA[q][d].members[0][h]].pos[1] += (Math.sin(newAngle)*moveDist * deltaPercent * (1/cd.iterations));
+    				cd.enemyStackRef.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[0] += (Math.cos(newAngle)*moveDist * smallPercent * (1/cd.iterations));
+    				cd.enemyStackRef.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos[1] += (Math.sin(newAngle)*-moveDist * smallPercent * (1/cd.iterations));
     			  }
-    			  en.enemyStack[cd.AA[q][d].members[0][h]].angle = getAngle(en.enemyStack[cd.AA[q][d].members[0][h]].pos, pl.pos);
-    			  en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].angle = getAngle(en.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos, pl.pos);
+    			  cd.enemyStackRef.enemyStack[cd.AA[q][d].members[0][h]].angle = getAngle(cd.enemyStackRef.enemyStack[cd.AA[q][d].members[0][h]].pos, cd.playerRef.pos);
+    			  cd.enemyStackRef.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].angle = getAngle(cd.enemyStackRef.enemyStack[cd.AA[tempRow][tempCol].members[0][s]].pos, cd.playerRef.pos);
     			}
   		  }
   		}

@@ -26,8 +26,15 @@ function holes()
 
   h.updateHoles = function(msdt)
   {
+    var dt = msdt/1000;
     for(var i = 0; i < h.allHoles.length; ++i)
     {
+      h.allHoles[i].angle += Math.PI * 2 * (dt/h.allHoles[i].rotateTime);
+      if(h.allHoles[i].angle > Math.PI * 2)
+      {
+        h.allHoles[i].angle = 0;
+      }
+
       if(h.allHoles[i].timeDependant)
       {
         h.allHoles[i].hasLivedFor += msdt;
@@ -39,13 +46,12 @@ function holes()
     }
   }
 
-  h.renderHoles = function(msdt)
+  h.renderHoles = function(dt)
   {
-    h.updateHoles(msdt);
     for(var i = 0; i < h.allHoles.length; ++i)
     {
       //h.allHoles[i].drawEffectiveArea();
-      h.allHoles[i].render(msdt/1000);
+      h.allHoles[i].render(dt);
     }
   }
 
@@ -144,12 +150,6 @@ function blackHole(inMass, inDrawRad, inEffectRad, inPos, inRotateTime)
 
   b.render = function(dt)
   {
-    b.angle += Math.PI * 2 * (dt/b.rotateTime);
-    if(b.angle > Math.PI * 2)
-    {
-      b.angle = 0;
-    }
-
     var scale = Math.abs(Math.cos(b.angle/2));
 
     ctx.save();

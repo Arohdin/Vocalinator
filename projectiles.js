@@ -7,9 +7,11 @@ function projectiles() {
   pj.skott= [];
   pj.timeSinceShot;
   pj.filteredShots = [];
+  pj.playerRef;
 
-  pj.init= function()
+  pj.init= function(plRef)
   {
+    pj.playerRef = plRef;
     pj.timeSinceShot=clock.getTime();
   }
 
@@ -21,6 +23,7 @@ function projectiles() {
   //projectile object
   function projectile() {
     const pro=this;
+    pro.playerRef;
 
     pro.pos = [];
     pro.radius;
@@ -29,16 +32,17 @@ function projectiles() {
     pro._type;
     pro.angle;
 
-    pro.init = function()
+    pro.init = function(plRef)
     {
+      pro.playerRef = plRef;
       pro.radius= 7*_scaleFactor;
       pro._type = projectileType;
       pro.color = projColors[projectileType];
-      pro.angle =getAngle([mousePos.x, mousePos.y], pl.pos);
-      var hype=pl._collisionRadius*0.5;
+      pro.angle =getAngle([mousePos.x, mousePos.y], pro.playerRef.pos);
+      var hype=pro.playerRef._collisionRadius*0.5;
 
       pro.direction = [Math.cos(pro.angle), -Math.sin(pro.angle)];
-      pro.pos = [pl.pos[0] + pro.direction[0]*hype, pl.pos[1] + pro.direction[1]*hype];
+      pro.pos = [pro.playerRef.pos[0] + pro.direction[0]*hype, pro.playerRef.pos[1] + pro.direction[1]*hype];
     }
 
     pro.updatePosition= function(deltaT)
@@ -58,14 +62,14 @@ function projectiles() {
 
   pj.shoot = function()
   {
-    if(!paused && (clock.getTime()-pj.timeSinceShot > rateOfFire/timeFactor) && pitch!=NOTLOUD && !pl.teleporting)
+    if(!paused && (clock.getTime()-pj.timeSinceShot > rateOfFire/timeFactor) && pitch!=NOTLOUD && !pj.playerRef.teleporting)
     {
       if(gamepadUsed && !(Math.abs(gp.axes[2])>gamepadThreshold || Math.abs(gp.axes[3])>gamepadThreshold))
       {
         return;
       }
       var ettSkott = new projectile();
-      ettSkott.init();
+      ettSkott.init(pj.playerRef);
       pj.skott.push(ettSkott);
       pj.timeSinceShot=clock.getTime();
     }

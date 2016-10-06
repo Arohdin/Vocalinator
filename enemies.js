@@ -6,13 +6,20 @@ function enemies()
 
   //const
   e.maxNumber = 16;
+  e.playerRef ;
+  e.playerRef;
 
 
   //variables
   e.enemyStack = [];
 
+  e.linkRefs = function(plRef)
+  {
+    e.playerRef = plRef;
+  }
+
   //Populates the array with enemies of different types.
-  e.generateStack = function()
+  e.generateStack = function(plRef)
   {
     for(var i = 0; i < e.maxNumber; ++i)
     {
@@ -20,17 +27,17 @@ function enemies()
 
       if(typeIndex == 0)
       {
-        e.enemyStack.push(new enemy());
+        e.enemyStack.push(new enemy(e.playerRef));
         e.enemyStack[e.enemyStack.length - 1].init(0);	//low
       }
       if(typeIndex == 1)
       {
-        e.enemyStack.push(new enemy());
+        e.enemyStack.push(new enemy(e.playerRef));
         e.enemyStack[e.enemyStack.length - 1].init(1); 	//med
       }
       if(typeIndex == 2)
       {
-        e.enemyStack.push(new enemy());
+        e.enemyStack.push(new enemy(e.playerRef));
         e.enemyStack[e.enemyStack.length - 1].init(2); //high
       }
     }
@@ -48,10 +55,11 @@ function enemies()
   }
 }
 
-function enemy(){
+function enemy(plRef){
 
     //ref to this
     const e = this;
+  e.playerRef = plRef;
 
     //Defaults [low,medhigh] - parameters
 	e._typeHealth = [5,3,1];
@@ -82,7 +90,7 @@ function enemy(){
       {
         var randIntX = getRandomInt(c.width * 0.1, c.width * 0.8);
         var randIntY = getRandomInt(c.height*0.05, c.height* 0.9);
-      }while(getDist(pl.pos,[randIntX,randIntY])[2] < (c.width*0.10)); //Enemies can't spawn closer than this (percent of width)
+      }while(getDist(e.playerRef.pos,[randIntX,randIntY])[2] < (c.width*0.10)); //Enemies can't spawn closer than this (percent of width)
 
       //Creates enemy of right type and sets properties accordningly
 		e._type = e._type[typeOf];
@@ -95,13 +103,13 @@ function enemy(){
 
       //sets common properties
       e.pos = [randIntX, randIntY];
-      e.angle = getAngle(e.pos, pl.pos);
+      e.angle = getAngle(e.pos, e.playerRef.pos);
     }
 
     //Render functions which i called to render an enemy
     e.render = function(dt)
     {
-      //drawLineBetween(e.pos, pl.pos, "rgba(231, 76, 60, 0.3)", 0.10);
+      //drawLineBetween(e.pos, e.playerRef.pos, "rgba(231, 76, 60, 0.3)", 0.10);
       e.draw();
       //drawCollisionMesh(e._collisionRadius, e.pos, "rgba(231, 76, 60, 0.8)");
 		//drawCollisionMesh(1,[en.enemyStack[0].pos[0],en.enemyStack[0].pos[1]],"rgba(255,0,0,1.0)");
@@ -110,7 +118,7 @@ function enemy(){
     //function that update the position of an enemy
     e.updatePosition = function(dt)
     {
-      e.angle = getAngle(e.pos, pl.pos);
+      e.angle = getAngle(e.pos, e.playerRef.pos);
       e.pos[0] += (-e.speed * Math.cos(e.angle) * dt * timeFactor * _scaleFactor);
       e.pos[1] += (e.speed * Math.sin(e.angle) * dt * timeFactor *_scaleFactor);
       if(!e.pos[0] || !e.pos[1] || e.pos[0]<0.0 || e.pos[1]<0.0)
