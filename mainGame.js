@@ -21,6 +21,7 @@ var playerDeath=false, disableCollision=false, wasPressed=false;
 var disablePlayerCollision = false;
 var backupTime;
 var refToPlayer, refToEnemyStack, refToBattlefield, refToProjectiles, refToDeaths, refToBlackHoles, refToCollision;
+var dontSpawnWithin = 0.25;
 
 var godMode = false;
 var timeFactor = 1.0;
@@ -134,7 +135,6 @@ $(document).ready(function(){
 	calMenu=new menu();
 	clock = new Date();
 	hud =new HUD();
-	bh=new holes();
 	battlefield = new walls();
 	deathRow = new deathRow();
 
@@ -142,9 +142,11 @@ $(document).ready(function(){
 	refToCollision = krock;
 	refToProjectiles = proj;
 	refToEnemyStack = en;
-	refToBlackHoles = bh;
 	refToBattlefield = battlefield;
 	refToDeaths = deathRow;
+	bh=new holes(deathRow);
+	refToBlackHoles = bh;
+
 
 	mainMenu.active=true;
 	mainMenu.addButton("Start");
@@ -162,13 +164,13 @@ $(document).ready(function(){
 	}
 
 	//Init
-	refToEnemyStack.linkRefs(pl);
-	refToEnemyStack.generateStack();
-	refToCollision.linkRefs(pl, en, proj);
+	refToEnemyStack.linkRefs(refToPlayer);
+	refToEnemyStack.generateStack(dontSpawnWithin);
+	refToCollision.linkRefs(refToPlayer, refToEnemyStack, refToProjectiles, refToDeaths);
 	refToCollision.generateGrid();
 	refToCollision.init();
-	refToProjectiles.init(pl);
-	battlefield.init(pl);
+	refToProjectiles.init(refToPlayer);
+	battlefield.init(refToPlayer);
 	hud.init();
 	refToPlayer.loadPlayerImage();
 
@@ -179,8 +181,11 @@ $(document).ready(function(){
 	refToBlackHoles.addHole(6,50,120,[c.width/6		, 	5*c.height/6],	10);
 	refToBlackHoles.linkHoles([0,1,2,3,4]);
 
-//	refToBlackHoles.addHole(10,50,300,[2*c.width/6	,		3*c.height/6],	10);
-//	refToBlackHoles.addHole(10,50,300,[4*c.width/6		, 	3*c.height/6],	10);
+	refToBlackHoles.allHoles[0].setTimeout(10000);
+	refToBlackHoles.allHoles[0].isTimeDependant(true);
+
+	//refToBlackHoles.addHole(10,50,300,[2*c.width/6	,		3*c.height/6],	10);
+	//refToBlackHoles.addHole(10,50,300,[4*c.width/6		, 	3*c.height/6],	10);
 
 
 	//krock.calculateCollision();
@@ -241,7 +246,7 @@ function draw()
 	refToBlackHoles.renderLinks(clock.getTime() - prevTime);
 	refToProjectiles.shoot();
 	refToEnemyStack.renderStack((clock.getTime() - prevTime)/1000);	//render for enemies
-	deathRow.draw((clock.getTime() - prevTime)/1000);
+	refToDeaths.draw((clock.getTime() - prevTime)/1000);
 	refToProjectiles.render((clock.getTime() - prevTime)/1000); // render projectiles
 	refToPlayer.render((clock.getTime() - prevTime)/1000);	//render for player
 	hud.draw();
@@ -297,8 +302,9 @@ function drawMenu()
 //Resets enemyStack basically
 function respawnEnemies()
 {
+	dontSpawnWithin = 0.15;
 	refToEnemyStack.enemyStack=[];
-	refToEnemyStack.generateStack();
+	refToEnemyStack.generateStack(dontSpawnWithin);
 }
 
 //resets enemies and player

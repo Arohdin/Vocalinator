@@ -67,8 +67,11 @@ function player(){
 
 		if(!p.teleporting)
 		{
-			p.calc();	//Calculates the behaivour of the movement
-			p.updatePosition(dt);	//Uppdates the position
+			if(!paused)
+			{
+				p.calc();	//Calculates the behaivour of the movement
+				p.updatePosition(dt);	//Uppdates the position
+			}
 			p.draw();	//Draws the player on screen
 			//drawCollisionMesh(p._collisionRadius, p.pos, "rgba(231, 76, 60, 0.5)");	//Draw the collision circle
 		}
@@ -177,7 +180,9 @@ function player(){
 
 		var secToFinish = dist[2]/playerSpeed;
 
-		p.hasTeleportedFor += dt;
+		if(!paused)
+			p.hasTeleportedFor += dt;
+
 
 		if(p.hasTeleportedFor >= secToFinish)
 		{

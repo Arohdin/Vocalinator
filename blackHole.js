@@ -1,7 +1,8 @@
-function holes()
+function holes(deathRef)
 {
   const h = this;
 
+  h.refToDeathRow = deathRef;
   h.allHoles = [];
   h.linkedHoles = [];
   h.enableGravity = enableGravity;
@@ -15,6 +16,10 @@ function holes()
   //should not be called
   h.removeHole = function(index)
   {
+    
+    h.refToDeathRow.holeRow.push(new deadHole(h.refToDeathRow));
+    h.refToDeathRow.holeRow[h.refToDeathRow.holeRow.length - 1].init([h.allHoles[index].pos[0], h.allHoles[index].pos[1]], h.allHoles[index].angle, h.allHoles[index].images, h.allHoles[index].drawRadius);
+
     //remove
     if(h.allHoles[index].isLinked)
     {
@@ -26,24 +31,28 @@ function holes()
 
   h.updateHoles = function(msdt)
   {
-    var dt = msdt/1000;
-    for(var i = 0; i < h.allHoles.length; ++i)
+    if(!paused)
     {
-      h.allHoles[i].angle += Math.PI * 2 * (dt/h.allHoles[i].rotateTime);
-      if(h.allHoles[i].angle > Math.PI * 2)
+      var dt = msdt/1000;
+      for(var i = 0; i < h.allHoles.length; ++i)
       {
-        h.allHoles[i].angle = 0;
-      }
-
-      if(h.allHoles[i].timeDependant)
-      {
-        h.allHoles[i].hasLivedFor += msdt;
-        if(h.allHoles[i].hasLivedFor >= h.allHoles[i].timeToLive)
+        h.allHoles[i].angle += Math.PI * 2 * (dt/h.allHoles[i].rotateTime);
+        if(h.allHoles[i].angle > Math.PI * 2)
         {
-          h.allHoles[i].removeHole(i);
+          h.allHoles[i].angle = 0;
+        }
+
+        if(h.allHoles[i].timeDependant)
+        {
+          h.allHoles[i].hasLivedFor += msdt;
+          if(h.allHoles[i].hasLivedFor >= h.allHoles[i].timeToLive)
+          {
+            h.removeHole(i);
+          }
         }
       }
     }
+
   }
 
   h.renderHoles = function(dt)
@@ -119,7 +128,7 @@ function holes()
         if(h.linkedHoles[i].length > 2 && q == (h.linkedHoles[i].length - 2))
         {
           h.allHoles[h.linkedHoles[i][q]].renderLinks(h.allHoles[h.linkedHoles[i][0]].pos, h.allHoles[h.linkedHoles[i].length - 1].pos);
-        }
+        }//send this to deathrow
       }
     }
   }

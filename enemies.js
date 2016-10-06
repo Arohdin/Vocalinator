@@ -19,7 +19,7 @@ function enemies()
   }
 
   //Populates the array with enemies of different types.
-  e.generateStack = function(plRef)
+  e.generateStack = function(percent)
   {
     for(var i = 0; i < e.maxNumber; ++i)
     {
@@ -28,17 +28,17 @@ function enemies()
       if(typeIndex == 0)
       {
         e.enemyStack.push(new enemy(e.playerRef));
-        e.enemyStack[e.enemyStack.length - 1].init(0);	//low
+        e.enemyStack[e.enemyStack.length - 1].init(0, percent);	//low
       }
       if(typeIndex == 1)
       {
         e.enemyStack.push(new enemy(e.playerRef));
-        e.enemyStack[e.enemyStack.length - 1].init(1); 	//med
+        e.enemyStack[e.enemyStack.length - 1].init(1, percent); 	//med
       }
       if(typeIndex == 2)
       {
         e.enemyStack.push(new enemy(e.playerRef));
-        e.enemyStack[e.enemyStack.length - 1].init(2); //high
+        e.enemyStack[e.enemyStack.length - 1].init(2, percent); //high
       }
     }
     //console.log(en.enemyStack);
@@ -83,14 +83,14 @@ function enemy(plRef){
     e.angle;
 
     //init
-    e.init = function(typeOf)
+    e.init = function(typeOf, percent)
     {
       //randomize a start position
       do
       {
         var randIntX = getRandomInt(c.width * 0.1, c.width * 0.8);
         var randIntY = getRandomInt(c.height*0.05, c.height* 0.9);
-      }while(getDist(e.playerRef.pos,[randIntX,randIntY])[2] < (c.width*0.10)); //Enemies can't spawn closer than this (percent of width)
+      }while(getDist(e.playerRef.pos,[randIntX,randIntY])[2] < (c.width*percent)); //Enemies can't spawn closer than this (percent of width)
 
       //Creates enemy of right type and sets properties accordningly
 		e._type = e._type[typeOf];

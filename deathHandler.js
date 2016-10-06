@@ -11,6 +11,10 @@ function deathRow()
     {
       dR.enemyRow[i].render(dt);
     }
+    for(var k = 0; k < dR.holeRow.length; ++k)
+    {
+      dR.holeRow[k].render(dt);
+    }
   }
 
   dR.removeFromArray = function(objTypeRow)
@@ -73,7 +77,9 @@ function deadEnemy(ref)
   {
     ctx.fillStyle = e.color;
 
+    if(!paused)
     e.timeLived += dt;
+
     var t = (e.timeBeforeGone*e.timeLived < 1.0) ? e.timeBeforeGone*e.timeLived : 1.0;
 
     ctx.globalAlpha = 1.0 - t;
@@ -96,50 +102,54 @@ function deadHole(ref)
   const dh = this;
   dh.refToParent = ref
 
-  dh.timeBeforeGone = 1; //seconds
-  dh.timeLived;
+  dh.timeBeforeGone = 2.0; //seconds
+  dh.timeLived = 0;
   dh.pos;
   dh.angle;
-  dh.size;
+  dh.images = [];
+  dh.drawRadius;
 
-  dh.init = function(inPos, inSize, inAngle)
+  dh.init = function(inPos, inAngle, sprites, rad)
   {
     dh.timeLived = 0;
     dh.pos = inPos;
     dh.angle = inAngle;
-    dh.size = inSize;
+    dh.images = sprites;
+    dh.drawRadius = rad;
   }
 
   dh.render = function(dt)
   {
-    ctx.fillStyle = e.color;
-
+    if(!paused)
     dh.timeLived += dt;
-    var t = (dh.timeBeforeGone*e.timeLived < 1.0) ? dh.timeBeforeGone*dh.timeLived : 1.0;
+
+    var t = (dh.timeLived/dh.timeBeforeGone < 1.0) ? dh.timeLived/dh.timeBeforeGone : 1.0;
 
     var scale = Math.abs(Math.cos(dh.angle/2));
 
+    ctx.globalAlpha = 1.0 - t;
     ctx.save();
     ctx.translate(dh.pos[0], dh.pos[1]);
     ctx.rotate(-dh.angle);
     ctx.translate(-dh.pos[0], -dh.pos[1]);
     ctx.drawImage(dh.images.blackHoleSprite, dh.pos[0] - dh.drawRadius, dh.pos[1]- dh.drawRadius, dh.drawRadius*2,  dh.drawRadius*2);
     ctx.restore();
+    ctx.globalAlpha = 1.0;
 
     ctx.save();
     ctx.translate(dh.pos[0], dh.pos[1]);
     ctx.rotate(-dh.angle*0.5);
     ctx.translate(-dh.pos[0], -dh.pos[1]);
-    ctx.globalAlpha = 0.1;
+    ctx.globalAlpha = 0.1 * (1.0 - t);
     ctx.drawImage(dh.images.blackHoleSprite, dh.pos[0] - (dh.effectRadius*scale), dh.pos[1]- (dh.effectRadius*scale), dh.effectRadius*2*scale,  dh.effectRadius*2*scale);
     ctx.globalAlpha = 1.0;
     ctx.restore();
 
-    if(dh.timeBeforeGone*dh.timeLived > 1.0)
+    if(t == 0)
     {
       deathRow.removeFromArray(dh.refToParent.holeRow);
     }
     ctx.globalAlpha = 1.0;
-  }
 
+  }
 }

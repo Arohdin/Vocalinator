@@ -15,12 +15,14 @@ function collisionDetection()
   cd.playerRef;
   cd.projectileRef;
   cd.enemyStackRef;
+  cd.deathRowRef;
 
-  cd.linkRefs = function(plRef, enRef, projRef)
+  cd.linkRefs = function(plRef, enRef, projRef, deathRef)
   {
     cd.playerRef = plRef;
     cd.projectileRef = projRef;
     cd.enemyStackRef = enRef;
+    cd.deathRowRef = deathRef;
   }
 
   cd.generateGrid = function()
@@ -285,8 +287,8 @@ function collisionDetection()
             if(cd.enemyStackRef.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].health < 1)
             {
               //Handles death animations
-              deathRow.enemyRow.push(new deadEnemy(deathRow));
-              deathRow.enemyRow[deathRow.enemyRow.length - 1].init(cd.enemyStackRef.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].pos, cd.enemyStackRef.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]]._size, cd.enemyStackRef.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].angle, cd.enemyStackRef.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]]._color);
+              cd.deathRowRef.enemyRow.push(new deadEnemy(cd.deathRowRef));
+              cd.deathRowRef.enemyRow[cd.deathRowRef.enemyRow.length - 1].init(cd.enemyStackRef.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].pos, cd.enemyStackRef.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]]._size, cd.enemyStackRef.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]].angle, cd.enemyStackRef.enemyStack[cd.AA[rowIndex][colIndex].members[0][j]]._color);
 
               //Removes enemy from cd.enemyStackRef.enemyStack[]
               cd.enemyStackRef.enemyStack.splice(cd.AA[rowIndex][colIndex].members[0][j],1);
