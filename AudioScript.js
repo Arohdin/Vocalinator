@@ -11,7 +11,7 @@ google.charts.load('current', {packages: ['corechart', 'line']});
 var context = new AudioContext();
 var analyzer = context.createAnalyser();
 analyzer.fftSize = 8192;
-var amplitudeArray = new Uint8Array(analyzer.frequencyBinCount);
+var amplitudeArray = new Float32Array(analyzer.frequencyBinCount);
 var pitchArray = [];
 var frequencyArray= [];
 var sampleRate= context.sampleRate;
@@ -20,7 +20,7 @@ volumeNode.gain.value = 0.0;
 var errorCallback = function(e) {console.log('Mic error!', e);};
 var high =400, low=200, step =((high-low)/3.0), picth, projectileType;
 const LOW=0, MEDIUM=1, HIGH=2, NOTLOUD=-1;
-var dBThreshold=230;
+var dBThreshold=-60;
 
 navigator.getUserMedia({audio: true}, function(stream)
 {
@@ -53,7 +53,7 @@ setInterval(function() {
       projectileType=LOW;
     }
   }
-  //drawBasic();
+  drawBasic();
 }, 33);
 
 //Draw graph
@@ -62,9 +62,9 @@ function drawBasic()
   var data = new google.visualization.DataTable();
   data.addColumn('number', 'X');
   data.addColumn('number', 'Dogs');
-  for(var i =0;i<Math.floor(analyzer.frequencyBinCount/5);++i)
+  for(var i =0;i<Math.floor(analyzer.frequencyBinCount);++i)
   {
-  	data.addRow([frequencyArray[i],pitchArray[i]]);
+  	data.addRow([frequencyArray[i],amplitudeArray[i]]);
   }
   var options =
   {
@@ -78,18 +78,21 @@ function drawBasic()
 
 function getPitch()
 {
-  analyzer.getByteFrequencyData(amplitudeArray);
-  var max= 0.0;
+  analyzer.getFloatFrequencyData(amplitudeArray);
+  var rangeSize=analyzer.maxDeciBels-analyzer.minDecibels;
+  var max= -300;
   var maxIndex=0;
   for(var i=0;i<amplitudeArray.length;++i)
   {
     if(amplitudeArray[i]>max)
     max=amplitudeArray[i]
   }
+
   if(max<dBThreshold)
   return NOTLOUD;
 
   max=0.0;
+
 
   //Use algorithm to "amplify" the percieved frequency
   for(var i =0; 5*i < Math.floor(analyzer.frequencyBinCount/5); ++i)
