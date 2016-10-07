@@ -53,7 +53,7 @@ setInterval(function() {
       projectileType=LOW;
     }
   }
-  drawBasic();
+  //drawBasic();
 }, 33);
 
 //Draw graph
