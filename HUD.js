@@ -1,10 +1,5 @@
 const TOP_LEFT=0, TOP_RIGHT=1, MIDDLE=2, BOTTOM_LEFT=3,BOTTOM_RIGHT=4;
 
-function Mesage()
-{
-  const m=this;
-  m.msg;
-}
 function HUD()
 {
   const g=this;
@@ -98,18 +93,35 @@ function HUD()
     },1000);
   }
 
-  g.drawHeart=function() {
+  g.drawHeart=function(x,y) {
 
     ctx.fillStyle="#EF4836";
+    x=2*x-75*_scaleFactor;
+    y=2*y-40*_scaleFactor;
+    ctx.scale(0.5,0.5);
     ctx.beginPath();
-    ctx.moveTo(75,40);
-    ctx.bezierCurveTo(75,37,70,25,50,25);
-    ctx.bezierCurveTo(20,25,20,62.5,20,62.5);
-    ctx.bezierCurveTo(20,80,40,102,75,120);
-    ctx.bezierCurveTo(110,102,130,80,130,62.5);
-    ctx.bezierCurveTo(130,62.5,130,25,100,25);
-    ctx.bezierCurveTo(85,25,75,37,75,40);
+    ctx.moveTo(x+75*_scaleFactor,y+40*_scaleFactor);
+    ctx.bezierCurveTo(x+75*_scaleFactor,y+37*_scaleFactor,x+70*_scaleFactor,y+25*_scaleFactor,x+50*_scaleFactor,y+25*_scaleFactor);
+    ctx.bezierCurveTo(x+20*_scaleFactor,y+25*_scaleFactor,x+20*_scaleFactor,y+62.5*_scaleFactor,x+20*_scaleFactor,y+62.5*_scaleFactor);
+    ctx.bezierCurveTo(x+20*_scaleFactor,y+80*_scaleFactor,x+40*_scaleFactor,y+102*_scaleFactor,x+75*_scaleFactor,y+120*_scaleFactor);
+    ctx.bezierCurveTo(x+110*_scaleFactor,y+102*_scaleFactor,x+130*_scaleFactor,y+80*_scaleFactor,x+130*_scaleFactor,y+62.5*_scaleFactor);
+    ctx.bezierCurveTo(x+130*_scaleFactor,y+62.5*_scaleFactor,x+130*_scaleFactor,y+25*_scaleFactor,x+100*_scaleFactor,y+25*_scaleFactor);
+    ctx.bezierCurveTo(x+85*_scaleFactor,y+25*_scaleFactor,x+75*_scaleFactor,y+37*_scaleFactor,x+75*_scaleFactor,y+40*_scaleFactor);
     ctx.fill();
+    ctx.scale(2,2);
+}
+g.drawHearts = function()
+{
+  var margin = 70*_scaleFactor;
+  //var x=c.width*0.5+ margin*(STARTLIVES/2-0.5); //center
+  var x =c.width - margin; //right corner
+
+  for(var i =0; i<refToPlayer.lives; ++i)
+  {
+    g.drawHeart(x, c.height*0.03);
+    x-=margin;
+  }
+
 }
 
 }

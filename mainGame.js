@@ -352,12 +352,7 @@ function dealWithDeath()
 	if(playerDeath)
 	refToPlayer.lives--;
 
-	var liveHUD="";
-	for(var i = 1; i<=refToPlayer.lives; ++i)
-	{
-		liveHUD = liveHUD + " * ";
-	}
-	hud.setMessage(liveHUD, TOP_RIGHT); // show lives
+	hud.drawHearts();
 
 	if(playerDeath)
 	{
