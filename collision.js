@@ -155,7 +155,7 @@ function collisionDetection()
           }
           if(enableProjectileTeleport)
           {
-            if(d[2] - bh.allHoles[k].collisionRadius - cd.projectileRef.skott[j].radius < 0)
+            if(d[2] - bh.allHoles[k].collisionRadius - cd.projectileRef.skott[j].radius < 0 && bh.allHoles[k].linkId != -1)
             {
               var q = bh.allHoles[k].linkId;
               var f = 0;
@@ -170,6 +170,15 @@ function collisionDetection()
               var asd = bh.linkedHoles[q][ind];
               cd.projectileRef.skott[j].pos[0] = bh.allHoles[asd].pos[0] + Math.cos(cd.projectileRef.skott[j].angle) * (bh.allHoles[asd].collisionRadius + cd.projectileRef.skott[j].radius * 2);
               cd.projectileRef.skott[j].pos[1] = bh.allHoles[asd].pos[1] - Math.sin(cd.projectileRef.skott[j].angle) * (bh.allHoles[asd].collisionRadius + cd.projectileRef.skott[j].radius * 2);
+              ++cd.projectileRef.skott[j].numberOfTeleports;
+              if(cd.projectileRef.skott[j].numberOfTeleports > 5)
+              {
+                cd.projectileRef.removeOne(j);
+                if(j > 0)
+                {
+                  --j;
+                }
+              }
               cd.updateCells();
             }
           }

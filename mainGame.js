@@ -181,7 +181,13 @@ $(document).ready(function(){
 	refToBlackHoles.addHole(6,50,120,[c.width/6		, 	5*c.height/6],	10);
 	refToBlackHoles.linkHoles([0,1,2,3,4]);
 
-	refToBlackHoles.allHoles[0].setTimeout(10000);
+	refToBlackHoles.allHoles[4].setTimeout(15000);
+	refToBlackHoles.allHoles[4].isTimeDependant(true);
+	refToBlackHoles.allHoles[2].setTimeout(25000);
+	refToBlackHoles.allHoles[2].isTimeDependant(true);
+	refToBlackHoles.allHoles[1].setTimeout(35000);
+	refToBlackHoles.allHoles[1].isTimeDependant(true);
+	refToBlackHoles.allHoles[0].setTimeout(50000);
 	refToBlackHoles.allHoles[0].isTimeDependant(true);
 
 	//refToBlackHoles.addHole(10,50,300,[2*c.width/6	,		3*c.height/6],	10);
@@ -243,7 +249,7 @@ function draw()
 	//Collision is disabled when player is killed so that so that playerDeath isn't reset every time collision is checked after player has disabled
 	if(!disableCollision)
 	refToCollision.calculateCollision((clock.getTime() - prevTime)/1000);
-	refToBlackHoles.renderLinks(clock.getTime() - prevTime);
+	refToBlackHoles.renderLinks();
 	refToProjectiles.shoot();
 	refToEnemyStack.renderStack((clock.getTime() - prevTime)/1000);	//render for enemies
 	refToDeaths.draw((clock.getTime() - prevTime)/1000);
@@ -311,6 +317,16 @@ function respawnEnemies()
 function resetGame() {
 	refToPlayer.pos=[c.width/2, c.height/2];
 	refToPlayer.vel=[0.0, 0.0];
+	//respawns black holes, this is a temp version
+	refToBlackHoles.flush();
+	refToBlackHoles.addHole(3,50,120,[c.width/6		,		c.height/6], 		10);
+	refToBlackHoles.addHole(5,50,120,[5*c.width/6	,		c.height/6], 		10);
+	refToBlackHoles.addHole(2,50,120,[5*c.width/6	,		5*c.height/6], 	10);
+	refToBlackHoles.addHole(4,50,120,[3*c.width/6	,		4*c.height/6],	10);
+	refToBlackHoles.addHole(6,50,120,[c.width/6		, 	5*c.height/6],	10);
+	refToBlackHoles.linkHoles([0,1,2,3,4]);
+
+
 	respawnEnemies();
 }
 
@@ -360,6 +376,7 @@ function dealWithDeath()
 		if(refToPlayer.lives>0) //resets the field for next round
 		{
 			pause(); //prevents movement and aiming durring countdown
+
 			hud.countdown(function()
 			{
 				resetGame();//respawns enemies agfter countdown

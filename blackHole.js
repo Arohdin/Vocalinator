@@ -17,6 +17,7 @@ function holes(deathRef)
   {
     var id = -1;
     var spliceId = -1;
+    var tempBlackHoleID;
     for(var i = 0; i < h.allHoles.length; ++i)
     {
       if(index == i)
@@ -25,7 +26,7 @@ function holes(deathRef)
         {
           id = h.allHoles[i].linkId;
         }
-        h.allHoles.splice(i,1);
+        tempBlackHoleID = i;
         break;
       }
     }
@@ -51,6 +52,14 @@ function holes(deathRef)
         h.removeLink(id, spliceId);
       }
     }
+
+    h.allHoles.splice(tempBlackHoleID,1);
+  }
+
+  h.flush = function()
+  {
+    h.allHoles.length = 0;
+    h.linkedHoles.length = 0;
   }
 
   h.updateHoles = function(msdt)
@@ -60,7 +69,6 @@ function holes(deathRef)
       var dt = msdt/1000;
       for(var i = 0; i < h.allHoles.length; ++i)
       {
-        h.allHoles[i].isLinked = false;
         h.allHoles[i].angle += Math.PI * 2 * (dt/h.allHoles[i].rotateTime);
         if(h.allHoles[i].angle > Math.PI * 2)
         {

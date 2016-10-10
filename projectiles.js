@@ -31,6 +31,7 @@ function projectiles() {
     pro.direction = [];
     pro._type;
     pro.angle;
+    pro.numberOfTeleports = 0;
 
     pro.init = function(plRef)
     {
@@ -101,6 +102,11 @@ function projectiles() {
       pj.skott[i]=pj.filteredShots[i];
     }
     pj.filteredShots.length=0;
+  }
+
+  pj.removeOne = function(index)
+  {
+    pj.skott.splice(index,1);
   }
 
   pj.render = function(deltaT)
