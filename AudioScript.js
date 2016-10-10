@@ -20,14 +20,12 @@ volumeNode.gain.value = 0.0;
 var errorCallback = function(e) {console.log('Mic error!', e);};
 var high =400, low=200, step =((high-low)/3.0), picth, projectileType;
 const LOW=0, MEDIUM=1, HIGH=2, NOTLOUD=-1;
-var dBThreshold=-60;
+var dBThreshold=-55;
 
 navigator.getUserMedia({audio: true}, function(stream)
 {
   microphone = context.createMediaStreamSource(stream);
   microphone.connect(analyzer);
-  analyzer.connect(volumeNode);
-  volumeNode.connect(context.destination); //play mic sound
 }, errorCallback);
 
 //calculate frequencies based om sample rate
@@ -36,10 +34,14 @@ for(var i =0; i<analyzer.frequencyBinCount; ++i)
 	frequencyArray[i]= i*(sampleRate/analyzer.fftSize)
 }
 
+//The code within setInterval is repeated every 33rd millisecond
 setInterval(function() {
   pitch=getPitch();
+
+  //validate pitch and calibration-pitch
   if((pitch!=NOTLOUD) && (high>low))
   {
+    //determine pitch type
     if(pitch > high-step) //High
     {
       projectileType=HIGH;
@@ -56,7 +58,7 @@ setInterval(function() {
   //drawBasic();
 }, 33);
 
-//Draw graph
+//Draw graph (used for debugging)
 function drawBasic()
 {
   var data = new google.visualization.DataTable();
@@ -76,20 +78,25 @@ function drawBasic()
 }
 
 
+//
 function getPitch()
 {
-  analyzer.getFloatFrequencyData(amplitudeArray);
-  var rangeSize=analyzer.maxDeciBels-analyzer.minDecibels;
+
+  analyzer.getFloatFrequencyData(amplitudeArray); //get frequency-data
   var max= -300;
   var maxIndex=0;
+
   for(var i=0;i<amplitudeArray.length;++i)
   {
+    //identify highest amplitude
     if(amplitudeArray[i]>max)
     max=amplitudeArray[i]
   }
 
+  //The sound isn't loud enoguh, exit function
   if(max<dBThreshold)
   return NOTLOUD;
+
 
   max=0.0;
 
@@ -97,16 +104,18 @@ function getPitch()
   //Use algorithm to "amplify" the percieved frequency
   for(var i =0; 5*i < Math.floor(analyzer.frequencyBinCount/5); ++i)
   {
-    pitchArray[i]=Math.pow(10.0, -12.0)*Math.pow(10.0, (amplitudeArray[i]+amplitudeArray[2*i]+amplitudeArray[3*i]+amplitudeArray[4*i]+amplitudeArray[5*i])/10.0);
+    //multiply the spectras with (1/n) times the length of the original (n = 1-5) with each other
+    pitchArray[i]=Math.pow(10.0, (amplitudeArray[i]+amplitudeArray[2*i]+amplitudeArray[3*i]+amplitudeArray[4*i]+amplitudeArray[5*i])/10.0);
+
     //identify frequency with highest amplitude
     if(pitchArray[i]>max)
     {
       max=pitchArray[i];
-      maxIndex=i;
+      maxIndex=i; // saves index
     }
   }
 
-  return frequencyArray[maxIndex];
+  return frequencyArray[maxIndex]; // uses maxindex to determine pitch
 }
 
 function setHigh()
@@ -115,7 +124,7 @@ function setHigh()
 
   if(temp==NOTLOUD)
   {
-    hud.setTimedMessage("Louder plz!", TOP_RIGHT, 2);
+    hud.setTimedMessage("Louder!", TOP_RIGHT, 2);
     return;
   }
   else if(temp <low)
@@ -133,7 +142,7 @@ function setLow()
   var temp=pitch;
   if(temp==NOTLOUD)
   {
-    hud.setTimedMessage("Louder plz!", TOP_RIGHT, 2);
+    hud.setTimedMessage("Louder!", TOP_RIGHT, 2);
     return;
   }
   else if(temp >high)
@@ -142,7 +151,7 @@ function setLow()
     return;
   }
   low=temp;
-  hud.setTimedMessage("low set to " + Math.floor(low), TOP_RIGHT, 2);
+  hud.setTimedMessage("Low set to " + Math.floor(low), TOP_RIGHT, 2);
   setStep();
 }
 
