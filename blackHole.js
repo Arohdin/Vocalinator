@@ -13,20 +13,44 @@ function holes(deathRef)
     h.allHoles[h.allHoles.length-1].loadBlackHoleImage();
   }
 
-  //should not be called
   h.removeHole = function(index)
   {
-    
-    h.refToDeathRow.holeRow.push(new deadHole(h.refToDeathRow));
-    h.refToDeathRow.holeRow[h.refToDeathRow.holeRow.length - 1].init([h.allHoles[index].pos[0], h.allHoles[index].pos[1]], h.allHoles[index].angle, h.allHoles[index].images, h.allHoles[index].drawRadius);
-
-    //remove
-    if(h.allHoles[index].isLinked)
+    var id = -1;
+    var spliceId = -1;
+    for(var i = 0; i < h.allHoles.length; ++i)
     {
-      h.removeLink(index,h.allHoles[index].linkId);
+      if(index == i)
+      {
+        if(h.allHoles[i].isLinked)
+        {
+          id = h.allHoles[i].linkId;
+        }
+        h.allHoles.splice(i,1);
+        break;
+      }
     }
-    h.allHoles.splice(index,1);
 
+    if(id > -1 && h.allHoles.length > 0)
+    {
+      {
+        for(var g = 0; g < h.linkedHoles[id].length; ++g)
+        {
+          if(index == h.linkedHoles[id][g])
+          {
+            spliceId = g;
+            for(var k = 0; k < h.linkedHoles[id].length; ++k)
+            {
+              if(h.linkedHoles[id][k] > index)
+              {
+                --h.linkedHoles[id][k];
+              }
+            }
+            break;
+          }
+        }
+        h.removeLink(id, spliceId);
+      }
+    }
   }
 
   h.updateHoles = function(msdt)
@@ -36,6 +60,7 @@ function holes(deathRef)
       var dt = msdt/1000;
       for(var i = 0; i < h.allHoles.length; ++i)
       {
+        h.allHoles[i].isLinked = false;
         h.allHoles[i].angle += Math.PI * 2 * (dt/h.allHoles[i].rotateTime);
         if(h.allHoles[i].angle > Math.PI * 2)
         {
@@ -64,57 +89,33 @@ function holes(deathRef)
     }
   }
 
-  h.linkHoles = function(inIndecis)
+  h.linkHoles = function(idArray)
   {
-    var num = inIndecis.length;
-    if(num >= 1)
+
+    for(var i = 0; i < idArray.length; ++i)
     {
-      for(var i = 0; i < inIndecis.length; ++i)
+      if(h.allHoles[idArray[i]].isLinked == true)
       {
-        if(!h.allHoles[inIndecis[i]].isLinked)
-        {
-          h.allHoles[inIndecis[i]].linkId = h.linkedHoles.length;
-          h.allHoles[inIndecis[i]].isLinked = true;
-        }
-        else
-        {
-          console.log("BlackHole with id: " + i + " is already linked to another pair of blacHoles");
-          inIndecis.splice(i);
-        }
-      }
-      if(inIndecis.length > 1)
-      {
-        h.linkedHoles.push(inIndecis);
-        //console.log("Link established");
+        console.log("already linked");
+        return;
       }
     }
+
+    for(var i = 0; i < idArray.length; ++i)
+    {
+      h.allHoles[idArray[i]].isLinked = 1;
+      h.allHoles[idArray[i]].linkId = h.linkedHoles.length;
+    }
+    h.linkedHoles.push(idArray);
   }
 
-  h.removeLink = function(index, linkId)
+  h.removeLink = function(id, spliceId)
   {
-    //remove links
-    for(var q = 0; q < h.linkedHoles[linkId].length; ++q)
+    h.allHoles[h.linkedHoles[id][spliceId]].isLinked = -1;
+    h.linkedHoles[id].splice(spliceId,1);
+    if(h.linkedHoles[id].length == 0)
     {
-      if(h.linkedHoles[linkId][q] == index)
-      {
-        h.linkedHoles[linkId].splice(q,1);
-      }
-    }
-
-    //Adjust
-    for(var k = 0; k < h.linkedHoles[linkId].length; ++k)
-    {
-      if(k >= index)
-      {
-        --h.linkedHoles[linkId][k];
-      }
-    }
-
-    //check if it is the last item
-    if(h.linkedHoles[linkId].length == 1)
-    {
-      h.removeHole(h.linkedHoles[linkId][0]);
-      h.linkedHoles.splice(linkId,1);
+      h.linkedHoles.splice(id,1);
     }
   }
 
@@ -122,15 +123,38 @@ function holes(deathRef)
   {
     for(var i = 0; i < h.linkedHoles.length; ++i)
     {
-      for(q = 0; q < h.linkedHoles[i].length - 1; ++q)
+      var obj = {startPos: h.allHoles[h.linkedHoles[i][0]].pos, middlePos: []};
+      if(h.linkedHoles[i].length > 1)
       {
-        h.allHoles[h.linkedHoles[i][q]].renderLinks(h.allHoles[h.linkedHoles[i][q]].pos, h.allHoles[h.linkedHoles[i][q + 1]].pos);
-        if(h.linkedHoles[i].length > 2 && q == (h.linkedHoles[i].length - 2))
+        for(var q = 1; q < h.linkedHoles[i].length; ++q)
         {
-          h.allHoles[h.linkedHoles[i][q]].renderLinks(h.allHoles[h.linkedHoles[i][0]].pos, h.allHoles[h.linkedHoles[i].length - 1].pos);
-        }//send this to deathrow
+          obj.middlePos.push(h.allHoles[h.linkedHoles[i][q]].pos);
+        }
       }
+      obj.endPos = h.allHoles[h.linkedHoles[i][0]].pos;
+      h.drawLinks(obj);
     }
+  }
+
+  h.drawLinks = function(inObj)
+  {
+    ctx.globalAlpha = 0.8;
+    ctx.strokeStyle = "white";
+    ctx.setLineDash([5*_scaleFactor, 15*_scaleFactor]);
+    ctx.lineWidth = 2 * _scaleFactor;
+
+    ctx.beginPath();
+    ctx.moveTo(inObj.startPos[0], inObj.startPos[1]);
+    for(var i = 0; i < inObj.middlePos.length; ++i)
+    {
+      ctx.lineTo(inObj.middlePos[i][0], inObj.middlePos[i][1]);
+    }
+    ctx.lineTo(inObj.endPos[0], inObj.endPos[1]);
+    ctx.stroke();
+    ctx.closePath();
+
+    ctx.setLineDash([]);
+    ctx.globalAlpha = 1.0;
   }
 }
 
@@ -189,23 +213,6 @@ function blackHole(inMass, inDrawRad, inEffectRad, inPos, inRotateTime)
     ctx.closePath();
     ctx.fill();
 
-    ctx.globalAlpha = 1.0;
-  }
-
-  b.renderLinks = function(pos1,pos2)
-  {
-    ctx.globalAlpha = 0.8;
-    ctx.strokeStyle = "white";
-    ctx.setLineDash([5*_scaleFactor, 15*_scaleFactor]);
-    ctx.lineWidth = 2 * _scaleFactor;
-
-    ctx.beginPath();
-    ctx.moveTo(pos1[0],pos1[1]);
-    ctx.lineTo(pos2[0], pos2[1]);
-    ctx.stroke();
-    ctx.closePath();
-
-    ctx.setLineDash([]);
     ctx.globalAlpha = 1.0;
   }
 
