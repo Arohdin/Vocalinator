@@ -17,7 +17,7 @@ function collisionDetection()
   cd.enemyStackRef;
   cd.deathRowRef;
 
-  cd.linkRefs = function(plRef, enRef, projRef, deathRef)
+  collisionDetection.prototype.linkRefs = function(plRef, enRef, projRef, deathRef)
   {
     cd.playerRef = plRef;
     cd.projectileRef = projRef;
@@ -25,8 +25,9 @@ function collisionDetection()
     cd.deathRowRef = deathRef;
   }
 
-  cd.generateGrid = function()
+  collisionDetection.prototype.generateGrid = function()
   {
+    var cd = this;
     cd.cellWidth = c.width / (cd.numCols - cd._PAD);
     cd.cellHeight = c.height / (cd.numRows - cd._PAD);
 
@@ -47,8 +48,9 @@ function collisionDetection()
     }
   }
 
-  cd.drawGrid = function()
+  collisionDetection.prototype.drawGrid = function()
   {
+    var cd = this;
     ctx.strokeStyle = "rgba(46, 204, 113, 0.8)";
     ctx.lineWidth = 1;
     for(var i = 0; i < cd.numRows; ++i)
@@ -69,8 +71,9 @@ function collisionDetection()
     }
   }
 
-  cd.init = function()
+  collisionDetection.prototype.init = function()
   {
+    var cd = this;
 		//Init for enemies
 		for(var i = 0; i < cd.enemyStackRef.enemyStack.length; ++i)
 		{
@@ -100,8 +103,9 @@ function collisionDetection()
     }
   }
 
-  cd.updateCells = function()
+  collisionDetection.prototype.updateCells = function()
   {
+    var cd = this;
 	  //flushing
 	  for(var q = 0; q < cd.cellIndexArray.length; q++)
 	  {
@@ -116,8 +120,9 @@ function collisionDetection()
 	  cd.init();
   }
 
-  cd.calculateCollision = function(dt)
+  collisionDetection.prototype.calculateCollision = function(dt)
   {
+    var cd = this;
 	  //Check collision with screen border (also moves if outside the boundries)
 	  cd.playerRef.pos = cd.checkBorderCollision(cd.playerRef.pos, cd.playerRef._collisionRadius)
     for(var b = 0; b < cd.iterations; ++b)
@@ -235,8 +240,9 @@ function collisionDetection()
 
   }
 
-	cd.checkBorderCollision = function(positions, radius)
+	collisionDetection.prototype.checkBorderCollision = function(positions, radius)
 	{
+    var cd = this;
 		var returnValues = positions;
 		//x
 		if((positions[0] - radius) < c.width*0)
@@ -260,8 +266,9 @@ function collisionDetection()
 		return returnValues;
 	}
 
-  cd.projectileCollisionCheck = function(rowIndex, colIndex, middleIndex)
+  collisionDetection.prototype.projectileCollisionCheck = function(rowIndex, colIndex, middleIndex)
   {
+    var cd = this;
     var tr = cd.cellIndexArray[middleIndex][0];
     var tc = cd.cellIndexArray[middleIndex][1];
     for(var g = 0; g < cd.AA[tr][tc].members[1].length; ++g)
@@ -335,8 +342,9 @@ function collisionDetection()
     }
   }
 
-  cd.adjustEnemyIndex = function(index)
+  collisionDetection.prototype.adjustEnemyIndex = function(index)
   {
+    var cd = this;
     for(var i = 0; i < cd.cellIndexArray.length; ++i)
     {
       for(var h = 0; h < cd.AA[cd.cellIndexArray[i][0]][cd.cellIndexArray[i][1]].members[0].length; ++h)
@@ -349,8 +357,9 @@ function collisionDetection()
     }
   }
 
-  cd.adjustProjectileIndex = function(index)
+  collisionDetection.prototype.adjustProjectileIndex = function(index)
   {
+    var cd = this;
     for(var i = 0; i < cd.cellIndexArray.length; ++i)
     {
       for(var h = 0; h < cd.AA[cd.cellIndexArray[i][0]][cd.cellIndexArray[i][1]].members[1].length; ++h)
@@ -365,8 +374,9 @@ function collisionDetection()
 
 
 
-	cd.enemyCollisionCheck = function(q,d,i)
+	collisionDetection.prototype.enemyCollisionCheck = function(q,d,i)
 	{
+    var cd = this;
 	  //tempRow/col is current enemy position
 	  var tempRow = cd.cellIndexArray[i][0];
 	  var tempCol = cd.cellIndexArray[i][1];
@@ -419,8 +429,9 @@ function collisionDetection()
     }
 	}
 
-  cd.checkProjectileBorderCollision = function(projektil)
+  collisionDetection.prototype.checkProjectileBorderCollision = function(projektil)
   {
+    var cd = this;
     //x
     if((projektil.pos[0] - projektil.radius) < 0)
     {

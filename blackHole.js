@@ -7,17 +7,20 @@ function holes(deathRef)
   h.linkedHoles = [];
   h.enableGravity = enableGravity;
 
-  h.addHole = function(inMass, inDrawRad, inEffectRad, inPos, inRotateTime)
+  holes.prototype.addHole = function(inMass, inDrawRad, inEffectRad, inPos, inRotateTime)
   {
+    var h = this;
     h.allHoles.push(new blackHole(inMass, inDrawRad, inEffectRad, inPos, inRotateTime));
     h.allHoles[h.allHoles.length-1].loadBlackHoleImage();
   }
 
-  h.removeHole = function(index)
+  holes.prototype.removeHole = function(index)
   {
+    var h = this;
     var id = -1;
     var spliceId = -1;
     var tempBlackHoleID;
+
     for(var i = 0; i < h.allHoles.length; ++i)
     {
       if(index == i)
@@ -49,21 +52,36 @@ function holes(deathRef)
             break;
           }
         }
+        var o = h.getLinkObject(id);
+        h.refToDeathRow.holeRow.push(new deadHole(h.refToDeathRow));
+        h.refToDeathRow.holeRow[h.refToDeathRow.holeRow.length-1].init(h.allHoles[i].pos, h.allHoles[i].angle, h.allHoles[i].images, h.allHoles[i].drawRadius, o);
         h.removeLink(id, spliceId);
       }
     }
+    var o = h.getLinkObject(id);
+    h.refToDeathRow.holeRow.push(new deadHole(h.refToDeathRow));
+    h.refToDeathRow.holeRow[h.refToDeathRow.holeRow.length-1].init(h.allHoles[i].pos, h.allHoles[i].angle, h.allHoles[i].images, h.allHoles[i].drawRadius, o);
+    //h.refToDeathRow.holeRow.push(new deadHole(h.refToDeathRow));
+    //h.refToDeathRow.holeRow[h.refToDeathRow.holeRow.length-1].init(h.allHoles[i].pos, h.allHoles[i].angle, h.allHoles[i].images, h.allHoles[i].drawRadius, null);
 
     h.allHoles.splice(tempBlackHoleID,1);
+
+    if(h.linkedHoles[id].length == 1)
+    {
+      h.removeLink(id, 0);
+    }
   }
 
-  h.flush = function()
+  holes.prototype.flush = function()
   {
+    var h = this;
     h.allHoles.length = 0;
     h.linkedHoles.length = 0;
   }
 
-  h.updateHoles = function(msdt)
+  holes.prototype.updateHoles = function(msdt)
   {
+    var h = this;
     if(!paused)
     {
       var dt = msdt/1000;
@@ -88,8 +106,9 @@ function holes(deathRef)
 
   }
 
-  h.renderHoles = function(dt)
+  holes.prototype.renderHoles = function(dt)
   {
+    var h = this;
     for(var i = 0; i < h.allHoles.length; ++i)
     {
       //h.allHoles[i].drawEffectiveArea();
@@ -97,9 +116,9 @@ function holes(deathRef)
     }
   }
 
-  h.linkHoles = function(idArray)
+  holes.prototype.linkHoles = function(idArray)
   {
-
+    var h = this;
     for(var i = 0; i < idArray.length; ++i)
     {
       if(h.allHoles[idArray[i]].isLinked == true)
@@ -117,8 +136,9 @@ function holes(deathRef)
     h.linkedHoles.push(idArray);
   }
 
-  h.removeLink = function(id, spliceId)
+  holes.prototype.removeLink = function(id, spliceId)
   {
+    var h = this;
     h.allHoles[h.linkedHoles[id][spliceId]].isLinked = -1;
     h.linkedHoles[id].splice(spliceId,1);
     if(h.linkedHoles[id].length == 0)
@@ -127,25 +147,42 @@ function holes(deathRef)
     }
   }
 
-  h.renderLinks = function()
+  holes.prototype.renderLinks = function()
   {
+    var h = this;
     for(var i = 0; i < h.linkedHoles.length; ++i)
     {
-      var obj = {startPos: h.allHoles[h.linkedHoles[i][0]].pos, middlePos: []};
-      if(h.linkedHoles[i].length > 1)
-      {
-        for(var q = 1; q < h.linkedHoles[i].length; ++q)
-        {
-          obj.middlePos.push(h.allHoles[h.linkedHoles[i][q]].pos);
-        }
-      }
-      obj.endPos = h.allHoles[h.linkedHoles[i][0]].pos;
-      h.drawLinks(obj);
+      var o = h.getLinkObject(i);
+      h.drawLinks(o);
     }
   }
 
-  h.drawLinks = function(inObj)
+  holes.prototype.getLinkObject = function(i)
   {
+    var obj = {startPos: h.allHoles[h.linkedHoles[i][0]].pos, middlePos: []};
+    if(h.linkedHoles[i].length == 2)
+    {
+      obj.endPos = h.allHoles[h.linkedHoles[i][1]].pos;
+    }
+    else if(h.linkedHoles[i].length > 1)
+    {
+      for(var q = 1; q < h.linkedHoles[i].length; ++q)
+      {
+        obj.middlePos.push(h.allHoles[h.linkedHoles[i][q]].pos);
+      }
+      obj.endPos = h.allHoles[h.linkedHoles[i][0]].pos;
+    }
+    else
+    {
+      obj.endPos = h.allHoles[h.linkedHoles[i][0]].pos;
+    }
+
+    return obj;
+  }
+
+  holes.prototype.drawLinks = function(inObj)
+  {
+    var h = this;
     ctx.globalAlpha = 0.8;
     ctx.strokeStyle = "white";
     ctx.setLineDash([5*_scaleFactor, 15*_scaleFactor]);
@@ -189,8 +226,9 @@ function blackHole(inMass, inDrawRad, inEffectRad, inPos, inRotateTime)
 
   b.linkId = -1; //what  id to spawn by (not used atm)
 
-  b.render = function(dt)
+  blackHole.prototype.render = function(dt)
   {
+    var b = this;
     var scale = Math.abs(Math.cos(b.angle/2));
 
     ctx.save();
@@ -211,8 +249,9 @@ function blackHole(inMass, inDrawRad, inEffectRad, inPos, inRotateTime)
 
   }
 
-  b.drawEffectiveArea = function()
+  blackHole.prototype.drawEffectiveArea = function()
   {
+    var b = this;
     ctx.globalAlpha = 0.3;
     ctx.fillStyle = "darkblue";
 
@@ -224,37 +263,37 @@ function blackHole(inMass, inDrawRad, inEffectRad, inPos, inRotateTime)
     ctx.globalAlpha = 1.0;
   }
 
-  b.resetTimer = function()
+  blackHole.prototype.resetTimer = function()
   {
+    var b = this;
     b.hasLivedFor = 0;
   }
 
-  b.isTimeDependant = function(state)
+  blackHole.prototype.isTimeDependant = function(state)
   {
+    var b = this;
     b.timeDependant = state;
   }
 
-  b.setTimeout = function(ms)
+  blackHole.prototype.setTimeout = function(ms)
   {
+    var b = this;
     b.timeToLive = ms;
   }
 
-  b.loadBlackHoleImage = function()
+  blackHole.prototype.loadBlackHoleImage = function()
   {
-
-  b.sources = {
+    var b = this;
+    b.sources = {
     blackHoleSprite: 'images/hole.png'
     };
 
-  for(var src in b.sources) {
-         b.images[src] = new Image();
-         b.images[src].onload = function() {
-
-          };
-          b.images[src].src = b.sources[src];
+    for(var src in b.sources)
+    {
+      b.images[src] = new Image();
+      b.images[src].onload = function() {};
+      b.images[src].src = b.sources[src];
       console.log("LOADED");
-        }
-
+    }
   }
-
 }

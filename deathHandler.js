@@ -102,20 +102,22 @@ function deadHole(ref)
   const dh = this;
   dh.refToParent = ref
 
-  dh.timeBeforeGone = 2.0; //seconds
+  dh.timeBeforeGone = 0.7; //seconds
   dh.timeLived = 0;
   dh.pos;
   dh.angle;
   dh.images = [];
   dh.drawRadius;
+  dh.linkPositions = null;
 
-  dh.init = function(inPos, inAngle, sprites, rad)
+  dh.init = function(inPos, inAngle, sprites, rad, linkObj)
   {
     dh.timeLived = 0;
     dh.pos = inPos;
     dh.angle = inAngle;
     dh.images = sprites;
     dh.drawRadius = rad;
+    dh.linkPositions = linkObj;
   }
 
   dh.render = function(dt)
@@ -124,9 +126,11 @@ function deadHole(ref)
     dh.timeLived += dt;
 
     var t = (dh.timeLived/dh.timeBeforeGone < 1.0) ? dh.timeLived/dh.timeBeforeGone : 1.0;
+    var g = (dh.timeLived/dh.timeBeforeGone < 0.4) ? dh.timeLived/dh.timeBeforeGone*0.4 : 0.4;
 
     var scale = Math.abs(Math.cos(dh.angle/2));
 
+    //HOLES
     ctx.globalAlpha = 1.0 - t;
     ctx.save();
     ctx.translate(dh.pos[0], dh.pos[1]);
@@ -145,7 +149,27 @@ function deadHole(ref)
     ctx.globalAlpha = 1.0;
     ctx.restore();
 
-    if(t == 0)
+    if(dh.linkPositions)
+    {
+      ctx.globalAlpha = 0.4 - g;
+      ctx.strokeStyle = "white";
+      ctx.setLineDash([5*_scaleFactor, 15*_scaleFactor]);
+      ctx.lineWidth = 2 * _scaleFactor;
+
+      ctx.beginPath();
+      ctx.moveTo(dh.linkPositions.startPos[0], dh.linkPositions.startPos[1]);
+      for(var i = 0; i < dh.linkPositions.middlePos.length; ++i)
+      {
+        ctx.lineTo(dh.linkPositions.middlePos[i][0], dh.linkPositions.middlePos[i][1]);
+      }
+      ctx.lineTo(dh.linkPositions.endPos[0], dh.linkPositions.endPos[1]);
+      ctx.stroke();
+      ctx.closePath();
+
+      ctx.setLineDash([]);
+    }
+
+    if(t == 1.0 && g == 0.4)
     {
       deathRow.removeFromArray(dh.refToParent.holeRow);
     }

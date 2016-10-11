@@ -33,8 +33,9 @@ function projectiles() {
     pro.angle;
     pro.numberOfTeleports = 0;
 
-    pro.init = function(plRef)
+    projectile.prototype.init = function(plRef)
     {
+      var pro = this;
       pro.playerRef = plRef;
       pro.radius= 7*_scaleFactor;
       pro._type = projectileType;
@@ -46,13 +47,15 @@ function projectiles() {
       pro.pos = [pro.playerRef.pos[0] + pro.direction[0]*hype, pro.playerRef.pos[1] + pro.direction[1]*hype];
     }
 
-    pro.updatePosition= function(deltaT)
+    projectile.prototype.updatePosition= function(deltaT)
     {
+      var pro = this;
       pro.pos = [pro.pos[0]+pro.direction[0]*speed*deltaT*timeFactor*_scaleFactor, pro.pos[1]+ pro.direction[1]*speed*deltaT*timeFactor*_scaleFactor];
     }
 
-    pro.draw =function ()
+    projectile.prototype.draw =function ()
     {
+      var pro = this;
       ctx.beginPath();
       ctx.arc(pro.pos[0], pro.pos[1], pro.radius, 0, 2 * Math.PI, false);
       ctx.closePath();

@@ -13,14 +13,16 @@ function enemies()
   //variables
   e.enemyStack = [];
 
-  e.linkRefs = function(plRef)
+  enemies.prototype.linkRefs = function(plRef)
   {
+    var e = this;
     e.playerRef = plRef;
   }
 
   //Populates the array with enemies of different types.
-  e.generateStack = function(percent)
+  enemies.prototype.generateStack = function(percent)
   {
+    var e = this;
     for(var i = 0; i < e.maxNumber; ++i)
     {
       var typeIndex = getRandomInt(0,2);
@@ -45,8 +47,9 @@ function enemies()
   }
 
   //renders the stack of enemies (calls enemy.render());
-  e.renderStack = function(dt)
+  enemies.prototype.renderStack = function(dt)
   {
+    var e = this;
     for(var i = 0; i < e.enemyStack.length; ++i)
     {
       e.enemyStack[i].updatePosition(dt);
@@ -83,7 +86,7 @@ function enemy(plRef){
     e.angle;
 
     //init
-    e.init = function(typeOf, percent)
+    enemy.prototype.init = function(typeOf, percent)
     {
       //randomize a start position
       do
@@ -107,8 +110,9 @@ function enemy(plRef){
     }
 
     //Render functions which i called to render an enemy
-    e.render = function(dt)
+    enemy.prototype.render = function(dt)
     {
+      var e = this;
       //drawLineBetween(e.pos, e.playerRef.pos, "rgba(231, 76, 60, 0.3)", 0.10);
       e.draw();
       //drawCollisionMesh(e._collisionRadius, e.pos, "rgba(231, 76, 60, 0.8)");
@@ -116,8 +120,9 @@ function enemy(plRef){
     }
 
     //function that update the position of an enemy
-    e.updatePosition = function(dt)
+    enemy.prototype.updatePosition = function(dt)
     {
+      var e = this;
       e.angle = getAngle(e.pos, e.playerRef.pos);
       e.pos[0] += (-e.speed * Math.cos(e.angle) * dt * timeFactor * _scaleFactor);
       e.pos[1] += (e.speed * Math.sin(e.angle) * dt * timeFactor *_scaleFactor);
@@ -128,8 +133,9 @@ function enemy(plRef){
     }
 
     //draws the enemy on the screen
-    e.draw = function()
+    enemy.prototype.draw = function()
     {
+      var e = this;
       ctx.fillStyle = e._color;
 
       ctx.save();
@@ -139,8 +145,9 @@ function enemy(plRef){
       ctx.restore();
     }
 
-    e.getCollisionMeshBoundary = function()
+    enemy.prototype.getCollisionMeshBoundary = function()
     {
+      var e = this;
       return e._collisionRadius;
     }
 
